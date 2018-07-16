@@ -93,15 +93,15 @@
       <Device>1</Device>
     </Intel_OpenCL_Build_Rules>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(INTELOCLSDKROOT)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(INTELOCLSDKROOT)include;$(ProjecrDir)/glutdlls37beta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>Win32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PrecompiledHeader />
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(INTELOCLSDKROOT)lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(INTELOCLSDKROOT)lib\x86;$(ProjectDir)/glutdlls37beta;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenCL.lib;glut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
@@ -113,15 +113,15 @@
       <Device>1</Device>
     </Intel_OpenCL_Build_Rules>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(INTELOCLSDKROOT)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(INTELOCLSDKROOT)include;$(ProjecrDir)/glutdlls37beta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>Win32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <PrecompiledHeader />
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(INTELOCLSDKROOT)lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(INTELOCLSDKROOT)lib\x86;$(ProjectDir)/glutdlls37beta;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenCL.lib;glut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
@@ -179,11 +179,24 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Approximation.cpp" />
     <ClCompile Include="GPUOpenCLProjectforWindows.cpp" />
+    <ClCompile Include="Interpolation.cpp" />
+    <ClCompile Include="Linear_equations_solve.cpp" />
+    <ClCompile Include="LoadersAndPrints.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="PolinomeOnMatrixBuilder.cpp" />
+    <ClCompile Include="Polinomial_functions.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Features.h" />
     <ClInclude Include="GPUOpenCLProjectforWindows.h" />
+    <ClInclude Include="InterpolationAndApproximation.h" />
+    <ClInclude Include="LinearEquations.h" />
+    <ClInclude Include="LoaderAndPrinter.h" />
+    <ClInclude Include="Plotter.h" />
+    <ClInclude Include="Polinoms.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>

@@ -15,13 +15,31 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GPUOpenCLProjectforWindows.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Linear_equations_solve.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadersAndPrints.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PolinomeOnMatrixBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Polinomial_functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -30,6 +48,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GPUOpenCLProjectforWindows.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Features.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InterpolationAndApproximation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LinearEquations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoaderAndPrinter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Plotter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Polinoms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
