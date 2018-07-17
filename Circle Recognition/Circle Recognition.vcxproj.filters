@@ -68,6 +68,9 @@
     <ClInclude Include="Polinoms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PolinomeBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Intel_OpenCL_Build_Rules Include="Template.cl">

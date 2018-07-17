@@ -1,6 +1,8 @@
 #include <string>
+#include <iostream>
 #include "InterpolationAndApproximation.h"
 #include "Polinoms.h"
+#include <ctime>
 const int SIZE_SMALL = 17;
 const int SIZE_MEDDIUM = 28;
 const int SIZE_LARGE = 32;
@@ -41,13 +43,13 @@ double* choseSubvector(double* vector, const int& vectorSize, const int& start, 
 }
 
 
-double** create_approx_polinomes(double* xSet, double **matrix, const int& hight, const int& width, const int& polinome_power,  std::string approximationFunc) {
+double** create_approx_polinomes(double* xSet, double **matrix, const int& hight, const int& width, const int& polinome_power) {
+	
 	double** polinomes = new double*[hight];
 	for (int i = 0; i < hight; ++i) {
 		polinomes[i] = new double[polinome_power];
-		polinomes[i] = approximation_coefs(xSet, matrix[i], width, polinome_power, approximationFunc, 0.1);
+		polinomes[i] = approximation_polinome(xSet, matrix[i], width, polinome_power);
 	}
-	
 	delete[]xSet;
 	return polinomes;
 }
@@ -94,51 +96,21 @@ double** ReverseMatrix(double** matr, const int& hight, const int& wigth) {
 }
 
 
-//double* createClass(string filepath, const int& imgNumb, string filenamePattern, const int& matrHight, const int & matrWidth, string appox = "polinome") {
-//	double ** vectors = new double*[imgNumb];
-//	int vectorSize = matrHight * matrWidth;
-//	double* xSet = X_Set(vectorSize);
-//	double** polinoms = new double*[imgNumb];
-//	int i, j;
-//	for (i = 0; i < imgNumb; ++i) {
-//		vectors[i] = loadMatrix_ToVector(filepath + to_string(i) + filenamePattern, matrHight, matrWidth);
-//		polinoms[i] = Aproxx(xSet, vectors[i], vectorSize, appox, POLINOME_POWER + 1);
-//	}
-//
-//	double* function = normalizePolinoms(polinoms, imgNumb, POLINOME_POWER + 1);
-//	for (i = 0; i < imgNumb; ++i) {
-//		delete[]vectors[i];
-//		delete[]polinoms[i];
-//	}
-//	delete[]vectors; delete[]polinoms;
-//	delete[]xSet;
-//
-//	return function;
-//}
 
-//double* createFunction(double** matrix, const int& matrHight, const int & matrWidth, const int& startingPoint = 0, std::string approximationFunc = "polinome") {
-//	int vectorSize = matrHight * matrWidth;
-//	double * vectors = new double[vectorSize];
-//	vectors = loadMatrix_ToVector(filepath, matrHight, matrWidth);
-//	double* xSet = X_Set(vectorSize);
-//	double* polinom = approximation_coefs(xSet, vectors, vectorSize, 3, approximationFunc);
-//	//printVectorScreen(vectors, vectorSize);
-//	delete[]xSet;
-//	delete[]vectors;
-//	return polinom;
-//}
+/*
+* Builds a set of approximation polinomes on a matrix --- one polinome per a row
+* Counts computational time, and prints it, if (printTime == true)
+* Returns a matrix of polinome coeficients
+*/
+double** buidPolinome(double* x, double** Matrix, const int& MatrSize, const int& power, bool printTime) {
+	clock_t begin = clock();
+	double** polinomes = create_approx_polinomes(x, Matrix, MatrSize, MatrSize, power);
+	clock_t end = clock();
+	double time = 0;
+	if (printTime) {
+		time = double(end - begin) / CLOCKS_PER_SEC;
+		std::cout << "\n ELAPCED TIME: " << time << "\n";
+	}
 
-//double* createFunctionFromRow(std::string filepath, const int& matrHight, const int & matrWidth, const int& Row, std::string approximationFunc = "polinome") {
-//	int vectorSize = matrWidth;
-//	double * vectors = loadMatrix_ToVector(filepath, matrHight, matrWidth);
-//	double* subvector = choseSubvector(vectors, matrHight*matrWidth, Row*matrWidth, matrWidth + Row * matrWidth);
-//
-//	delete[]vectors;
-//
-//	double* xSet = X_Set(vectorSize);
-//	double* polinom = approximation_coefs(xSet, subvector, vectorSize, POLINOME_POWER, approximationFunc);
-//	//printVectorScreen(subvector, vectorSize);
-//	delete[]xSet;
-//	delete[]subvector;
-//	return polinom;
-//}
+	return polinomes;
+}

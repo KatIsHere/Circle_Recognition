@@ -8,6 +8,7 @@
 #include "LoaderAndPrinter.h"
 #include "InterpolationAndApproximation.h"
 #include "LinearEquations.h"
+#include "PolinomeBuilder.h"
 #include "Plotter.h"
 #include "Polinoms.h"
 using namespace std;
@@ -20,7 +21,7 @@ const int SIZE_LARGE = 32;
 const int POLINOME_POWER_SMALL = 5;
 const int POLINOME_POWER_LARGE = 6;
 const int POLINOME_POWER_MEDDIUM = 6;
-const int POLINOME_POWER = 6; 
+const int POLINOME_POWER = 6;
 const int DOTS = 100;
 
 void RenderApproximation(void);
@@ -33,7 +34,6 @@ inline void drawPointsSet(double** matr, const int & height, const int& width, c
 inline void drawFunctionSet(double** polinomes, const int& height, const int& N, const double& xFrom, const double& xTo,
 	const int& dots = 100, float colorRed = 0.05f, float colorGreen = 0.05f,
 	float colorBlue = 0.05f, float thikness = 1.45);
-double** buidPolinome(double*x, double** Matrix, const int& MatrSize, const int& power, bool printTime = true, string aproxx = "polinome");
 
 
 int main(int argc, char ** argv) {
@@ -54,12 +54,12 @@ int main(int argc, char ** argv) {
 	glutCreateWindow("Real data graph");
 	glutDisplayFunc(RenderPoints);
 
-	/*glutInit(&argc, argv);
+	glutInit(&argc, argv);
 	glutInitWindowSize(WindowWidth, WindowHeight);
 	glutInitWindowPosition(WindowPosX + 50, WindowPosY + 50);
 	glutCreateWindow("Reversed data graph");
-	glutDisplayFunc(RenderReversed);*/
-	
+	glutDisplayFunc(RenderReversed);
+
 	glutMainLoop();
 
 	return 1;
@@ -67,29 +67,12 @@ int main(int argc, char ** argv) {
 
 
 
+//-------------------------------------------------------------------------------------------------------
+// DRAWING ON A GRAPH
 
-
-double** buidPolinome(double* x, double** Matrix, const int& MatrSize, const int& power, bool printTime, string aproxx) {
-	
-	clock_t begin = clock();
-	double** polinomes = create_approx_polinomes(x, Matrix, MatrSize, MatrSize, power);
-	clock_t end = clock();
-	double time = 0;
-	if (printTime) {
-		//cout << "\n \t\tMATRIX OF POLINOMES: \n";
-		//printMatrixScreen(polinomes, MatrSize, power, aproxx, 1);
-		time = double(end - begin) / CLOCKS_PER_SEC;
-		cout << "\n ELAPCED TIME: " << time << "\n";
-		//RenderString(0.5, 0.5, to_string(time));
-	}
-
-	return polinomes;
-}
-
-
-inline void drawFunctionSet(double** polinomes, const int& height, const int& N, const double& xFrom, const double& xTo, 
-				const int& dots, float colorRed, float colorGreen, float colorBlue, float thikness) {
-	double* x = xCreateSet(0, height, dots); 
+inline void drawFunctionSet(double** polinomes, const int& height, const int& N, const double& xFrom, const double& xTo,
+	const int& dots, float colorRed, float colorGreen, float colorBlue, float thikness) {
+	double* x = xCreateSet(0, height, dots);
 	double** values = PolinomeSetValues(x, polinomes, height, N, dots);
 	double maxF, minF;
 	float redCh, greenCh, blueCh;
@@ -117,7 +100,7 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 	double** extremsValues = new double*[height];
 	// Finding all exteme values
 	for (int i = 0; i < height; ++i) {
-		extrems[i] = findExtrems(polinomes[i], N, xFrom, xTo);	
+		extrems[i] = findExtrems(polinomes[i], N, xFrom, xTo);
 		extremsValues[i] = new double[N - 1];
 		for (int j = 0; j < N - 1; ++j) {
 			extremsValues[i][j] = Polinome_Power(extrems[i][j], polinomes[i], N);
@@ -141,8 +124,8 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 		redCh = float(rand() % 90) / 100 - 0.05;
 		greenCh = float(rand() % 90) / 100 - 0.05;
 		blueCh = float(rand() % 90) / 100 - 0.05;
-		plotFunctionWithOrtho2D(x, values[i], dots, xTo, xFrom, max_Y, min_Y, 
-								colorRed + redCh, colorGreen + greenCh, colorBlue + blueCh, thikness);
+		plotFunctionWithOrtho2D(x, values[i], dots, xTo, xFrom, max_Y, min_Y,
+			colorRed + redCh, colorGreen + greenCh, colorBlue + blueCh, thikness);
 		plotPointsWithOrtho2D(extrems[i], extremsValues[i], dots, xTo, xFrom, max_Y, min_Y, 1.0f, 0.0f, 0.0f, 3);
 	}
 
@@ -160,57 +143,25 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 	}
 	delete[]extrems; delete[]extremsValues;
 	delete[]values;
-	
+
 }
 
 
-//Point* localMinMax(double* xSet, double* fSet, const int& setSize, const int& power) {
-//	Point* extrem = new Point[power - 1];
-//	Point max, min;
-//	max.y = -numeric_limits<double>::infinity(), min.y = numeric_limits<double>::infinity();
-//	bool down = (fSet[1] - fSet[0] < 0);
-//	int i, j;
-//	for (i = 0, j = 0; j < power - 1 && i < setSize; ++i) {
-//		if (down) {
-//			if (fSet[i] < min.y) {
-//				min.y = fSet[i];
-//				min.x = xSet[i];
-//			}
-//			else {
-//				extrem[j] = min;
-//				min.y = numeric_limits<double>::infinity();
-//				j++; down = false;
-//			}
-//		}
-//		else {
-//			if (fSet[i] > max.y) {
-//				max.y = fSet[i];
-//				max.x = xSet[i];
-//			}
-//			else {
-//				extrem[j] = max;
-//				max.y = - numeric_limits<double>::infinity();
-//				j++; down = true;
-//			}
-//		}
-//	}
-//	return extrem;
-//}
+
+Point centerDetection(double** coefs, const int& height, const int& power, const double& a, const double&b) {
+	int i, j;
+	double** extrems = new double*[height];
+	for (i = 0; i < height; ++i) {
+		extrems[i] = findExtrems(coefs[i], power, a, b);
+	}
+	Point t;
+	return t;
+}
 
 
-//Point centerDetection(double** coefs, const int& height, const int& power, const double& a, const double&b) {
-//	int i, j;
-//	double** extrems = new double*[height];
-//	for (i = 0; i < height; ++i) {
-//		extrems[i] = findExtrems(coefs[i], power, a, b);
-//	}
-//	return t;
-//}
-
-
-inline void drawPointsSet(double** matr, const int & height, const int& width, const double& xFrom, 
-			const double& xTo,
-			float colorRed, float colorGreen, float colorBlue, float thikness) {
+inline void drawPointsSet(double** matr, const int & height, const int& width, const double& xFrom,
+	const double& xTo,
+	float colorRed, float colorGreen, float colorBlue, float thikness) {
 	// MAX and MIN values of the set
 	double* x = xCreateSet(xFrom, xTo, width);
 	double maxF, minF;
@@ -233,8 +184,12 @@ inline void drawPointsSet(double** matr, const int & height, const int& width, c
 		plotFunctionWithOrtho2D(x, matr[i], width, xTo, xFrom, max_Y, min_Y, redCh, greenCh, blueCh, 1.2);
 	}
 	Draw_XY_Axis(min_X, max_X, min_Y, max_Y, 0, 0);
+	delete[]x;
 }
 
+
+//-------------------------------------------------------------------------------------------------------
+// SCENE RENDERING
 
 void RenderApproximation(void) {
 	string filepath_LARGE = "idle_test_data_set\\idle_4\\2_x=52_y=125_sz=32.txt";
@@ -251,8 +206,6 @@ void RenderApproximation(void) {
 	// Reset transformations
 	glLoadIdentity();
 
-	//glOrtho(0, 1, -1, 1, 0.0, 0.0);
-	//drawPointsSet(MatrixLARGE, SIZE_LARGE, SIZE_LARGE, 0, SIZE_LARGE);
 	drawFunctionSet(polinomes_LARGE, SIZE_LARGE, POLINOME_POWER_LARGE, 0, SIZE_LARGE);
 	glutSwapBuffers();
 
@@ -269,17 +222,19 @@ void RenderApproximation(void) {
 	for (int i = 0; i < SIZE_SMALL; ++i)
 		delete[]MatrixSMALL[i];
 	delete[]MatrixSMALL;
+	//delete[]x_LARGE;
+	//delete[]x_SMALL;
 }
 
 
 void RenderReversed(void) {
-	string filepath_LARGE = "idle_test_data_set\\idle_4\\2_x=52_y=125_sz=32.txt";	
+	string filepath_LARGE = "idle_test_data_set\\idle_4\\2_x=52_y=125_sz=32.txt";
 	double** Matrix = loadMatrix(filepath_LARGE, SIZE_LARGE, SIZE_LARGE);
 	double** MatrixLARGE = ReverseMatrix(Matrix, SIZE_LARGE, SIZE_LARGE);
 	double* x_LARGE = xCreateSet(0, SIZE_LARGE, SIZE_LARGE);
 	double** polinomes_LARGE = buidPolinome(x_LARGE, MatrixLARGE, SIZE_LARGE, POLINOME_POWER_LARGE, 0);
 	glClearColor(0.98f, 0.98f, 0.98f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// Reset transformations
 	glLoadIdentity();
 	//glOrtho(0, 1, -1, 1, 0.0, 0.0);
@@ -297,6 +252,7 @@ void RenderReversed(void) {
 	for (int i = 0; i < SIZE_LARGE; ++i)
 		delete[]Matrix[i];
 	delete[]Matrix;
+	//delete[]x_LARGE;
 }
 
 
@@ -305,7 +261,7 @@ void RenderPoints(void) {
 	//string filepath_SMALL = "idle_test_data_set\\idle_1\\10_x=45_y=22_sz=17.txt";
 
 	double** MatrixLARGE = loadMatrix(filepath_LARGE, SIZE_LARGE, SIZE_LARGE);
-	
+
 	glClearColor(0.98f, 0.98f, 0.98f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glOrtho(0, 1, -1, 1, 0.0, 0.0);

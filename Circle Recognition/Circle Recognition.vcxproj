@@ -91,6 +91,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Intel_OpenCL_Build_Rules>
       <Device>1</Device>
+      <ASM>1</ASM>
+      <IR>1</IR>
     </Intel_OpenCL_Build_Rules>
     <ClCompile>
       <AdditionalIncludeDirectories>$(INTELOCLSDKROOT)include;$(ProjecrDir)/glutdlls37beta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -111,6 +113,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Intel_OpenCL_Build_Rules>
       <Device>1</Device>
+      <ASM>1</ASM>
+      <IR>1</IR>
     </Intel_OpenCL_Build_Rules>
     <ClCompile>
       <AdditionalIncludeDirectories>$(INTELOCLSDKROOT)include;$(ProjecrDir)/glutdlls37beta;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -196,6 +200,7 @@
     <ClInclude Include="LinearEquations.h" />
     <ClInclude Include="LoaderAndPrinter.h" />
     <ClInclude Include="Plotter.h" />
+    <ClInclude Include="PolinomeBuilder.h" />
     <ClInclude Include="Polinoms.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>

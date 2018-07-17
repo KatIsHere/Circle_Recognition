@@ -86,7 +86,7 @@ private:
 	Point Center() {
 		Point P;
 		P.x = extrems[0].x + (extrems[N - 1].x - extrems[0].x);
-		float sum = 0;
+		double sum = 0;
 		for (int i = 0; i < N; ++i) {
 			sum += extrems[i].y;
 		}

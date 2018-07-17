@@ -8,6 +8,9 @@ double Polinome_Power(double x, double* coefSet, const int& power);
 double scalarMult(double &f1(double &), double &f2(double&), double * xSet, const int& setSize);	// scalar multiplication
 double Cubic_Solve(double a, double b, double c, double d);											// solve cubic equation
 
+// polinome derevative
+double* polinome_derivative(double* coefs, const int& N);
+
 // Chebishow polinoms for discrete case
 double Polinome_Chebishow(double x, const int& SetSize, const int& power);
 double function_from_coefs(double x, double* coefs, const int& N_power, std::string func = "polinome");

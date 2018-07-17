@@ -1,9 +1,11 @@
 #include <cmath>
 #include <string>
 #include <unordered_set>
-//	TODO: make this a big function wich receives a 
-//	set of functions and creates a new lambda function
 
+// -------------------------------------------------------------------------------------------------------------
+// SOME POLINOME FUNCTIONS
+
+// Faster polinome functions 
 double Polinome_4(double x, double c0, double c1, double c2, double c3, double c4) {
 	return c0 + c1 * x + c2 * x*x + c3 * x*x*x + c4 * x*x*x*x;
 }
@@ -16,32 +18,7 @@ double Polinome_2(double x, double c0, double c1, double c2) {
 	return c0 + c1 * x + c2 * x*x;
 }
 
-double scalarMult(double &f1(double &), double &f2(double&), double * xSet, const int& setSize) {
-	double suma = 0.;
-	int i;
-	for (i = 0; i < setSize; ++i) {
-		suma += f1(xSet[i])*f2(xSet[i]);
-	}
-	return suma;
-}
-
-double Kardano_Solve(double p, double q) {
-	double Q = (p*p*p) / 27 + (q*q) / 4;
-	if (Q < 0)
-		throw "Complex solutions";
-	double sqrtQ = sqrt(Q);
-	double alfa = cbrt(-q / 2 + sqrtQ);
-	double beta = cbrt(-q / 2 - sqrtQ);
-	return alfa + beta;
-}
-
-double Cubic_Solve(double a, double b, double c, double d) {
-	double p = (3 * a*c - b * b) / (3 * a*a);
-	double q = (2 * b*b*b - 9 * a*b*c + 27 * a*a*d) / (27 * a*a*a);
-	double y = Kardano_Solve(p, q) - b / (3 * a);
-	return y;
-}
-
+// Chebishow polinomes 
 double discrete_Chebishow_1(double x, const int& setSize) {
 	return 1 - 2 * x / setSize;
 }
@@ -56,7 +33,7 @@ double discrete_Chebishow_3(double x, const int& setSize) {
 }
 
 double discrete_Chebishow_4(double x, const int& setSize) {
-	return 7 / (2*(setSize - 3)) * ((setSize / 2 - x)*discrete_Chebishow_3(x, setSize) - 3 * (setSize + 4) / 14 * (1 - 6 * x / setSize - 6 * x*x / (setSize*(setSize - 1))));
+	return 7 / (2 * (setSize - 3)) * ((setSize / 2 - x)*discrete_Chebishow_3(x, setSize) - 3 * (setSize + 4) / 14 * (1 - 6 * x / setSize - 6 * x*x / (setSize*(setSize - 1))));
 }
 
 double discrete_Chebishow_5(double x, const int& setSize) {
@@ -89,8 +66,8 @@ double Polinome_Chebishow(double x, const int& SetSize, const int& power) {
 		break;
 	}
 }
-// TODO: write this functions in their ordinary view
 
+// Returns polinome of a given power
 double Polinome_Power(double x, double* coefSet, const int& power) {
 	double suma = 0.;
 	for (int i = 0; i < power; ++i) {
@@ -102,8 +79,7 @@ double Polinome_Power(double x, double* coefSet, const int& power) {
 double function_from_coefs(double x, double* coefs, const int& N_power, std::string func = "polinome") {
 	double sum = 0.;
 	if (func == "polinome") {
-		for (int i = 0; i < N_power; ++i)
-			sum += coefs[i] * pow(x, i);
+		return Polinome_Power(x, coefs, N_power);
 	}
 	else if (func == "exp") {
 		for (int i = 0; i < N_power; ++i)
@@ -113,7 +89,62 @@ double function_from_coefs(double x, double* coefs, const int& N_power, std::str
 }
 
 
-double HalleyMethodPolinome(double* coefs, const int& N, const double&start, const double& Eps = 0.000001) {
+
+// -------------------------------------------------------------------------------------------------------------
+// SCALAR FUNCTION MULTIPLICATION
+double scalarMult(double &f1(double &), double &f2(double&), double * xSet, const int& setSize) {
+	double suma = 0.;
+	int i;
+	for (i = 0; i < setSize; ++i) {
+		suma += f1(xSet[i])*f2(xSet[i]);
+	}
+	return suma;
+}
+
+
+// -------------------------------------------------------------------------------------------------------------
+// POLINOME DERIVATIVE
+double* polinome_derivative(double* coefs, const int& N) {
+	/*
+	* Input: coeficients for a polinome power N
+	* Return: coeficients for an input polinome derivative, power is N - 1
+	*/
+	double* derCoefs = new double[N - 1];
+	for (int i = 0; i < N - 1; ++i)
+		derCoefs[i] = (i + 1)*coefs[i + 1];
+	return derCoefs;
+}
+
+// -------------------------------------------------------------------------------------------------------------
+// ROOT FINDING ALGORYTHMS
+
+// Finding an exact root in cubic polinomial equation 
+double Kardano_Solve(double p, double q) {
+	double Q = (p*p*p) / 27 + (q*q) / 4;
+	if (Q < 0)
+		throw "Complex solutions";
+	double sqrtQ = sqrt(Q);
+	double alfa = cbrt(-q / 2 + sqrtQ);
+	double beta = cbrt(-q / 2 - sqrtQ);
+	return alfa + beta;
+}
+
+double Cubic_Solve(double a, double b, double c, double d) {
+	/*
+	* Finds all real solutions for a cubic polinome equation
+	*/
+	double p = (3 * a*c - b * b) / (3 * a*a);
+	double q = (2 * b*b*b - 9 * a*b*c + 27 * a*a*d) / (27 * a*a*a);
+	double y = Kardano_Solve(p, q) - b / (3 * a);
+	return y;
+}
+
+
+double HalleyMethodPolinome(double* coefs, const int& N, const double&start, const double& Eps = 0.00001) {
+	/*
+	* A root-finding algorithm used for functions of one real variable 
+	* with a continuous second derivative
+	*/
 	double* FirstDerivative = new double[N - 1];
 	double* SecondDerivative = new double[N - 2];
 	for (int i = 0; i < N - 1; ++i) {
@@ -124,7 +155,7 @@ double HalleyMethodPolinome(double* coefs, const int& N, const double&start, con
 	}
 	double x0 = start, res, polinome = Polinome_Power(x0, coefs, N), firstDer = Polinome_Power(x0, FirstDerivative, N - 1);
 	bool stop = false;
-	while ((abs(polinome) >= Eps)){
+	while ((abs(polinome) >= Eps)) {
 		stop = abs(polinome) >= Eps;
 		res = polinome / firstDer;
 		x0 = x0 - res / (1 - res * Polinome_Power(x0, SecondDerivative, N - 2) / (2 * firstDer));
@@ -137,7 +168,10 @@ double HalleyMethodPolinome(double* coefs, const int& N, const double&start, con
 }
 
 
-double NewtonMethod(double* coefs, const int& N, const double&start, const double& Eps = 0.0001) {
+double NewtonMethod(double* coefs, const int& N, const double& start, const double& Eps = 0.00001) {
+	/*
+	* A method for finding approximations to the roots of a real-valued function
+	*/
 	double* FirstDerivative = new double[N - 1];
 	for (int i = 0; i < N - 1; ++i) {
 		FirstDerivative[i] = coefs[i + 1] * (i + 1);
@@ -145,32 +179,56 @@ double NewtonMethod(double* coefs, const int& N, const double&start, const doubl
 	double x0 = start, res, polinome = Polinome_Power(x0, coefs, N), firstDer = Polinome_Power(x0, FirstDerivative, N - 1);
 	while (abs(polinome) >= Eps) {
 		res = polinome / firstDer;
-		x0 = x0 - res ;
+		x0 = x0 - res;
 		polinome = Polinome_Power(x0, coefs, N);
 		firstDer = Polinome_Power(x0, FirstDerivative, N - 1);
 	}
-	delete[]FirstDerivative; 
+	delete[]FirstDerivative;
 	return x0;
 }
 
+//TODO
+//double LaguerreMethod(double* coefs, const int& N, const double& start, const double& Eps = 1e-10) {
+//	/* 
+//	* Laguerre’s method is exclusively for polynomial zerofinding;
+//	* It belongs to a class of methods for more general that includes 
+//	* other methods such as Newton’s and Ostrowski’s
+//	*/
+//	double* FirstDerivative = polinome_derivative(coefs, N);
+//	double* SecondDerivative = polinome_derivative(FirstDerivative, N - 1);
+//
+//	double x0 = start, res; 
+//	double polinome = Polinome_Power(x0, coefs, N), firstDer = Polinome_Power(x0, FirstDerivative, N - 1);
+//	double Beta;
+//	while ((abs(polinome) >= Eps)) {
+//		res = polinome / firstDer;
+//		x0 = x0 - res / (1 - res * Polinome_Power(x0, SecondDerivative, N - 2) / (2 * firstDer));
+//		polinome = Polinome_Power(x0, coefs, N);
+//		firstDer = Polinome_Power(x0, FirstDerivative, N - 1);
+//	}
+//
+//	delete[]FirstDerivative; delete[]SecondDerivative;
+//	return x0;
+//}
 
+
+// finding all roots in a polinome
 std::unordered_set<double> SolvePolinome(double* coefs, const int& N, const double& a, const double& b) {
 	std::unordered_set<double> roots;
-	double start = a + (b - a) / (N + 1), res;
+	double start = a + (b - a) / (N + 3), res;
 	int i = 0;
-	while(i < N) {
+	while (i < N) {
 		res = NewtonMethod(coefs, N, start);
-		auto search = roots.find(res);
-		if (search == roots.end()) {
-			roots.insert(res);
-			i++;
-		}
-		start = (start + (b - a) / (N + 1));
+		i = i + (roots.find(res) == roots.end());
+		roots.insert(res);
+		start = start + (b - a) / (N + 3);
 	}
 	return roots;
 }
 
 
+// -------------------------------------------------------------------------------------------------------------
+// FIND EXTREME VALUES IN A POLINOMES
 double* findExtrems(double* coefs, const int& N, const double& a, const double& b) {
 	double* newCoefs = new double[N - 1];
 	double* solv = new double[N - 1];
@@ -178,16 +236,8 @@ double* findExtrems(double* coefs, const int& N, const double& a, const double& 
 		newCoefs[i] = (i + 1)*coefs[i + 1];
 	std::unordered_set<double> roots = SolvePolinome(newCoefs, N - 1, a, b);
 	int j = 0;
-	for (auto i = roots.begin(); i != roots.end(); ++i, ++j) {
+	for (auto i = roots.begin(); i != roots.end(); ++i, ++j)
 		solv[j] = *(i);
-	}
+	delete[]newCoefs;
 	return solv;
 }
-
-// AN ARRAY OF FUNCTION POINTERS
-//typedef double(*DoubleFunctionWithOneParameter) (double a);
-//
-//DoubleFunctionWithOneParameter Chebishow(const int& N, const int& m) {
-//	DoubleFunctionWithOneParameter* functions = new DoubleFunctionWithOneParameter[m];
-//
-//}

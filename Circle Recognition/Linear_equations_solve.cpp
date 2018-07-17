@@ -120,15 +120,15 @@ double* BaireissSolve(double** A, double* b, const int & N) {
 	double** A_copy = new double*[N];
 	int i, j, k, t;
 	for (i = 0; i < N; ++i) {
-		A_copy[i] = new double[N+1];
+		A_copy[i] = new double[N + 1];
 		for (j = 0; j < N; ++j) {
 			A_copy[i][j] = A[i][j];
 		}
 		A_copy[i][N] = b[i];
 	}
-	
+
 	double p0 = 1, p1 = A_copy[0][0];
-	
+
 	for (j = 0; j < N + 1; ++j) {
 		for (i = 0; i < N; ++i) {
 			if (i != j) {
@@ -148,8 +148,8 @@ double* BaireissSolve(double** A, double* b, const int & N) {
 }
 
 double* GaussMethod(double** A, double*b, const int& n) {
-	/* Finds a solution to the system of linear equations 
-										using Gauss method*/
+	/* Finds a solution to the system of linear equations
+	using Gauss method*/
 	double *x, max;
 	int k, index;
 	const double eps = 0.001;  // precision
@@ -214,8 +214,8 @@ double* TridiagonalSolve(const double *a, const double *b, double *c, double *d,
 	// c[n-1] == 0
 	double* x = new double[n];
 	/* Modify the coefficients. */
-	c[0] /= b[0];	
-	d[0] /= b[0];	
+	c[0] /= b[0];
+	d[0] /= b[0];
 	double id;	int i;
 	for (i = 1; i < n; i++) {
 		id = 1 / (b[i] - c[i - 1] * a[i]);  /* Division by zero risk. */

@@ -1,5 +1,4 @@
 #pragma once
-//#include "glut.h"
 #include "Plotter.h"
 #include<iostream>
 #include <cstring>
@@ -8,16 +7,16 @@
 template<typename T>
 float normalizeNumber(T value, T a, T b, float move = 0.1) {
 	double midl = double(b - a) / 2;
-	double res = double(value - a - midl) / (midl + midl*move);
+	double res = double(value - a - midl) / (midl + midl * move);
 	return res;
 }
 
 
 template<typename T>
-void plotFunctionWithOrtho2D(T* xSet, T* Fset, const int& setSize, 
-				T maxX, T minX, T maxY, T minY,
-				float colorRed = 0.5, float colorGreen = 0.5, float colorBlue = 0.5,
-				float thikness = 1.2) {
+void plotFunctionWithOrtho2D(T* xSet, T* Fset, const int& setSize,
+	T maxX, T minX, T maxY, T minY,
+	float colorRed = 0.5, float colorGreen = 0.5, float colorBlue = 0.5,
+	float thikness = 1.2) {
 	float x, f;
 	glLineWidth(thikness);
 	glBegin(GL_LINE_STRIP);
@@ -32,10 +31,10 @@ void plotFunctionWithOrtho2D(T* xSet, T* Fset, const int& setSize,
 
 
 template<typename T>
-void plotPointsWithOrtho2D(T* xSet, T* Fset, const int& setSize, 
-				T maxX, T minX, T maxY, T minY,
-				float colorRed = 1.0, float colorGreen = 0.5, float colorBlue = 0.0,
-				float thikness = 2) {
+void plotPointsWithOrtho2D(T* xSet, T* Fset, const int& setSize,
+	T maxX, T minX, T maxY, T minY,
+	float colorRed = 1.0, float colorGreen = 0.5, float colorBlue = 0.0,
+	float thikness = 2) {
 	float x, f;
 	glPointSize(thikness);
 	glBegin(GL_POINTS);
@@ -50,10 +49,10 @@ void plotPointsWithOrtho2D(T* xSet, T* Fset, const int& setSize,
 
 
 template<typename T>
-inline void plotFunctionWithOrtho3D(T* xSet, T* ySet, T*zSet, const int& setSize, 
-				T maxX, T minX, T maxY, T minY, T maxZ, T minZ,
-				float colorRed = 0.5, float colorGreen = 0.5, float colorBlue = 0.5,
-				float thikness = 1) {
+inline void plotFunctionWithOrtho3D(T* xSet, T* ySet, T*zSet, const int& setSize,
+	T maxX, T minX, T maxY, T minY, T maxZ, T minZ,
+	float colorRed = 0.5, float colorGreen = 0.5, float colorBlue = 0.5,
+	float thikness = 1) {
 	glLineWidth(thikness);
 	glBegin(GL_LINE_STRIP);
 	for (int i = 0; i < setSize; ++i) {
@@ -80,55 +79,52 @@ inline void RenderString(float x, float y, std::string str) {
 }
 
 
-void Draw_XY_Axis(double xFrom, double xTo, double yFrom, double yTo, 
-				double xZero, double yZero, const int& divisions = 15) {
+void Draw_XY_Axis(double xFrom, double xTo, double yFrom, double yTo,
+	double xZero, double yZero, const int& divisions = 15) {
 	float minXaxis = normalizeNumber(xFrom, xFrom, xTo);
 	float minYaxis = normalizeNumber(yFrom, yFrom, yTo);
 	float maxXaxis = normalizeNumber(xTo, xFrom, xTo);
 	float maxYaxis = normalizeNumber(yTo, yFrom, yTo);
 	xZero = (float)normalizeNumber(xZero, xFrom, xTo);
 	yZero = (float)normalizeNumber(yZero, yFrom, yTo);
-	
-	//RenderString(xZero, yZero, "0", 1);
 
-	float x, f;
 	// X AXIS
 	glLineWidth(1);
 	glBegin(GL_LINES);
-		glColor3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(minXaxis - 0.05, yZero, 0.0f);
-		glVertex3f(maxXaxis + 0.05, yZero, 0.0f);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(minXaxis - 0.05, yZero, 0.0f);
+	glVertex3f(maxXaxis + 0.05, yZero, 0.0f);
 	glEnd();
 	// Y AXIS
 	glBegin(GL_LINES);
-		glColor3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(xZero, minYaxis - 0.05, 0.0f);
-		glVertex3f(xZero, maxYaxis + 0.05, 0.0f);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(xZero, minYaxis - 0.05, 0.0f);
+	glVertex3f(xZero, maxYaxis + 0.05, 0.0f);
 	glEnd();
 
 
 	// X AXIS ARROWS
 	glBegin(GL_LINES);
-		glColor3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(maxXaxis + 0.03, yZero + 0.025, 0.0f);
-		glVertex3f(maxXaxis + 0.05, yZero, 0.0f);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(maxXaxis + 0.03, yZero + 0.025, 0.0f);
+	glVertex3f(maxXaxis + 0.05, yZero, 0.0f);
 	glEnd();
 	glBegin(GL_LINES);
-		glColor3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(maxXaxis + 0.03, yZero - 0.025, 0.0f);
-		glVertex3f(maxXaxis + 0.05, yZero, 0.0f);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(maxXaxis + 0.03, yZero - 0.025, 0.0f);
+	glVertex3f(maxXaxis + 0.05, yZero, 0.0f);
 	glEnd();
 
 	// X AXIS ARROWS
 	glBegin(GL_LINES);
 	glColor3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(xZero + 0.015, maxYaxis + 0.025, 0.0f);
-		glVertex3f(xZero, maxYaxis + 0.05, 0.0f);
+	glVertex3f(xZero + 0.015, maxYaxis + 0.025, 0.0f);
+	glVertex3f(xZero, maxYaxis + 0.05, 0.0f);
 	glEnd();
 	glBegin(GL_LINES);
 	glColor3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(xZero - 0.015, maxYaxis + 0.025, 0.0f);
-		glVertex3f(xZero, maxYaxis + 0.05, 0.0f);
+	glVertex3f(xZero - 0.015, maxYaxis + 0.025, 0.0f);
+	glVertex3f(xZero, maxYaxis + 0.05, 0.0f);
 	glEnd();
 
 	// RENDERING VALUES ON AXISES
@@ -152,7 +148,7 @@ void Draw_XY_Axis(double xFrom, double xTo, double yFrom, double yTo,
 		glColor3f(0.0f, 0.0f, 0.0f);
 		glVertex3f(posX, yZero + 0.005, 0.0f);
 		glVertex3f(posX, yZero - 0.005, 0.0f);
-		glEnd(); 
+		glEnd();
 		glBegin(GL_LINES);
 		glColor3f(0.0f, 0.0f, 0.0f);
 		glVertex3f(xZero + 0.005, posY, 0.0f);
