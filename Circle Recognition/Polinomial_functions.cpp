@@ -28,16 +28,18 @@ double discrete_Chebishow_2(double x, const int& setSize) {
 }
 
 double discrete_Chebishow_3(double x, const int& setSize) {
-	//return 10 / (3 * (setSize - 2)) * ((setSize / 2 - x)*discrete_Chebishow_2(x, setSize) - (setSize + 3) / 5 * discrete_Chebishow_1(x, setSize));
-	return 10 / (3 * (setSize - 2)) * ((setSize / 2 - x)*(1 - 6 * x / setSize - 6 * x*x / (setSize*(setSize - 1))) - (setSize + 3) / 5 * (1 - 2 * x / setSize));
+	return 10 / (3 * (setSize - 2)) * ((setSize / 2 - x)*(1 - 6 * x / setSize - 
+				6 * x*x / (setSize*(setSize - 1))) - (setSize + 3) / 5 * (1 - 2 * x / setSize));
 }
 
 double discrete_Chebishow_4(double x, const int& setSize) {
-	return 7 / (2 * (setSize - 3)) * ((setSize / 2 - x)*discrete_Chebishow_3(x, setSize) - 3 * (setSize + 4) / 14 * (1 - 6 * x / setSize - 6 * x*x / (setSize*(setSize - 1))));
+	return 7 / (2 * (setSize - 3)) * ((setSize / 2 - x)*discrete_Chebishow_3(x, setSize) - 
+			3 * (setSize + 4) / 14 * (1 - 6 * x / setSize - 6 * x*x / (setSize*(setSize - 1))));
 }
 
 double discrete_Chebishow_5(double x, const int& setSize) {
-	return 18 / (5 * (setSize - 4))*((setSize / 2 - x)* discrete_Chebishow_4(x, setSize) - 2 * (setSize + 5) / 9 * discrete_Chebishow_3(x, setSize));
+	return 18 / (5 * (setSize - 4))*((setSize / 2 - x)* discrete_Chebishow_4(x, setSize) - 
+										2 * (setSize + 5) / 9 * discrete_Chebishow_3(x, setSize));
 }
 
 double Polinome_Chebishow(double x, const int& SetSize, const int& power) {
@@ -71,7 +73,7 @@ double Polinome_Chebishow(double x, const int& SetSize, const int& power) {
 double Polinome_Power(double x, double* coefSet, const int& power) {
 	double suma = 0.;
 	for (int i = 0; i < power; ++i) {
-		suma += coefSet[i] * pow(x, i);
+		suma += coefSet[i] * pow(x, i);						// 1 KERNEL
 	}
 	return suma;
 }
@@ -111,7 +113,7 @@ double* polinome_derivative(double* coefs, const int& N) {
 	*/
 	double* derCoefs = new double[N - 1];
 	for (int i = 0; i < N - 1; ++i)
-		derCoefs[i] = (i + 1)*coefs[i + 1];
+		derCoefs[i] = (i + 1)*coefs[i + 1];						// 2 KERNEL
 	return derCoefs;
 }
 
@@ -145,14 +147,9 @@ double HalleyMethodPolinome(double* coefs, const int& N, const double&start, con
 	* A root-finding algorithm used for functions of one real variable 
 	* with a continuous second derivative
 	*/
-	double* FirstDerivative = new double[N - 1];
-	double* SecondDerivative = new double[N - 2];
-	for (int i = 0; i < N - 1; ++i) {
-		FirstDerivative[i] = coefs[i + 1] * (i + 1);
-	}
-	for (int i = 0; i < N - 2; ++i) {
-		SecondDerivative[i] = FirstDerivative[i + 2] * (i + 1);
-	}
+	double* FirstDerivative = polinome_derivative(coefs, N);
+	double* SecondDerivative = polinome_derivative(FirstDerivative, N - 1);
+
 	double x0 = start, res, polinome = Polinome_Power(x0, coefs, N), firstDer = Polinome_Power(x0, FirstDerivative, N - 1);
 	bool stop = false;
 	while ((abs(polinome) >= Eps)) {
@@ -172,12 +169,9 @@ double NewtonMethod(double* coefs, const int& N, const double& start, const doub
 	/*
 	* A method for finding approximations to the roots of a real-valued function
 	*/
-	double* FirstDerivative = new double[N - 1];
-	for (int i = 0; i < N - 1; ++i) {
-		FirstDerivative[i] = coefs[i + 1] * (i + 1);
-	}
+	double* FirstDerivative = polinome_derivative(coefs, N);
 	double x0 = start, res, polinome = Polinome_Power(x0, coefs, N), firstDer = Polinome_Power(x0, FirstDerivative, N - 1);
-	while (abs(polinome) >= Eps) {
+	while (abs(polinome) >= Eps) {								// 3 KERNEL
 		res = polinome / firstDer;
 		x0 = x0 - res;
 		polinome = Polinome_Power(x0, coefs, N);
@@ -186,6 +180,7 @@ double NewtonMethod(double* coefs, const int& N, const double& start, const doub
 	delete[]FirstDerivative;
 	return x0;
 }
+
 
 //TODO
 //double LaguerreMethod(double* coefs, const int& N, const double& start, const double& Eps = 1e-10) {
@@ -212,16 +207,17 @@ double NewtonMethod(double* coefs, const int& N, const double& start, const doub
 //}
 
 
-// finding all roots in a polinome
+// FINDING ALL ROOTS IN A POLINOME
 std::unordered_set<double> SolvePolinome(double* coefs, const int& N, const double& a, const double& b) {
 	std::unordered_set<double> roots;
-	double start = a + (b - a) / (N + 3), res;
+	double h = (b - a) / (N - 1);
+	double res, start = a;//+ (b - a) / (N - 1);
 	int i = 0;
 	while (i < N) {
 		res = NewtonMethod(coefs, N, start);
-		i = i + (roots.find(res) == roots.end());
+		i = i + (roots.find(res) == roots.end());				// 4 KERNEL
 		roots.insert(res);
-		start = start + (b - a) / (N + 3);
+		start = start + h;										// 5 KERNEL
 	}
 	return roots;
 }
@@ -230,10 +226,9 @@ std::unordered_set<double> SolvePolinome(double* coefs, const int& N, const doub
 // -------------------------------------------------------------------------------------------------------------
 // FIND EXTREME VALUES IN A POLINOMES
 double* findExtrems(double* coefs, const int& N, const double& a, const double& b) {
-	double* newCoefs = new double[N - 1];
+	double* newCoefs = polinome_derivative(coefs, N);
 	double* solv = new double[N - 1];
-	for (int i = 0; i < N - 1; ++i)
-		newCoefs[i] = (i + 1)*coefs[i + 1];
+
 	std::unordered_set<double> roots = SolvePolinome(newCoefs, N - 1, a, b);
 	int j = 0;
 	for (auto i = roots.begin(); i != roots.end(); ++i, ++j)

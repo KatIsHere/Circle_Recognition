@@ -6,12 +6,24 @@ Doesn't allways work great, especially for strongly oscillating functions.
 RETURNS: a set of coefficients for a given set of functions
 */
 
+#define __CL_ENABLE_EXCEPTIONS
+#include <CL/cl.hpp>			// OpenCl optimization
 #include "Polinoms.h"
 #include <cmath>
 #include <string>
 #include "LinearEquations.h"
 #include<iostream>
 #define NORM_DIFFERENCE_MAX 1
+
+
+// CONTEXT FOR A DEVICE
+cl::Context context(CL_DEVICE_TYPE_DEFAULT);
+
+// COMMAND QUEUE FOR THE FIRST DEVICE IN THE CONTEXT
+cl::CommandQueue queue(context);
+
+std::string KernelSource = "";
+cl::Program program(context, KernelSource, true);
 
 
 double* approximation_coefs(double* xSet, double* fSet, const int& setSize, const int& polinomialPower = 5, std::string functions = "polinome", double SystemTolerance = 0.1) {
@@ -22,7 +34,7 @@ double* approximation_coefs(double* xSet, double* fSet, const int& setSize, cons
 	*/
 	double** A = new double*[polinomialPower];
 	double* B = new double[polinomialPower];
-	int i, j, k, temp, sighn;
+	int i, j, k;
 	double normalizing = double(1) / (setSize + 1);	// 1/(b-a)
 	double sumaA, sumaB, res;
 	for (i = 0; i < polinomialPower; ++i) {
@@ -68,7 +80,10 @@ double* approximation_coefs(double* xSet, double* fSet, const int& setSize, cons
 	return C;
 }
 
-
+// POSSIBLE KERNELS:
+// POW AND SUM AND ASSIGHN
+// ADD AND ASSIGHN
+// MULTIPLY AND ASSIGHN
 double* approximation_polinome(double* xSet, double* fSet, const int& setSize, const int& polinomialPower = 5, double SystemTolerance = 0.1) {
 	/*
 	* Approximation of a table function with a polinome of power n, using mean square ethod forapproximation
@@ -79,22 +94,28 @@ double* approximation_polinome(double* xSet, double* fSet, const int& setSize, c
 	double* B = new double[polinomialPower];
 	int i, j, k;
 	double normalizing = double(1) / (setSize + 1);	// 1/(b-a)
-	double sumaA, sumaB, res;
+	double sumaA, sumaB;
+	int size = setSize * sizeof(double);
+	// Creating openCl buffers
+	cl::Buffer d_b(context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_PTR, size, B);
+
+
 	for (i = 0; i < polinomialPower; ++i) {
-		A[i] = new double[polinomialPower];
+		A[i] = new double[polinomialPower]; 
+		cl::Buffer d_a(context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_PTR, size, A[i]);
+
 		for (j = 0; j < polinomialPower; ++j) {
 			sumaA = 0.;
 			for (k = 0; k < setSize; ++k) {
-				sumaA += pow(xSet[k], i + j);
-			}
-			res = normalizing * sumaA;
-			A[i][j] = res;
+				sumaA += pow(xSet[k], i + j);					// 1 KERNEL
+			}					
+			A[i][j] = normalizing * sumaA;						// 2 KERNEL
 		}
 		sumaB = 0.;
 		for (j = 0; j < setSize; ++j) {
-			sumaB += pow(xSet[j], i)*fSet[j];
-		}
-		B[i] = sumaB * normalizing;
+			sumaB += pow(xSet[j], i)*fSet[j];					// 1 KERNEL
+		}				
+		B[i] = sumaB * normalizing;								// 2 KERNEL
 	}
 
 	double* C = new double[polinomialPower];
@@ -121,7 +142,7 @@ double factorial(const int& N) {
 
 double* approximation_Chebishov(double* xSet, double* fSet, const int& setSize, const int& polinomialPower = 4) {
 	double* P = new double[polinomialPower];
-	int i, j, k;
+	int i, j;
 	double suma;
 	for (i = 0; i < polinomialPower; ++i) {
 		suma = 0;
@@ -185,7 +206,7 @@ int approximation_optimal_N(double* xSet, double* FSet, const int& setSize, std:
 	*/
 	double suma = 0;
 	int N = 0;
-	int i, k;
+	int k;
 	double prev = 0;
 	bool first = true, last = false;
 	for (k = 0; k < setSize; ++k) {

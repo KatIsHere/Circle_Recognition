@@ -79,7 +79,7 @@ inline void RenderString(float x, float y, std::string str) {
 }
 
 
-void Draw_XY_Axis(double xFrom, double xTo, double yFrom, double yTo,
+void Plot_XY_Axis(double xFrom, double xTo, double yFrom, double yTo,
 	double xZero, double yZero, const int& divisions = 15) {
 	float minXaxis = normalizeNumber(xFrom, xFrom, xTo);
 	float minYaxis = normalizeNumber(yFrom, yFrom, yTo);

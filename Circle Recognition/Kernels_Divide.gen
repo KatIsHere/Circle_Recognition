@@ -1,0 +1,20 @@
+LABEL0
+(W)      and      (1|M0)         r1.6<1>:ud    r0.5<0;1,0>:ud    0x1FF:ud        
+(W)      mov      (8|M0)         r127.0<1>:ud  r0.0<8;8,1>:ud                   {Compacted}
+(W)      mul      (1|M0)         r4.0<1>:ud    r0.1<0;1,0>:ud    r1.3<0;1,0>:ud  
+(W)      mul      (1|M0)         r6.0<1>:ud    r0.1<0;1,0>:ud    r1.3<0;1,0>:ud  
+(W)      add      (1|M0)         r4.0<1>:ud    r4.0<0;1,0>:ud    r1.0<0;1,0>:ud   {Compacted}
+(W)      add      (1|M0)         r6.0<1>:ud    r6.0<0;1,0>:ud    r1.0<0;1,0>:ud   {Compacted}
+         add      (16|M0)        r4.0<1>:ud    r4.0<0;1,0>:ud    r2.0<8;8,1>:uw  
+         add      (16|M16)       r6.0<1>:ud    r6.0<0;1,0>:ud    r3.0<8;8,1>:uw  
+         shl      (16|M0)        r16.0<1>:ud   r4.0<8;8,1>:ud    0x2:ud           {Compacted}
+         shl      (16|M16)       r20.0<1>:ud   r6.0<8;8,1>:ud    0x2:ud          
+         send     (16|M0)        r8:uw         r16:ud            0xC       0x4205E00 //  hdc.dc1  wr:2, rd:2, rd.usurf msc:30, to #0
+         send     (16|M0)        r10:uw        r16:ud            0xC       0x4205E01 //  hdc.dc1  wr:2, rd:2, rd.usurf msc:30, to #1
+         send     (16|M16)       r12:uw        r20:ud            0xC       0x4205E00 //  hdc.dc1  wr:2, rd:2, rd.usurf msc:30, to #0
+         send     (16|M16)       r14:uw        r20:ud            0xC       0x4205E01 //  hdc.dc1  wr:2, rd:2, rd.usurf msc:30, to #1
+         math.fdiv (16|M0)        r18.0<1>:f    r8.0<8;8,1>:f     r10.0<8;8,1>:f   {Compacted}
+         math.fdiv (16|M16)       r22.0<1>:f    r12.0<8;8,1>:f    r14.0<8;8,1>:f  
+         send     (16|M0)        null:uw       r16:ud            0xC       0x8025E02 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #2
+         send     (16|M16)       null:uw       r20:ud            0xC       0x8025E02 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #2
+         send     (8|M0)         null:ud       r127:ud           0x27      0x2000010 {EOT} //  spawner  wr:1, rd:0, fc: 0x10

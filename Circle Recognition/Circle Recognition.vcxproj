@@ -185,6 +185,7 @@
   <ItemGroup>
     <ClCompile Include="Approximation.cpp" />
     <ClCompile Include="GPUOpenCLProjectforWindows.cpp" />
+    <ClCompile Include="Host.cpp" />
     <ClCompile Include="Interpolation.cpp" />
     <ClCompile Include="Linear_equations_solve.cpp" />
     <ClCompile Include="LoadersAndPrints.cpp" />
@@ -194,6 +195,7 @@
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Drawing.h" />
     <ClInclude Include="Features.h" />
     <ClInclude Include="GPUOpenCLProjectforWindows.h" />
     <ClInclude Include="InterpolationAndApproximation.h" />
@@ -205,7 +207,10 @@
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <Intel_OpenCL_Build_Rules Include="Template.cl" />
+    <None Include="..\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Intel_OpenCL_Build_Rules Include="Kernels.cl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

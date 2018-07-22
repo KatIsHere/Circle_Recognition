@@ -1,5 +1,8 @@
 #pragma once
 #include <cmath>
+
+// TODO: Add some more features
+
 struct Point {
 	double x = 0;
 	double y = 0;
@@ -13,9 +16,27 @@ struct Point {
 	}
 };
 
-
+/* 
+* Creates a set of common features from an array of polinomes(polinome extreme points)
+*/
 class Features {
 public:
+	Features(double* xExtr, double* yExtr, const int& len) {
+		N = len;
+		extrems = new Point[len];
+		for (int i = 0; i < len; i++) {
+			extrems[i].x = xExtr[i];
+			extrems[i].y = yExtr[i];
+		}
+		distancesNumb = len - 1;
+		anglesNumb = int(len + 1) / 2;
+
+		distances = Distances();
+		angles = Angles();
+		center = Center();
+	}
+
+
 	Features(Point* extr, const int& len) {
 		N = len;
 		extrems = new Point[len];
@@ -70,10 +91,11 @@ private:
 
 
 	double* Angles() {
-		// returns cos of all ancgles
-		// based on law of cosines: cos C = (a**2 + b**2 - c**2)/(2ab)
-		// the BIGGER the meaning ----> the SMALLER the angle
-		// angle from 0 to pi
+		/* returns cos of all ancgles
+		* based on law of cosines: cos C = (a**2 + b**2 - c**2)/(2ab)
+		* the BIGGER the meaning ----> the SMALLER the angle
+		* angle from 0 to pi
+		*/
 		double* Angles = new double[anglesNumb];
 		for (int i = 0; i < anglesNumb; ++i) {
 			Angles[i] = (distances[i] * distances[i] + distances[i + 1] * distances[i + 1] - 
@@ -85,7 +107,7 @@ private:
 
 	Point Center() {
 		Point P;
-		P.x = extrems[0].x + (extrems[N - 1].x - extrems[0].x);
+		P.x = (extrems[N - 1].x + extrems[0].x) / 2;
 		double sum = 0;
 		for (int i = 0; i < N; ++i) {
 			sum += extrems[i].y;

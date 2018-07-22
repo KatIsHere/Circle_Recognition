@@ -20,12 +20,13 @@ int LUPDecompose(double **A, const int& N, double Tol, int *P) {
 		imax = i;
 
 		for (k = i; k < N; k++)
-			if ((absA = fabs(A[k][i])) > maxA) {
+			if ((absA = fabs(A[k][i])) > maxA) {			// 1 KERNEL
 				maxA = absA;
 				imax = k;
 			}
 
-		if (maxA < Tol) throw "Matrix is degenerate, try another method"; //failure, matrix is degenerate
+		//failure, matrix is degenerate
+		if (maxA < Tol) throw "Matrix is degenerate, try another method";
 
 		if (imax != i) {
 			//pivoting P
@@ -43,14 +44,15 @@ int LUPDecompose(double **A, const int& N, double Tol, int *P) {
 		}
 
 		for (j = i + 1; j < N; j++) {
-			A[j][i] /= A[i][i];
+			A[j][i] /= A[i][i];								// 2 KERNEL
 
 			for (k = i + 1; k < N; k++)
-				A[j][k] -= A[j][i] * A[i][k];
+				A[j][k] -= A[j][i] * A[i][k];				// 3 KERNEL
 		}
 	}
-
-	return 1;  //decomposition done 
+	delete ptr;
+	// decomposition done 
+	return 1;			
 }
 
 
@@ -63,16 +65,17 @@ void LUPSolve(double **A, int *P, double *b, const int& N, double *x) {
 		x[i] = b[P[i]];
 
 		for (int k = 0; k < i; k++)
-			x[i] -= A[i][k] * x[k];
+			x[i] -= A[i][k] * x[k];							// 3 KERNEL
 	}
 
 	for (int i = N - 1; i >= 0; i--) {
 		for (int k = i + 1; k < N; k++)
-			x[i] -= A[i][k] * x[k];
+			x[i] -= A[i][k] * x[k];							// 3 KERNEL
 
-		x[i] = x[i] / A[i][i];
+		x[i] = x[i] / A[i][i];								// 2 KERNEL
 	}
 }
+
 
 /* INPUT: A,P filled in LUPDecompose; N - dimension
 *  OUTPUT: IA is the inverse of the initial matrix
@@ -99,6 +102,7 @@ void LUPInvert(double **A, int *P, const int& N, double **IA) {
 	}
 }
 
+
 /* INPUT: A,P filled in LUPDecompose; N - dimension.
 *  OUTPUT: Function returns the determinant of the initial matrix
 */
@@ -115,10 +119,11 @@ double LUPDeterminant(double **A, int *P, const int& N) {
 		return -det;
 }
 
+
 double* BaireissSolve(double** A, double* b, const int & N) {
 	double* x = new double[N];
 	double** A_copy = new double*[N];
-	int i, j, k, t;
+	int i, j;
 	for (i = 0; i < N; ++i) {
 		A_copy[i] = new double[N + 1];
 		for (j = 0; j < N; ++j) {
@@ -147,6 +152,7 @@ double* BaireissSolve(double** A, double* b, const int & N) {
 	return x;
 }
 
+
 double* GaussMethod(double** A, double*b, const int& n) {
 	/* Finds a solution to the system of linear equations
 	using Gauss method*/
@@ -172,7 +178,7 @@ double* GaussMethod(double** A, double*b, const int& n) {
 		if (max < eps)
 		{
 			// no non-zero elements
-			throw "Решение получить невозможно из-за нулевого столбца матрицы A";
+			throw "There is no solution because of non-zero collum of the matrix";
 		}
 		for (int j = 0; j < n; j++)
 		{
