@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include "CL/cl.hpp"
 using namespace std;
 
 
@@ -52,6 +53,21 @@ double* loadMatrix_ToVector(string filename, const int& height, const int& width
 	}
 	int i, size = height * width;
 	double* Vect = new double[size];
+	for (i = 0; i < size; ++i) {
+		in >> Vect[i];
+	}
+
+	return Vect;
+}
+
+
+cl_double* cl_loadFunc(const int& height, const int& width, string filename) {
+	ifstream in(filename);
+	if (!in) {
+		throw "Couldn't open the file";
+	}
+	int i, size = height * width;
+	cl_double* Vect = new cl_double[size];
 	for (i = 0; i < size; ++i) {
 		in >> Vect[i];
 	}

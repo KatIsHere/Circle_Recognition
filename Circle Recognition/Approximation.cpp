@@ -97,12 +97,12 @@ double* approximation_polinome(double* xSet, double* fSet, const int& setSize, c
 	double sumaA, sumaB;
 	int size = setSize * sizeof(double);
 	// Creating openCl buffers
-	cl::Buffer d_b(context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_PTR, size, B);
+	//cl::Buffer d_b(context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_PTR, size, B);
 
 
 	for (i = 0; i < polinomialPower; ++i) {
 		A[i] = new double[polinomialPower]; 
-		cl::Buffer d_a(context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_PTR, size, A[i]);
+		//cl::Buffer d_a(context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_PTR, size, A[i]);
 
 		for (j = 0; j < polinomialPower; ++j) {
 			sumaA = 0.;

@@ -68,18 +68,37 @@ void Draw(int argc, char ** argv) {
 void RenderApproximation(void) {
 	string filepath_LARGE = "idle_test_data_set\\idle_4\\2_x=52_y=125_sz=32.txt";
 	//string filepath_LARGE_2 = "idle_test_data_set\\idle_4\\2_x=52_y=125_sz=12.txt";
-	string filepath_SMALL = "idle_test_data_set\\idle_1\\10_x=45_y=22_sz=17.txt";
+	//string filepath_SMALL = "idle_test_data_set\\idle_1\\10_x=45_y=22_sz=17.txt";
 
-	double** MatrixLARGE = loadMatrix(filepath_LARGE, SIZE_LARGE, SIZE_LARGE);
-	double** MatrixSMALL = loadMatrix(filepath_SMALL, SIZE_SMALL, SIZE_SMALL);
-	double* x_LARGE = xCreateSet(0, SIZE_LARGE, SIZE_LARGE);
-	double* x_SMALL = xCreateSet(0, SIZE_SMALL, SIZE_SMALL);
-	double** polinomes_LARGE = buidPolinome(x_LARGE, MatrixLARGE, SIZE_LARGE, POLINOME_POWER_LARGE, 1);
-	double** polinomes_SMALL = buidPolinome(x_SMALL, MatrixSMALL, SIZE_SMALL, POLINOME_POWER_SMALL, 0); 
-	
+	//double** MatrixSMALL = loadMatrix(filepath_SMALL, SIZE_SMALL, SIZE_SMALL);
+	//double* x_SMALL = xCreateSet(0, SIZE_SMALL, SIZE_SMALL);
+	//double** polinomes_SMALL = buidPolinome(x_SMALL, MatrixSMALL, SIZE_SMALL, POLINOME_POWER_SMALL, 0); 
+
+
+	// CONVENTIONAL METHOD
+	//double** MatrixLARGE = loadMatrix(filepath_LARGE, SIZE_LARGE, SIZE_LARGE);
+	//double* x_LARGE = xCreateSet(0, SIZE_LARGE, SIZE_LARGE);
+	//double** polinomes_LARGE = buidPolinome(x_LARGE, MatrixLARGE, SIZE_LARGE, POLINOME_POWER_LARGE, 1);
 	//double** MatrixLARGE_2 = loadMatrix(filepath_LARGE_2, SIZE_LARGE, SIZE_LARGE);
 	//double* x_LARGE_2 = xCreateSet(0, SIZE_LARGE, SIZE_LARGE);
 	//double** polinomes_LARGE_2 = buidPolinome(x_LARGE_2, MatrixLARGE_2, SIZE_LARGE, POLINOME_POWER_LARGE, 1);
+
+
+	//Optimized OPENCL methods
+
+	cl_double* MatrixLARGE = cl_loadFunc( SIZE_LARGE, SIZE_LARGE, filepath_LARGE);
+	cl_double* x_LARGE = xCreateCLSet(0, SIZE_LARGE, SIZE_LARGE);
+	cl_double* polinomes= new cl_double[POLINOME_POWER_LARGE*SIZE_LARGE];
+	buidPolinomeWithOpenCL(argc, argv, x_LARGE, MatrixLARGE, polinomes, SIZE_LARGE, POLINOME_POWER_LARGE);
+
+	double** polinomes_LARGE = new double*[SIZE_LARGE];
+	for (int i = 0; i < SIZE_LARGE; ++i) {
+		polinomes_LARGE[i] = new double[POLINOME_POWER_LARGE];
+		for (int j = 0; j < POLINOME_POWER_LARGE; ++j) {
+			polinomes_LARGE[i][j] = polinomes[i*SIZE_LARGE + j];
+		}
+	}
+
 	glClearColor(0.98f, 0.98f, 0.98f, 1.0f);
 	glClearColor(0.98f, 0.98f, 0.98f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -96,17 +115,20 @@ void RenderApproximation(void) {
 		//delete[]polinomes_LARGE_2[i];
 	}
 	delete[]polinomes_LARGE;
-	for (int i = 0; i < SIZE_SMALL; ++i)
-		delete[]polinomes_SMALL[i];
-	delete[]polinomes_SMALL;
-	for (int i = 0; i < SIZE_LARGE; ++i) {
-		delete[]MatrixLARGE[i];
+	delete[]polinomes;
+	delete[]MatrixLARGE;
+	delete[]C;
+	//for (int i = 0; i < SIZE_SMALL; ++i)
+	//	delete[]polinomes_SMALL[i];
+	//delete[]polinomes_SMALL;
+	//for (int i = 0; i < SIZE_LARGE; ++i) {
+		//delete[]MatrixLARGE[i];
 		//delete[]MatrixLARGE_2[i];
-	}
-	delete[]MatrixLARGE;// delete[]MatrixLARGE_2;
-	for (int i = 0; i < SIZE_SMALL; ++i)
-		delete[]MatrixSMALL[i];
-	delete[]MatrixSMALL;
+	//}
+	 // delete[]MatrixLARGE_2;
+	//for (int i = 0; i < SIZE_SMALL; ++i)
+	//	delete[]MatrixSMALL[i];
+	//delete[]MatrixSMALL;
 	//delete[]x_LARGE;
 	//delete[]x_SMALL;
 }
