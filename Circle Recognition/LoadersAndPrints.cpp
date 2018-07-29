@@ -61,13 +61,13 @@ double* loadMatrix_ToVector(string filename, const int& height, const int& width
 }
 
 
-cl_double* cl_loadFunc(const int& height, const int& width, string filename) {
+cl_float* cl_loadFunc(const int& height, const int& width, string filename) {
 	ifstream in(filename);
 	if (!in) {
 		throw "Couldn't open the file";
 	}
 	int i, size = height * width;
-	cl_double* Vect = new cl_double[size];
+	cl_float* Vect = new cl_float[size];
 	for (i = 0; i < size; ++i) {
 		in >> Vect[i];
 	}

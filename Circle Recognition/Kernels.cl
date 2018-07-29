@@ -1,14 +1,17 @@
 // First kernell drafts
 
 // Need to pass A buffer and B buffer and P buffer
-__kernel void build_polinome(__global const double* xSet, __global const double* fSet, __global double* C, 
-								__global const int power, __global double* A, __global double* B, __global int* P, 
-								__global const int setSize){ 
+__kernel void build_polinome(__global const float* xSet, __global const float* fSet, __global float* C, 
+								const int power, 
+								__global float* A, __global float* B, __global int* P, 
+								const int setSize, 
+								__global float *ptr){ 
 	int i, j, k;
-	double normalizing = double(1) / (setSize + 1);					// 1/(b-a)
+	float normalizing = 1 / (setSize + 1);					// 1/(b-a)
 	
-	double sumaA, sumaB;
-	int size = setSize * sizeof(double);
+	float sumaA;
+	float sumaB;
+	int size = setSize * sizeof(float);
 
 	//const int globalRow = get_global_id(0);
 	//const int globalCol = get_global_id(1);
@@ -32,7 +35,7 @@ __kernel void build_polinome(__global const double* xSet, __global const double*
 	}
 	// LINEAR EQUATIONS SOLVE
 	int imax;
-	double maxA, *ptr, absA;
+	float maxA, absA;
 
 	for (i = 0; i <= power; i++)
 		P[i] = i; //Unit permutation matrix, P[N] initialized with N
@@ -54,22 +57,21 @@ __kernel void build_polinome(__global const double* xSet, __global const double*
 			P[imax] = j;
 
 			//pivoting rows of A
-			ptr = A[i];
+			ptr = &A[i];
 			A[i] = A[imax];
-			A[imax] = ptr;
+			A[imax] = *ptr;
 
 			//counting pivots starting from N (for determinant)
-			P[N]= P[N] + 1;
+			P[power]= P[power] + 1;
 		}
 
 		for (j = i + 1; j < power; j++) {
 			A[j*power + i] = A[j*power + i] / A[i*power + i];
 
-			for (k = i + 1; k < N; k++)
+			for (k = i + 1; k < power; k++)
 				A[j*power + k] = A[j*power + k] - A[j*power + i] * A[i*power + k];
 		}
 	}
-	delete ptr;
 
 	for (int i = 0; i < power; i++) {
 		C[id*power + i] = B[P[i]];
@@ -78,10 +80,10 @@ __kernel void build_polinome(__global const double* xSet, __global const double*
 			C[id*power + i] -= A[i*power + k] * C[k];							// 3 KERNEL
 	}
 
-	for (int i = N - 1; i >= 0; i--) {
+	for (int i = power - 1; i >= 0; i--) {
 		for (int k = i + 1; k < power; k++)
 			C[id*power + i] -= A[i*power + k] * C[k];							// 3 KERNEL
 
-		C[id*power + i] = C[id * power + i] / A[i][i];								// 2 KERNEL
+		C[id*power + i] = C[id * power + i] / A[i*power + i];								// 2 KERNEL
 	}
 }
