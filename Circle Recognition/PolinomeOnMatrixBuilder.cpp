@@ -125,7 +125,7 @@ double** buidPolinome(double* x, double** Matrix, const int& MatrSize, const int
 	clock_t end = clock();
 	double time = 0;
 	if (printTime) {
-		time = double(end - begin) / CLOCKS_PER_SEC;
+		time = (float)(end - begin) / CLOCKS_PER_SEC;
 		std::cout << "\n ELAPCED TIME: " << time << "\n";
 	}
 
@@ -310,7 +310,8 @@ double Approx_Polinomes_Run_Kernel(cl::Context context, cl::Device &device, cl::
 	cl_float* x_input, cl_float *f_input,
 	cl_int input_width, cl_int input_hight,
 	cl_float* A_input, cl_float *B_input, cl_float *C_input, cl_float *P_input,
-	cl_int polinome_power) {
+	cl_int polinome_power,
+	cl_float* T) {
 	const clock_t   perf_start = clock();
 	// CREATING BUFFERS FOR x, f, A, b, P and C
 
@@ -339,7 +340,8 @@ double Approx_Polinomes_Run_Kernel(cl::Context context, cl::Device &device, cl::
 	cl::Buffer C_buffer(context, CL_MEM_READ_WRITE, sizeof(double) * polinome_power* input_hight);
 	queue.enqueueWriteBuffer(C_buffer, CL_TRUE, 0, sizeof(cl_double) *  polinome_power * input_hight, C_input);
 
-	cl_float *tmp;// = new ;
+	cl::Buffer T_buffer(context, CL_MEM_READ_WRITE, sizeof(double) * polinome_power* input_hight);
+	queue.enqueueWriteBuffer(T_buffer, CL_TRUE, 0, sizeof(cl_double) *  polinome_power * input_hight, T);
 
 	// SETTING UP KERNEL ARGUMENTS + CHECKING FOR ERRORS
 	kernel.setArg(0, (void *)&x_buffer);
@@ -350,7 +352,7 @@ double Approx_Polinomes_Run_Kernel(cl::Context context, cl::Device &device, cl::
 	kernel.setArg(5, (void *)&B_buffer);
 	kernel.setArg(6, (void *)&P_buffer);
 	kernel.setArg(7, (void *)&input_width);
-	kernel.setArg(8, (void *)&tmp);
+	kernel.setArg(8, (void *)&T_buffer);
 
 	const int TS = 8;
 	const size_t local[2] = { TS, TS };
@@ -363,7 +365,7 @@ double Approx_Polinomes_Run_Kernel(cl::Context context, cl::Device &device, cl::
 
 	const clock_t   perf_stop = clock();
 
-	return (float)(perf_stop - perf_start);
+	return (float)(perf_stop - perf_start) / CLOCKS_PER_SEC;
 }
 
 

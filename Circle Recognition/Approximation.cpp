@@ -7,24 +7,12 @@ RETURNS: a set of coefficients for a given set of functions
 */
 
 #define __CL_ENABLE_EXCEPTIONS
-#include <CL/cl.hpp>			// OpenCl optimization
 #include "Polinoms.h"
 #include <cmath>
 #include <string>
 #include "LinearEquations.h"
 #include<iostream>
 #define NORM_DIFFERENCE_MAX 1
-
-
-// CONTEXT FOR A DEVICE
-cl::Context context(CL_DEVICE_TYPE_DEFAULT);
-
-// COMMAND QUEUE FOR THE FIRST DEVICE IN THE CONTEXT
-cl::CommandQueue queue(context);
-
-std::string KernelSource = "";
-cl::Program program(context, KernelSource, true);
-
 
 double* approximation_coefs(double* xSet, double* fSet, const int& setSize, const int& polinomialPower = 5, std::string functions = "polinome", double SystemTolerance = 0.1) {
 	/*

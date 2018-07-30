@@ -29,6 +29,7 @@ void RenderFast(void);
 int main(int argc, char ** argv) {
 	//Excecute();
 	Draw(argc, argv);
+	system("pause");
 	return 1;
 }
 
@@ -46,12 +47,14 @@ void Draw(int argc, char ** argv) {
 	glutCreateWindow("Approximation graph");
 	glutDisplayFunc(RenderFast);
 
-	glutInit(&argc, argv);
-	glutInitWindowSize(WindowWidth, WindowHeight);
-	glutInitWindowPosition(WindowPosX + 60, WindowPosY + 60);
-	glutCreateWindow("Real data graph");
-	glutDisplayFunc(RenderPoints);
+	// Points
+	//glutInit(&argc, argv);
+	//glutInitWindowSize(WindowWidth, WindowHeight);
+	//glutInitWindowPosition(WindowPosX + 60, WindowPosY + 60);
+	//glutCreateWindow("Real data graph");
+	//glutDisplayFunc(RenderPoints);
 
+	// Reversed polinomes
 	//glutInit(&argc, argv);
 	//glutInitWindowSize(WindowWidth, WindowHeight);
 	//glutInitWindowPosition(WindowPosX + 100, WindowPosY + 160);
@@ -66,8 +69,12 @@ inline void
 checkErr(cl_int err, const char * name)
 {
 	if (err != CL_SUCCESS) {
-		std::cerr << "ERROR: " << name
-			<< " (" << err << ")" << std::endl;
+		//std::cerr << "ERROR: " << name
+		//	<< " (" << err << ")" << std::endl;
+
+		std::cout << "ERROR: " << name
+			<< " (" << err << ")\n" << "Press Enter to continue..." <<std::endl;
+		cin.get();
 		exit(EXIT_FAILURE);
 	}
 }
@@ -119,24 +126,33 @@ void openclCalculating(float* x, float*f_x, float* Polinomes, const int& hight, 
 
 	cl::Program program(context, source);
 	err = program.build({default_device});
-	checkErr(file.is_open() ? CL_SUCCESS : -1, "Program::build()");
+	//err = program.build({ default_device }, "-g -s Kernels.cl", nullptr);
+	if (err == -11) {
+		// Determine the size of the log
+		auto buildInfo = program.getBuildInfo<CL_PROGRAM_BUILD_LOG>({ default_device }, &err);
+		std::cerr << buildInfo << std::endl ;
+
+	}
+	checkErr(err, "Program::build()");
 	cl::Kernel kernel(program, "build_polinome", &err);
 	checkErr(err, "Kernel::Kernel()");
 
 	int ret = EXIT_SUCCESS;
-	cl_int* p_input = NULL;
-	cl_int* p_ref = NULL;
+	//cl_int* p_input = nullptr;
+	//cl_int* p_ref = nullptr;
 	try
 	{
 		// Build kernel
 		cl_float* A = new cl_float[power*power];
 		cl_float* B = new cl_float[power];
 		cl_float* P = new cl_float[power];
+		cl_float* T = new cl_float[power*power];
 
 		printf("Executing OpenCL kernel...\n");
-		float ocl_time = Approx_Polinomes_Run_Kernel(context, default_device, kernel, x, f_x, width, hight, A, B, Polinomes, P, power);
+		float ocl_time = Approx_Polinomes_Run_Kernel(context, default_device, kernel, x, f_x, width, hight, A, B, Polinomes, P, power, T);
 
-		printf("NDRange perf. counter time %f ms.\n", 1000.0f*ocl_time);
+		printf("NDRange perf. counter time %f s.\n", ocl_time);
+		delete[]A; delete[]B; delete[]P; delete[]T;
 	}
 	catch (const std::exception& error)
 	{

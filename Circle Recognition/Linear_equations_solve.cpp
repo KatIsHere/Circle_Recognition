@@ -1,5 +1,64 @@
 #include <cmath>
 
+double* squre_help(double**  A, const int n) {
+	double* T = new double[n*n];
+	T[0] = sqrt(A[0][0]);
+	double S;
+	for (int i = 0; i < n; ++i) {
+		for (int j = 0; j < n; ++j) {
+			if (i == 0 && j > i) {
+				T[i*n + j] = A[i][j] / T[i*n + i];
+			}
+			else if (i != 0) {
+				if (i == j) {
+					S = 0;
+					for (int k = 0; k < i - 1; ++k) {
+						S += T[k*n + i] * T[k*n + i];
+					}
+					T[i*n + i] = sqrt(A[i][i] - S);
+				}
+				else if (i < j) {
+					S = 0;
+					for (int k = 0; k < i - 1; ++k) {
+						S += T[k * n + i] * T[k * n + i];
+					}
+					T[i*n + j] = (A[i][j] - S) / T[i*n + i];
+				}
+				else if (i > j) {
+					T[i * n + j] = 0;
+				}
+			}
+		}
+	}
+	return T;
+}
+
+
+double* Square_solve(double** A, double* b, const int& n) {
+
+	double* T = new double[n*n];
+	T = squre_help(A, n);
+	double* X = new double[n];
+	double* Y = new double[n]; double S;
+	Y[0] = b[0] / T[0];
+	for (int i = 1; i < n; ++i) {
+		S = 0;
+		for (int k = 0; k < i - 1; ++k) {
+			S += T[k*n + i] * Y[k];
+		}
+		Y[i] = (b[i] - S) / T[i * n + i];
+	}
+	X[n - 1] = Y[n - 1] / T[n*n - 1];
+	for (int j = n - 2; j >= 0; --j) {
+		S = 0;
+		for (int k = j + 1; k < n; ++k) {
+			S += T[j * n + k] * X[k];
+		}
+		X[j] = (Y[j] - S) / T[j*n + j];
+	}
+	return X;
+}
+
 /* INPUT: A - array of pointers to rows of a square matrix having dimension N
 *        Tol - small tolerance number to detect failure when the matrix is near degenerate
 *  OUTPUT: Matrix A is changed, it contains both matrices L-E and U as A=(L-E)+U such that P*A=L*U.
