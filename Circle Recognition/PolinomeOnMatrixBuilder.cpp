@@ -241,7 +241,7 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 	cl_mem T_buffer = clCreateBuffer(
 		context,
 		CL_MEM_USE_HOST_PTR,
-		sizeof(cl_float) * polinome_power * input_hight,
+		sizeof(cl_float) * polinome_power,
 		T,
 		&err);
 	checkErr(err, "T_buffer");
@@ -262,33 +262,33 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 	err = clSetKernelArg(kernel, 2, sizeof(C_buffer), (void *)& C_buffer);
 	checkErr(err, "clSetKernelArg : C(2)");
 
-	err = clSetKernelArg(kernel, 3, sizeof(cl_uint),  &polinome_power);
-	checkErr(err, "clSetKernelArg : power(3)");
-
-	err = clSetKernelArg(kernel, 4, sizeof(A_buffer), (void *)& A_buffer);
+	err = clSetKernelArg(kernel, 3, sizeof(A_buffer), (void *)& A_buffer);
 	checkErr(err, "clSetKernelArg : A(4)");
 
-	err = clSetKernelArg(kernel, 5, sizeof(B_buffer), (void *)& B_buffer);
+	err = clSetKernelArg(kernel, 4, sizeof(B_buffer), (void *)& B_buffer);
 	checkErr(err, "clSetKernelArg : B(5)");
 
-	err = clSetKernelArg(kernel, 6, sizeof(P_buffer), (void *)& P_buffer);
+	err = clSetKernelArg(kernel, 5, sizeof(P_buffer), (void *)& P_buffer);
 	checkErr(err, "clSetKernelArg : P(6)");
 
-	err = clSetKernelArg(kernel, 7, sizeof(cl_uint),  &input_width);
+	err = clSetKernelArg(kernel, 6, sizeof(cl_uint),  &input_width);
 	checkErr(err, "clSetKernelArg : width(7)");
 
-	err = clSetKernelArg(kernel, 8, sizeof(T_buffer), (void *)& T_buffer);
+	err = clSetKernelArg(kernel, 7, sizeof(T_buffer), (void *)& T_buffer);
 	checkErr(err, "clSetKernelArg : T(8)");
+
+	//err = clSetKernelArg(kernel, 8, sizeof(cl_uint),  &polinome_power);
+	//checkErr(err, "clSetKernelArg : power(3)");
 
 
 	const clock_t perf_start = clock();
 	int dim = 1;
-	size_t global[] = {input_hight, 1, 1 };
-	size_t local[] = { 0, 0, 0 };
+	size_t global[] = { input_hight, 1, 0 };
+	size_t local[] = { 1, 1, 0 };
 	err = clEnqueueNDRangeKernel(queue, kernel,
 		dim,		
 		nullptr,
-		global, nullptr,
+		global, local,
 		0, nullptr, nullptr); 
 	checkErr(err, "clEnqueueNDRangeKernel");
 

@@ -81,16 +81,11 @@ double* approximation_polinome(double* xSet, double* fSet, const int& setSize, c
 	double** A = new double*[polinomialPower];
 	double* B = new double[polinomialPower];
 	int i, j, k;
-	double normalizing = double(1) / (setSize + 1);	// 1/(b-a)
+	double normalizing = float(1) / (setSize + 1);	// 1/(b-a)
 	double sumaA, sumaB;
-	int size = setSize * sizeof(double);
-	// Creating openCl buffers
-	//cl::Buffer d_b(context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_PTR, size, B);
-
 
 	for (i = 0; i < polinomialPower; ++i) {
 		A[i] = new double[polinomialPower]; 
-		//cl::Buffer d_a(context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_PTR, size, A[i]);
 
 		for (j = 0; j < polinomialPower; ++j) {
 			sumaA = 0.;
@@ -107,14 +102,14 @@ double* approximation_polinome(double* xSet, double* fSet, const int& setSize, c
 	}
 
 	double* C = new double[polinomialPower];
-	int* P = new int[polinomialPower];
+	int* P = new int[polinomialPower + 1];
 	LUPDecompose(A, polinomialPower, SystemTolerance, P);
 	LUPSolve(A, P, B, polinomialPower, C);
 
 	for (i = 0; i < polinomialPower; i++)
 		delete[]A[i];
 	delete[]B;	delete[]A;
-	//delete[]P;
+	delete[]P;
 
 	return C;
 }

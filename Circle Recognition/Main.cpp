@@ -14,7 +14,7 @@ using namespace std;
 const int SIZE_SMALL = 17;
 const int SIZE_MEDDIUM = 28;
 const int SIZE_LARGE = 32;
-const int POLINOME_POWER_SMALL = 5;
+//const int POLINOME_POWER_SMALL = 5;
 const int POLINOME_POWER_LARGE = 6;
 const int POLINOME_POWER_MEDDIUM = 6;
 const int POLINOME_POWER = 6;
@@ -39,13 +39,21 @@ void Draw(int argc, char ** argv) {
 	int WindowPosX = 70, WindowPosY = 70;
 	int WindowHeight = 700, WindowWidth = 1200;
 
-	// Draw a window
+	// Render fast approximation using opencl
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+	glutInitWindowSize(WindowWidth, WindowHeight);
+	glutInitWindowPosition(WindowPosX, WindowPosY);
+	glutCreateWindow("Approximation graph, Opencl");
+	glutDisplayFunc(RenderFast);
+
+	// Render simple approximation
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(WindowWidth, WindowHeight);
 	glutInitWindowPosition(WindowPosX, WindowPosY);
 	glutCreateWindow("Approximation graph");
-	glutDisplayFunc(RenderFast);
+	glutDisplayFunc(RenderApproximation);
 
 	// Points
 	//glutInit(&argc, argv);
@@ -120,7 +128,7 @@ void openclCalculating(float* x, float*f_x, float* Polinomes, const int& hight, 
 							   //  0 - GPU
 							   //  1 - CPU
 	const int GCPU = 1;
-	const cl_int available_platforms = 3;
+	const cl_int available_platforms = 2;
 	// old code version
 	//std::vector< cl::Platform > platformList;
 	//cl::Platform::get(&platformList);
@@ -181,7 +189,11 @@ void openclCalculating(float* x, float*f_x, float* Polinomes, const int& hight, 
 	err = clGetPlatformIDs(available_platforms, platformList, NULL);
 	checkErr(err, "clGetPlatformID");
 	cl_platform_id default_platform = platformList[GCPU];
-	std::cout<< "Using platform: " << cl_platform_info(default_platform) << "\n";
+	char *patformName = new char[2024];
+	err = clGetPlatformInfo(default_platform, CL_PLATFORM_NAME, 1024, patformName, NULL);
+	checkErr(err, "clGetDeviceInfo");
+	std::cout<< "Using platform: " << patformName << "\n";
+	delete[]patformName;
 
 	// get default device of the default platform
 	cl_device_id deviceList[3];
@@ -197,12 +209,14 @@ void openclCalculating(float* x, float*f_x, float* Polinomes, const int& hight, 
 	err = clGetDeviceInfo(default_device, CL_DEVICE_NAME, 1024, deviceName, NULL);
 	checkErr(err, "clGetDeviceInfo");
 	std::cout << "Using device: " << deviceName << "\n";
+	delete[]deviceName;
 
 	// platform vendor info
-	std::string platformVendor;
-	clGetPlatformInfo(default_platform, (cl_platform_info)CL_PLATFORM_VENDOR, platformVendor.size(), &platformVendor, NULL);
+	char * platformVendor = new char[1024];
+	err = clGetPlatformInfo(default_platform, (cl_platform_info)CL_PLATFORM_VENDOR, 1024, platformVendor, NULL);
+	checkErr(err, "clGetPlatformInfo");
 	std::cerr << "Platform is by: " << platformVendor << "\n";
-	cl_context_properties cprops[3] = { CL_CONTEXT_PLATFORM, (cl_context_properties)(default_platform), 0 };
+	delete[]platformVendor;
 
 	// create context
 	printf("\nCreating a compute context for the required device\n");
@@ -233,6 +247,7 @@ void openclCalculating(float* x, float*f_x, float* Polinomes, const int& hight, 
 	printf("\nCompiling the program executable\n");
 
 	err = clBuildProgram(program, 0, NULL, "-g -s Kernels.cl", NULL, NULL);
+	//err = clBuildProgram(program, 0, NULL, "Kernels.cl", NULL, NULL);
 	checkErr(err, "clBuildProgram");
 
 	cl_kernel kernel = clCreateKernel(program, "build_polinome", &err);
@@ -240,14 +255,12 @@ void openclCalculating(float* x, float*f_x, float* Polinomes, const int& hight, 
 
 
 	int ret = EXIT_SUCCESS;
-	//cl_int* p_input = nullptr;
-	//cl_int* p_ref = nullptr;
 		
 	// Build kernel
 	cl_float* A = new cl_float[power*power];
 	cl_float* B = new cl_float[power];
 	cl_float* P = new cl_float[power + 1];
-	cl_float* T = new cl_float[power*power];
+	cl_float* T = new cl_float[power];
 	try
 	{
 		printf("Executing OpenCL kernel...\n");
@@ -293,34 +306,26 @@ void RenderApproximation(void) {
 
 
 	// CONVENTIONAL METHOD
-	//double** MatrixLARGE = loadMatrix(filepath_LARGE, SIZE_LARGE, SIZE_LARGE);
-	//double* x_LARGE = xCreateSet(0, SIZE_LARGE, SIZE_LARGE);
-	//double** polinomes_LARGE = buidPolinome(x_LARGE, MatrixLARGE, SIZE_LARGE, POLINOME_POWER_LARGE, 1);
+	double** MatrixLARGE = loadMatrix(filepath_LARGE, SIZE_LARGE, SIZE_LARGE);
+	double* x_LARGE = xCreateSet(0, SIZE_LARGE, SIZE_LARGE);
+	double** polinomes_LARGE = buidPolinome(x_LARGE, MatrixLARGE, SIZE_LARGE, POLINOME_POWER_LARGE, 1);
 	//double** MatrixLARGE_2 = loadMatrix(filepath_LARGE_2, SIZE_LARGE, SIZE_LARGE);
 	//double* x_LARGE_2 = xCreateSet(0, SIZE_LARGE, SIZE_LARGE);
 	//double** polinomes_LARGE_2 = buidPolinome(x_LARGE_2, MatrixLARGE_2, SIZE_LARGE, POLINOME_POWER_LARGE, 1);
 
 
-	//Optimized OPENCL methods
-
-	cl_float* MatrixLARGE = cl_loadFunc( SIZE_LARGE, SIZE_LARGE, filepath_LARGE);
-	cl_float* x_LARGE = xCreateCLSet(0, SIZE_LARGE, SIZE_LARGE);
-	cl_float* polinomes= new cl_float[POLINOME_POWER_LARGE*SIZE_LARGE];
-	//buidPolinomeWithOpenCL(x_LARGE, MatrixLARGE, polinomes, SIZE_LARGE, POLINOME_POWER_LARGE);
-
-	double** polinomes_LARGE = new double*[SIZE_LARGE];
-	for (int i = 0; i < SIZE_LARGE; ++i) {
-		polinomes_LARGE[i] = new double[POLINOME_POWER_LARGE];
-		for (int j = 0; j < POLINOME_POWER_LARGE; ++j) {
-			polinomes_LARGE[i][j] = polinomes[i*SIZE_LARGE + j];
-		}
-	}
-
-	glClearColor(0.98f, 0.98f, 0.98f, 1.0f);
 	glClearColor(0.98f, 0.98f, 0.98f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// Reset transformations
 	glLoadIdentity();
+
+	cout << "\nApproximation polinome: \n\n";
+	for (int i = 0; i < SIZE_LARGE; ++i) {
+		for (int j = 0; j < POLINOME_POWER_LARGE; ++j) {
+			printf("C[%d][%d] = %f \t", i, j, polinomes_LARGE[i][j]);
+		}
+		cout << "\n";
+	}
 
 	drawFunctionSet(polinomes_LARGE, SIZE_LARGE, POLINOME_POWER_LARGE, 0, SIZE_LARGE);
 	//drawFunctionSet(polinomes_LARGE_2, SIZE_LARGE, POLINOME_POWER_LARGE, 0, SIZE_LARGE);
@@ -329,24 +334,20 @@ void RenderApproximation(void) {
 	// DELETE ALL DATA
 	for (int i = 0; i < SIZE_LARGE; ++i) {
 		delete[]polinomes_LARGE[i];
+		delete[]MatrixLARGE[i];
 		//delete[]polinomes_LARGE_2[i];
 	}
 	delete[]polinomes_LARGE;
-	delete[]polinomes;
+	delete[]x_LARGE;
 	delete[]MatrixLARGE;
-	//delete[]C;
+	// delete[]MatrixLARGE_2;
+
 	//for (int i = 0; i < SIZE_SMALL; ++i)
 	//	delete[]polinomes_SMALL[i];
 	//delete[]polinomes_SMALL;
-	//for (int i = 0; i < SIZE_LARGE; ++i) {
-		//delete[]MatrixLARGE[i];
-		//delete[]MatrixLARGE_2[i];
-	//}
-	 // delete[]MatrixLARGE_2;
 	//for (int i = 0; i < SIZE_SMALL; ++i)
 	//	delete[]MatrixSMALL[i];
 	//delete[]MatrixSMALL;
-	//delete[]x_LARGE;
 	//delete[]x_SMALL;
 }
 
@@ -408,7 +409,7 @@ void RenderFast(void) {
 
 
 	double** polinomes_LARGE = new double*[SIZE_LARGE];
-	cout << "\n\nPolinomes final:\n";
+	//cout << "\n\nPolinomes final:\n";
 	float ser = 0;
 	for (int i = 0; i < SIZE_LARGE; ++i) {
 		polinomes_LARGE[i] = new double[POLINOME_POWER_LARGE];

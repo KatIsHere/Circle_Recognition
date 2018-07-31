@@ -7,7 +7,6 @@
 //-------------------------------------------------------------------------------------------------------
 // DRAWING ON A GRAPH
 
-// ADD OPTIMIZATION
 inline void drawFunctionSet(double** polinomes, const int& height, const int& N, const double& xFrom, const double& xTo,
 			const int& dots = 100, float colorRed = 0.05f, float colorGreen = 0.05f,
 			float colorBlue = 0.05f, float thikness = 1.45) {
@@ -35,9 +34,8 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 		if (minF < min_Y)
 			min_Y = minF;
 	}
-	double* centerX = new double[height];
-	double* centerY = new double[height];
-
+	//double* centerX = new double[height];
+	//double* centerY = new double[height];
 	//double** extrems = new double*[height];
 	//double** extremsValues = new double*[height];
 	//// Finding all exteme values of the polinomes
@@ -65,13 +63,13 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 	}
 
 	// Drawing center points
-	plotPointsWithOrtho2D(centerX, centerY, height, xTo, xFrom, max_Y, min_Y, 0.0f, 0.0f, 0.0f, 3.5);
+	// plotPointsWithOrtho2D(centerX, centerY, height, xTo, xFrom, max_Y, min_Y, 0.0f, 0.0f, 0.0f, 3.5);
 
 	// Drawing axis
 	Plot_XY_Axis(min_X, max_X, min_Y, max_Y, 0, 0);
 
 	// DELETING DATA
-	delete[]centerX; delete[]centerY;
+	// delete[]centerX; delete[]centerY;
 	delete[]x;
 	for (int i = 0; i < height; ++i) {
 		delete[]values[i]; //delete[]extrems[i]; delete[]extremsValues[i];

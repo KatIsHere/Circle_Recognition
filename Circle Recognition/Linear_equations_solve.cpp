@@ -60,7 +60,8 @@ double* squre_solve(double* A, double* B, const int power) {
 int LUPDecompose(double **A, const int& N, double Tol, int *P) {
 
 	int i, j, k, imax;
-	double maxA, *ptr, absA;
+	double maxA, absA;
+	double *ptr = new double[N];
 
 	for (i = 0; i <= N; i++)
 		P[i] = i; //Unit permutation matrix, P[N] initialized with N
@@ -84,10 +85,11 @@ int LUPDecompose(double **A, const int& N, double Tol, int *P) {
 			P[i] = P[imax];
 			P[imax] = j;
 
-			//pivoting rows of A
-			ptr = A[i];
-			A[i] = A[imax];
-			A[imax] = ptr;
+			for (int j = 0; j < N; ++j) {
+				ptr[j] = A[i][j];
+				A[i][j] = A[imax][j];
+				A[imax][j] = ptr[j];
+			}
 
 			//counting pivots starting from N (for determinant)
 			P[N]++;
@@ -100,7 +102,7 @@ int LUPDecompose(double **A, const int& N, double Tol, int *P) {
 				A[j][k] -= A[j][i] * A[i][k];				// 3 KERNEL
 		}
 	}
-	delete ptr;
+	delete[] ptr;
 	// decomposition done 
 	return 1;			
 }
