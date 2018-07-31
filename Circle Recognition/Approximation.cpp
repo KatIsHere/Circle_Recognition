@@ -54,7 +54,7 @@ double* approximation_coefs(double* xSet, double* fSet, const int& setSize, cons
 
 	double* C = new double[polinomialPower];
 	if (functions == "polinome") {
-		int* P = new int[polinomialPower];
+		int* P = new int[polinomialPower + 1];
 		LUPDecompose(A, polinomialPower, SystemTolerance, P);
 		LUPSolve(A, P, B, polinomialPower, C);
 	}

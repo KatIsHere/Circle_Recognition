@@ -38,22 +38,21 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 	double* centerX = new double[height];
 	double* centerY = new double[height];
 
-	double** extrems = new double*[height];
-	double** extremsValues = new double*[height];
-	// Finding all exteme values of the polinomes
-	// On extreme values feathures can be build
-	for (int i = 0; i < height; ++i) {
-		extrems[i] = findExtrems(polinomes[i], N, xFrom, xTo);
-		extremsValues[i] = new double[N - 1];
-		for (int j = 0; j < N - 1; ++j) {
-			extremsValues[i][j] = Polinome_Power(extrems[i][j], polinomes[i], N);
-		}
+	//double** extrems = new double*[height];
+	//double** extremsValues = new double*[height];
+	//// Finding all exteme values of the polinomes
+	//// On extreme values feathures can be build
+	//for (int i = 0; i < height; ++i) {
+	//	extrems[i] = findExtrems(polinomes[i], N, xFrom, xTo);
+	//	extremsValues[i] = new double[N - 1];
+	//	for (int j = 0; j < N - 1; ++j) {
+	//		extremsValues[i][j] = Polinome_Power(extrems[i][j], polinomes[i], N);
+	//	}
 
-		Features feature = Features(extrems[i], extremsValues[i], N - 1);					// creating a feture for one func														
-		centerY[i] = feature.getCenter().y;
-		centerX[i] = feature.getCenter().x;
-
-	}
+	//	Features feature = Features(extrems[i], extremsValues[i], N - 1);					// creating a feture for one func														
+	//	centerY[i] = feature.getCenter().y;
+	//	centerX[i] = feature.getCenter().x;
+	//}
 
 	// Drawing approximated polinomes, extreme values
 	for (int i = 0; i < height; ++i) {
@@ -62,7 +61,7 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 		blueCh = float(rand() % 90) / 100 - 0.05;
 		plotFunctionWithOrtho2D(x, values[i], dots, xTo, xFrom, max_Y, min_Y,
 			colorRed + redCh, colorGreen + greenCh, colorBlue + blueCh, thikness);
-		plotPointsWithOrtho2D(extrems[i], extremsValues[i], dots, xTo, xFrom, max_Y, min_Y, 0.5f, 0.0f, 1.0f, 3.0);
+		//plotPointsWithOrtho2D(extrems[i], extremsValues[i], dots, xTo, xFrom, max_Y, min_Y, 0.5f, 0.0f, 1.0f, 3.0);
 	}
 
 	// Drawing center points
@@ -75,9 +74,9 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 	delete[]centerX; delete[]centerY;
 	delete[]x;
 	for (int i = 0; i < height; ++i) {
-		delete[]values[i]; delete[]extrems[i]; delete[]extremsValues[i];
+		delete[]values[i]; //delete[]extrems[i]; delete[]extremsValues[i];
 	}
-	delete[]extrems; delete[]extremsValues;
+	//delete[]extrems; delete[]extremsValues;
 	delete[]values;
 
 }

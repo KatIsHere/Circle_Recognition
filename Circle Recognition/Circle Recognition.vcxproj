@@ -185,7 +185,6 @@
   <ItemGroup>
     <ClCompile Include="Approximation.cpp" />
     <ClCompile Include="GPUOpenCLProjectforWindows.cpp" />
-    <ClCompile Include="Host.cpp" />
     <ClCompile Include="Interpolation.cpp" />
     <ClCompile Include="Linear_equations_solve.cpp" />
     <ClCompile Include="LoadersAndPrints.cpp" />

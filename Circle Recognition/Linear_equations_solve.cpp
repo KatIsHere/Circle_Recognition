@@ -1,63 +1,54 @@
 #include <cmath>
 
-double* squre_help(double**  A, const int n) {
-	double* T = new double[n*n];
-	T[0] = sqrt(A[0][0]);
-	double S;
-	for (int i = 0; i < n; ++i) {
-		for (int j = 0; j < n; ++j) {
-			if (i == 0 && j > i) {
-				T[i*n + j] = A[i][j] / T[i*n + i];
+double* squre_solve(double* A, double* B, const int power) {
+	float sum;
+	double* T = new double[power*power];
+	double* d = new double[power];
+	T[0] = sqrt(abs(A[0]));
+	d[0] = A[0] > 0 ? 1 : -1;
+	for (int j = 1; j < power; ++j) {
+		T[j] = A[j] / T[0];
+	}
+	for (int i = 1; i < power; ++i) {
+		for (int j = 0; j < power; ++j) {
+			sum = 0;
+			if (i == j) {
+				for (int l = 0; l < i; ++l) {
+					sum += T[l*power + i] * T[l * power + i] * d[l];
+				}
+				T[i * power + i] = sqrt(abs(A[i*power + i] - sum));
+				d[i] = ((A[i * power + i] - sum > 0 ? 1 : -1));
 			}
-			else if (i != 0) {
-				if (i == j) {
-					S = 0;
-					for (int k = 0; k < i - 1; ++k) {
-						S += T[k*n + i] * T[k*n + i];
-					}
-					T[i*n + i] = sqrt(A[i][i] - S);
+			else if (i < j) {
+				for (int l = 0; l < i; ++l) {
+					sum += T[l * power + i] * d[l] * T[l * power + j];
 				}
-				else if (i < j) {
-					S = 0;
-					for (int k = 0; k < i - 1; ++k) {
-						S += T[k * n + i] * T[k * n + i];
-					}
-					T[i*n + j] = (A[i][j] - S) / T[i*n + i];
-				}
-				else if (i > j) {
-					T[i * n + j] = 0;
-				}
+				T[i*power + j] = (A[i*power + j] - sum) / (T[i * power + i] * d[i]);
 			}
+			else T[i*power + j] = 0;
 		}
 	}
-	return T;
+	double* Y = new double[power];
+	double* C = new double[power];
+	Y[0] = B[0] / T[0];
+	for (int i = 1; i < power; ++i) {
+		sum = 0;
+		for (int j = 0; j < i; ++j) {
+			sum += T[j * power + i] * Y[j] * d[j];
+		}
+		Y[i] = (B[i] - sum) / (T[i*power + i] * d[i]);
+	}
+	C[power - 1] = Y[power - 1] / T[power*power - 1];
+	for (int i = power - 2; i >= 0; --i) {
+		sum = 0;
+		for (int j = i; j < power; ++j) {
+			sum += T[i*power + j] * C[j];
+		}
+		C[i] = (Y[i] - sum) / T[i*power + i];
+	}
+	return C;
 }
 
-
-double* Square_solve(double** A, double* b, const int& n) {
-
-	double* T = new double[n*n];
-	T = squre_help(A, n);
-	double* X = new double[n];
-	double* Y = new double[n]; double S;
-	Y[0] = b[0] / T[0];
-	for (int i = 1; i < n; ++i) {
-		S = 0;
-		for (int k = 0; k < i - 1; ++k) {
-			S += T[k*n + i] * Y[k];
-		}
-		Y[i] = (b[i] - S) / T[i * n + i];
-	}
-	X[n - 1] = Y[n - 1] / T[n*n - 1];
-	for (int j = n - 2; j >= 0; --j) {
-		S = 0;
-		for (int k = j + 1; k < n; ++k) {
-			S += T[j * n + k] * X[k];
-		}
-		X[j] = (Y[j] - S) / T[j*n + j];
-	}
-	return X;
-}
 
 /* INPUT: A - array of pointers to rows of a square matrix having dimension N
 *        Tol - small tolerance number to detect failure when the matrix is near degenerate
