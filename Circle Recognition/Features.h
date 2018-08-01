@@ -50,6 +50,16 @@ public:
 		center = Center();
 	}
 
+	Features(double* distance, double* angle, const int&len, double x_center, double y_center) {
+		N = len;
+		extrems = new Point[len];
+		distancesNumb = len - 1;
+		anglesNumb = int(len + 1) / 2;
+		distances = distance;
+		angles = angle;
+		center.x = x_center; center.y = y_center;
+	}
+
 
 	const Point getCenter() {
 		return center;

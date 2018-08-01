@@ -10,82 +10,81 @@ __kernel void build_polinome(__global const float* xSet, __global const float* f
 	int i, j, k;
 	float normalizing = (float)1 / (setSize + 1);					// 1/(b-a)
 
-	float sumaA;
-	float sumaB;
+	float suma;
 	const int id = get_global_id(0);
 
 	// CREATING A SYSTEM OF LINEAR EQUATIONS
 	// I = 0
 	for (j = 0; j < POWER; ++j) {
-			sumaA = 0.;
+			suma = 0.;
 			for (k = 0; k < setSize; ++k) 
-				sumaA += pown(xSet[k], j);				
-			A[j] = normalizing * sumaA;					
+				suma += pown(xSet[k], j);				
+			A[j] = normalizing * suma;					
 		}
-	sumaB = 0.;
+	suma = 0.;
 	for (j = 0; j < setSize; ++j) 
-		sumaB += fSet[id * setSize + j];
-	B[0] = sumaB * normalizing;							
+		suma += fSet[id * setSize + j];
+	B[0] = suma * normalizing;							
 
 	// I = 1
 	for (j = 0; j < POWER; ++j) {
-		sumaA = 0.;
+		suma = 0.;
 		for (k = 0; k < setSize; ++k) 
-			sumaA += pown(xSet[k], 1 + j);
-		A[POWER + j] = normalizing * sumaA;
+			suma += pown(xSet[k], 1 + j);
+		A[POWER + j] = normalizing * suma;
 	}
-	sumaB = 0.;
+	suma = 0.;
 	for (j = 0; j < setSize; ++j)
-		sumaB += xSet[j] * fSet[id * setSize + j];
-	B[1] = sumaB * normalizing;
+		suma += xSet[j] * fSet[id * setSize + j];
+	B[1] = suma * normalizing;
 
 	// I = 2
 	for (j = 0; j < POWER; ++j) {
-		sumaA = 0.;
+		suma = 0.;
 		for (k = 0; k < setSize; ++k)
-			sumaA += pown(xSet[k], 2 + j);
-		A[2 * POWER + j] = normalizing * sumaA;
+			suma += pown(xSet[k], 2 + j);
+		A[2 * POWER + j] = normalizing * suma;
 	}
-	sumaB = 0.;
+	suma = 0.;
 	for (j = 0; j < setSize; ++j)
-		sumaB += pown(xSet[j], 2) * fSet[id * setSize + j];
-	B[2] = sumaB * normalizing;
+		suma += pown(xSet[j], 2) * fSet[id * setSize + j];
+	B[2] = suma * normalizing;
 
 	// I  = 3
 	for (j = 0; j < POWER; ++j) {
-		sumaA = 0.;
+		suma = 0.;
 		for (k = 0; k < setSize; ++k)
-			sumaA += pown(xSet[k], 3 + j);
-		A[3 * POWER + j] = normalizing * sumaA;
+			suma += pown(xSet[k], 3 + j);
+		A[3 * POWER + j] = normalizing * suma;
 	}
-	sumaB = 0.;
+	suma = 0.;
 	for (j = 0; j < setSize; ++j)
-		sumaB += pown(xSet[j], 3) * fSet[id * setSize + j];
-	B[3] = sumaB * normalizing;
+		suma += pown(xSet[j], 3) * fSet[id * setSize + j];
+	B[3] = suma * normalizing;
 
 	// i = 4
 	for (j = 0; j < POWER; ++j) {
-		sumaA = 0.;
+		suma = 0.;
 		for (k = 0; k < setSize; ++k) 
-			sumaA += pown(xSet[k], 4 + j);
-		A[4 * POWER + j] = normalizing * sumaA;
+			suma += pown(xSet[k], 4 + j);
+		A[4 * POWER + j] = normalizing * suma;
 	}
-	sumaB = 0.;
+	suma = 0.;
 	for (j = 0; j < setSize; ++j)
-		sumaB += pown(xSet[j], 4) * fSet[id * setSize + j];
-	B[4] = sumaB * normalizing;
+		suma += pown(xSet[j], 4) * fSet[id * setSize + j];
+	B[4] = suma * normalizing;
 
 	// I = 5
 	for (j = 0; j < POWER; ++j) {
-		sumaA = 0.;
+		suma = 0.;
 		for (k = 0; k < setSize; ++k) 
-			sumaA += pown(xSet[k], 5 + j);
-		A[5 * POWER + j] = normalizing * sumaA;
+			suma += pown(xSet[k], 5 + j);
+		A[5 * POWER + j] = normalizing * suma;
 	}
-	sumaB = 0.;
+	suma = 0.;
 	for (j = 0; j < setSize; ++j) 
-		sumaB += pown(xSet[j], 5) * fSet[id * setSize + j];
-	B[5] = sumaB * normalizing;
+		suma += pown(xSet[j], 5) * fSet[id * setSize + j];
+	B[5] = suma * normalizing;
 
 	
 	// LINEAR EQUATIONS SOLVE
@@ -343,6 +342,84 @@ __kernel void build_polinome(__global const float* xSet, __global const float* f
 }
 
 
+
+// S size: power*power
+// A size: power*power
+// B size: power
+// K size: power
+__kernel void build_polinome_square_root(__global const float* xSet, __global const float* fSet, __global float* C,
+				__global float* A, __global float* B, __global int* K,
+				const int setSize,
+				__global float* S,
+				const int power) {
+	int i, j, k;
+	float normalizing = (float)1 / (setSize + 1);					// 1/(b-a)
+
+	float suma;
+
+	const int id = get_global_id(0);
+
+	for (i = 0; i < power; ++i) {
+		for (j = 0; j < power; ++j) {
+			suma = 0.;
+			for (k = 0; k < setSize; ++k) {
+				suma += pown(xSet[k], i + j);
+			}
+			A[i * power + j] = normalizing * suma;
+		}
+		suma = 0.;
+		for (j = 0; j < setSize; ++j) {
+			suma += pown(xSet[j], i) * fSet[id * setSize + j];
+		}
+		B[i] = suma * normalizing;
+	}
+
+
+	// LINEAR EQUATIONS SOLVE (Square root method)
+	// Step 1
+	S[0] = sqrt(A[0]);
+	for (j = 1; j < power; ++j)
+		S[j] = A[j] / S[0];
+	for(i = 1; i < power; ++i){
+		suma = A[i * power + i];
+		for (k = 0; k < i - 1; ++k)
+			suma -= S[k*power + i] * S[k*power + i];
+		S[i*power + i] = sqrt(suma);
+		for(j = i + 1; j < power; ++j){ 
+			suma = A[i*power + j];
+			for(k = 0; k < i - 1; ++k){ 
+				suma -= S[k*power + i] * S[k*power + j];
+			}
+			S[i*power + j] = suma / S[i*power + i];
+			printf("S[%d] = %f \t", id*power + j, S[id*power + j]);
+		}
+	}
+
+	// Step 2
+	K[0] = B[0] / S[0];
+	for(i = 1; i < power; ++i){ 
+		suma = B[i];
+		for (j = 0; j < i - 1; ++j)
+			suma -= K[j] * S[j*power + i];
+		K[i] = suma / S[i*power + i];
+
+		printf("K[%d] = %f \t", i, K[i]);
+	}
+
+	// Step 3 - solution
+	C[id*power + power - 1] = K[power - 1] / S[power*power - 1];
+	for(i = power - 2; i >= 0; --i){ 
+		suma = K[i];
+		for (k = i + 1; k < power; ++k)
+			suma -= S[i*power + k] * C[id*power + k];
+		C[id*power + i] = suma / S[i*power + i];
+		printf("C[%d] = %f \t", id*power + i, C[id*power + i]);
+	}
+}
+
+
+
+
 __kernel void build_polinome_UNOPTIMIZED(__global const float* xSet, __global const float* fSet, __global float* C,
 					__global float* A, __global float* B, __global int* Y,
 					const int setSize,
@@ -351,25 +428,24 @@ __kernel void build_polinome_UNOPTIMIZED(__global const float* xSet, __global co
 	int i, j, k;
 	float normalizing = (float)1 / (setSize + 1);					// 1/(b-a)
 
-	float sumaA;
-	float sumaB;
+	float suma;
 
 	const int id = get_global_id(0);
 
 	for (i = 0; i < power; ++i) {
 		for (j = 0; j < power; ++j) {
-			sumaA = 0.;
+			suma = 0.;
 			for (k = 0; k < setSize; ++k) {
-				sumaA += pown(xSet[k], i + j);
+				suma += pown(xSet[k], i + j);
 			}
 
-			A[i * power + j] = normalizing * sumaA;
+			A[i * power + j] = normalizing * suma;
 		}
-		sumaB = 0.;
+		suma = 0.;
 		for (j = 0; j < setSize; ++j) {
-			sumaB += pown(xSet[j], i) * fSet[id * setSize + j];
+			suma += pown(xSet[j], i) * fSet[id * setSize + j];
 		}
-		B[i] = sumaB * normalizing;
+		B[i] = suma * normalizing;
 	}
 
 
@@ -419,8 +495,9 @@ __kernel void build_polinome_UNOPTIMIZED(__global const float* xSet, __global co
 
 		for (int k = 0; k < i; k++) {
 			C[id * power + i] -= A[i * power + k] * C[id * power + k];
-			//printf("A[%d][%d] = %f\t", i, k, A[i*power + k]);
+			printf("A[%d][%d] = %f\t", i, k, A[i*power + k]);
 		}
+		printf("\n");
 	}
 
 	for (i = power - 1; i >= 0; i--) {
@@ -428,107 +505,101 @@ __kernel void build_polinome_UNOPTIMIZED(__global const float* xSet, __global co
 			C[id * power + i] -= A[i * power + k] * C[id * power + k];
 
 		C[id * power + i] /= A[i * power + i];
-		// printf("C[%d] = %f\t", id * power + i, C[id*power + i]);
+		printf("C[%d] = %f\t", id * power + i, C[id*power + i]);
 	}
+	printf("\n");
 }
 
 
-//float sum;
-//T[0] = sqrt(fabs(A[0]));
-//d[0] = A[0] > 0 ? 1 : -1;
-//for (int j = 1; j < power; ++j) {
-//	T[j] = A[j] / T[0];
-//}
-//for (int i = 1; i < power; ++i) {
-//	for (int j = 0; j < power; ++j) {
-//		sum = 0;
-//		if (i == j) {
-//			for (int l = 0; l < i; ++l) {
-//				sum += T[l*power + i] * T[l * power + i] * d[l];
-//			}
-//			T[i * power + i] = sqrt(fabs(A[i*power + i] - sum));
-//			d[i] = ((A[i * power + i] - sum > 0 ? 1 : -1));
-//		}
-//		else if (i < j) {
-//			for (int l = 0; l < i; ++l) {
-//				sum += T[l * power + i] * d[l] * T[l * power + j];
-//			}
-//			T[i*power + j] = (A[i*power + j] - sum) / (T[i * power + i] * d[i]);
-//		}
-//		else T[i*power + j] = 0;
-//	}
-//}
-//Y[0] = B[0] / T[0];
-//for (int i = 1; i < power; ++i) {
-//	sum = 0;
-//	for (int j = 0; j < i; ++j) {
-//		sum += T[j * power + i] * Y[j] * d[j];
-//	}
-//	Y[i] = (B[i] - sum) / (T[i*power + i] * d[i]);
-//}
-//C[id*power + power - 1] = Y[power - 1] / T[power*power - 1];
-//for (int i = power - 2; i >= 0; --i) {
-//	sum = 0;
-//	for (int j = i; j < power; ++j) {
-//		sum += T[i*power + j] * C[id*power + j];
-//	}
-//	C[id*power + i] = (Y[i] - sum) / T[i*power + i];
-//	printf("sum = %f,  C[%d] = %f \t", sum, id*power + i, C[id*power + i]);
-//}
-//printf("\n\n");
 
-/*
-T[0] = sqrt(A[0]);
-float S;
-for (int i = 0; i < power; ++i) {
-for (int j = 0; j < power; ++j) {
-printf("A[%d][%d] = %f ~~~~~~~~~ ", i, j, A[i * power + j]);
-if (i == 0 && j > i) {
-T[i * power + j] = (float)A[i * power + j] / T[i * power + i];
-}
-else if (i != 0) {
-if (i == j) {
-S = 0;
-for (int k = 0; k < i - 1; ++k) {
-S += (float)T[k * power + i] * T[k * power + i];
-}
-T[i * power + i] = sqrt(A[i * power + i] - S);
-}
-else if (i < j) {
-S = 0;
-for (int k = 0; k < i - 1; ++k) {
-S += T[k * power + i] * T[k * power + i];
-}
-T[i * power + j] = (float)(A[i * power + j] - S) / T[i * power + i];
-}
-else if (i > j) {
-T[i * power + j] = 0;
+// Newton method
+// sizes:
+// polinome_coefs: [hight*width]
+// start: [hight]
+// firstDerivative x: [width - 1]
+// secondDerivative: [width - 2]
+// extrems: [hight*(width - 1)]
+// values: [hight*(width - 1)]
+__kernel Extremums_Newton(__global float* polinome_coefs, const int width, 
+					__global float *start, const float finish, 
+					__global float* firstDerivative, __global float* secondDerivative, 
+					__global float* extrems, __global float* values,
+					const float Eps, const float h){ 
+	const int id_dimi = get_global_id(0);
+	const int id_dimj = get_global_id(1);
+	float polinome = 0, firstDer = 0, x0 = start[id_dimi];
+	int i, j, k;
+	// filling out first derivative coefs
+	for (i = 0; i < width - 2; ++i) {
+		firstDeivative[i] = (i + 1)*polinome_coefs[id_dimi*width + i + 1];
+		secondDerivative[i] = (i + 1)*firstDeivative[i + 1];
+		polinome += firstDeivative[i] * pown(x0, i);
+	}
+	firstDeivative[width - 2] = (width - 1)*polinome_coefs[id_dimi*width + width - 1];
+	polinome += firstDeivative[width - 2] * pown(x0, width - 2);
+
+	// calculating  first meaning of the polinome
+	float value, div;
+
+	for (j = 0; j < width - 1; ++j) {
+		polinome += firstDeivative[j] * pown(x0, j);
+		firstDer += secondDerivative[j] * pown(x0, j);
+	}
+	polinome += polinome_coefs[id_dimi*width + width - 1] * pown(x0, width - 1);
+
+	value = fabs(polinome);
+
+	while (value >= Eps) {
+		div = polinome / firstDer;
+		x0 = x0 - div;
+		for (j = 0; j < width - 1; ++j) {
+			polinome += firstDeivative[j] * pown(x0, j);
+			firstDer += secondDerivative[j] * pown(x0, j);
+		}
+		polinome += polinome_coefs[id_dimi*width + width - 1] * pown(x0, width - 1);
+		value = fabs(polinome);
+	}
+
+	polinome = 0;
+	for (j = 0; j < width; ++j)
+		polinome += polinome_coefs[id_dimi*width + j] * pown(x0, j);
+		
+	extrems[id_dimi*(width - 1) + id_dimj] = x0;
+	values[id_dimi*(width - 1) + id_dimj] = polinome;
+	start[id_dimi] = x0 + h;
 }
 
-printf("T[%d][%d] = %f \t", i, j, T[i * power + j]);
-}
-}
-}
-printf("\t");
 
-Y[0] = B[0] / T[0];
-for (int i = 1; i < power; ++i) {
-S = 0;
-for (int k = 0; k < i - 1; ++k) {
-S += T[k * power + i] * Y[k];
-}
-Y[i] = (B[i] - S) / T[i * power + i];
-}
+// sizes:
+// distances: [hight*(width - 1)]
+// angles: [hight*(width + 1) / 2]
+// center_ x: [hight]
+// center_y: [hight]
+// extrems_x: [hight*(power - 1)]
+//  extrems_y: [hight*(power - 1)]
+__kernel features(__global float* extrems_x, __global float* extrems_y, const int width, 
+					__global float* distances, __global float* angles, 
+					__global float* center_x, __global float* center_y){ 
+	const int id = get_global_id(0);
+	// distancesNumb = width - 1;
+	// anglesNumb = int(width + 1) / 2;
+	int i, j, k;
+	// distance calculation (amplitude)
+	for(i = 0; i < width - 1; ++i){ 
+		distances[id*width + i] = sqrt((center_x[id*width + i + 1] - center_x[id*width + i])*(center_x[id*width + i + 1] - center_x[id*width + i]) +
+			(center_y[id*width + i + 1] - center_y[id*width + i])*(center_y[id*width + i + 1] - center_y[id*width + i]));
+	}
+	const int anglesNumb = int(width + 1) / 2;
+	float c;
+	// cos of angles between amplitudes
+	for(i = 0; i < anglesNumb; ++i){ 
+		c = sqrt((center_x[id*width + i + 2] - center_x[id*width + i])*(center_x[id*width + i + 2] - center_x[id*width + i]) +
+			(center_y[id*width + i + 2] - center_y[id*width + i])*(center_y[id*width + i + 2] - center_y[id*width + i]));
+		
+		angles[id*width + i] = (distances[i] * distances[i] + distances[i + 1] * distances[i + 1] - c*c ) / (2 * distances[i] * distances[i + 1]);
+	}
 
-printf("Hello\n");
-C[id * power + power - 1] = Y[power - 1] / T[power * power - 1];
-printf("C[%d] = %f \t", id * power + power - 1, C[id * power + power - 1]);
-for (int j = power - 2; j >= 0; --j) {
-S = 0;
-for (int k = j + 1; k < power; ++k) {
-S += T[j * power + k] * C[id * power + k];
+	// centers
+	center_y[id] = extrems_y[id*width + width / 2] + extrems_y[id*width + width / 2 + 1];
+	center_x[id] = (extrems_x[id*width + width / 2] + extrems_x[id*width + width / 2 + 1]) / 2;
 }
-C[id * power + j] = (float)(Y[j] - S) / T[j * power + j];
-printf("C[%d] = %f \t", id * power + j, C[id * power + j]);
-}
-printf("\n");*/

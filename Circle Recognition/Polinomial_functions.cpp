@@ -170,7 +170,8 @@ double NewtonMethod(double* coefs, const int& N, const double& start, const doub
 	* A method for finding approximations to the roots of a real-valued function
 	*/
 	double* FirstDerivative = polinome_derivative(coefs, N);
-	double x0 = start, res, polinome = Polinome_Power(x0, coefs, N), firstDer = Polinome_Power(x0, FirstDerivative, N - 1);
+	double x0 = start, res, polinome = Polinome_Power(x0, coefs, N), 
+							firstDer = Polinome_Power(x0, FirstDerivative, N - 1);
 	while (abs(polinome) >= Eps) {								// 3 KERNEL
 		res = polinome / firstDer;
 		x0 = x0 - res;
@@ -236,3 +237,4 @@ double* findExtrems(double* coefs, const int& N, const double& a, const double& 
 	delete[]newCoefs;
 	return solv;
 }
+

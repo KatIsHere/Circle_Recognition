@@ -20,3 +20,9 @@ double Approx_Polinomes_Run_Kernel(cl::Context context, cl::Device &device, cl::
 	cl_float* T);
 inline void
 checkErr(cl_int err, const char * name);
+double Approx_Polinomes_Kernel_squareRoot(cl_command_queue &queue, cl_context context, cl_device_id &device, cl_kernel &kernel,
+	cl_float* x_input, cl_float *f_input,
+	cl_int input_width, cl_int input_hight,
+	cl_float* A, cl_float *B, cl_float *C_output, cl_float *K,
+	cl_int polinome_power,
+	cl_float* S);

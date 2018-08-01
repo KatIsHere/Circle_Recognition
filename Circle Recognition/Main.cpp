@@ -5,6 +5,7 @@
 #include "PolinomeBuilder.h"
 #include "Polinoms.h"
 #include "Drawing.h"
+#include "Hosts.h"
 #include <vector>
 #include <fstream>
 using namespace std;
@@ -250,7 +251,7 @@ void openclCalculating(float* x, float*f_x, float* Polinomes, const int& hight, 
 	//err = clBuildProgram(program, 0, NULL, "Kernels.cl", NULL, NULL);
 	checkErr(err, "clBuildProgram");
 
-	cl_kernel kernel = clCreateKernel(program, "build_polinome", &err);
+	cl_kernel kernel = clCreateKernel(program, "build_polinome_square_root", &err);
 	checkErr(err, "clCreateKernel");
 
 
@@ -259,12 +260,12 @@ void openclCalculating(float* x, float*f_x, float* Polinomes, const int& hight, 
 	// Build kernel
 	cl_float* A = new cl_float[power*power];
 	cl_float* B = new cl_float[power];
-	cl_float* P = new cl_float[power + 1];
-	cl_float* T = new cl_float[power];
+	cl_float* P = new cl_float[power];
+	cl_float* T = new cl_float[power*power];
 	try
 	{
 		printf("Executing OpenCL kernel...\n");
-		float ocl_time = Approx_Polinomes_Run_Kernel(queue, context, default_device, kernel, x, f_x, width, hight, A, B, Polinomes, P, power, T);
+		float ocl_time = Approx_Polinomes_Kernel_squareRoot(queue, context, default_device, kernel, x, f_x, width, hight, A, B, Polinomes, P, power, T);
 		printf("\nNDRange perf. counter time %f s.\n", ocl_time);
 
 		//cout << "\n\nPolinomes second:\n";
