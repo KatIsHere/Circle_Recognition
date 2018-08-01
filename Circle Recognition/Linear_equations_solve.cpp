@@ -84,7 +84,7 @@ int LUPDecomposition(double **A, const int& N, double Tol, int *P) {
 			//printf("A[%d][%d] = %f\t", k, i, A[k][i]);
 		}
 		//printf("maxA = %f\n", max_a);
-		if (max_a < Tol) throw "Matrix is degenerate, try another method";
+		if (max_a < 0.01) throw "Matrix is degenerate, try another method";
 
 		if (i_max != i) {
 			j = P[i];

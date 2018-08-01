@@ -69,7 +69,7 @@ double** PolinomeSetValues(double*x, double** PolinomeCoefs, const int& height,
 double* xCreateSet(double start, double finish, const int& N) {
 	if (finish < start)
 		throw "invalid argument";
-	double h = double(finish - start) / (N - 1);
+	float h = float(finish - start) / (N - 1);
 	double* x = new double[N];
 	for (int i = 0; i < N; ++i) {
 		x[i] = start + h * i;

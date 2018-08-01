@@ -13,7 +13,8 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 	/*
 	* Drawing the matrix as a set of functions(approximation polinomes, power N) 
 	*/
-	double* x = xCreateSet(0, height, dots);
+	//double* x = xCreateSet(0, height, dots);
+	double* x = xCreateSet(xFrom, xTo, dots);
 	double** values = PolinomeSetValues(x, polinomes, height, N, dots);
 	double maxF, minF;
 	float redCh, greenCh, blueCh;

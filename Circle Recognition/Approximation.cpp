@@ -69,7 +69,7 @@ double* approximation_coefs(double* xSet, double* fSet, const int& setSize, cons
 }
 
 
-double* approximation_polinome(double* xSet, double* fSet, const int& setSize, const int& polinomialPower = 5, double SystemTolerance = 0.1) {
+double* approximation_polinome(double* xSet, double* fSet, const int& setSize, const int& polinomialPower = 5, double SystemTolerance = 0.01) {
 	/*
 	* Approximation of a table function with a polinome of power n, using mean square ethod forapproximation
 	* Returns an array of coeficients ci for polinome: Pn(x) = c0 + c1*x + c2*x**2 + ...
@@ -107,7 +107,6 @@ double* approximation_polinome(double* xSet, double* fSet, const int& setSize, c
 		delete[]A[i];
 	delete[]B;	delete[]A;
 	delete[]P;
-
 	return C;
 }
 

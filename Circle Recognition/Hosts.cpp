@@ -1,6 +1,7 @@
 #include <ctime>
 #include <iostream>
 #include "Hosts.h"
+#include <cmath>
 
 using namespace std;
 
@@ -8,7 +9,7 @@ using namespace std;
 cl_float* xCreateCLSet(double start, double finish, const int& N) {
 	if (finish < start)
 		throw "invalid argument";
-	double h = double(finish - start) / (N - 1);
+	float h = float(finish - start) / (N - 1);
 	cl_float* x = new cl_float[N];
 	for (int i = 0; i < N; ++i) {
 		x[i] = (cl_float)start + h * i;
@@ -198,14 +199,137 @@ double Approx_Polinomes_Kernel_squareRoot(cl_command_queue &queue, cl_context co
 	return (float)(perf_stop - perf_start) / CLOCKS_PER_SEC;
 }
 
+void initializeA(cl_float* xSet, cl_float* A, const cl_int& power, const cl_int& setSize, cl_int* Y) {
+	int i, j, k;
+	float suma;
+	float normalizing = (float)1 / (setSize + 1);
+
+	for (i = 0; i < power; ++i) {
+		for (j = 0; j < power; ++j) {
+			A[i * power + j] = 0;
+			suma = (float)0.;
+			for (k = 0; k < setSize; ++k) {
+				suma += pow(xSet[k], i + j);
+			}
+			A[i * power + j] = normalizing * suma;
+			//printf("A[%d][%d] = %f\t", i, j, A[i * power + j]);
+		}
+		//printf("\n");
+	}
+
+	int i_max;
+	float maxA, absA;
+	cl_float* T = new cl_float[power];
+	for (i = 0; i < power; i++)
+		Y[i] = i;					//Unit permutation matrix
+	printf("\n\n");
+	for (i = 0; i < power; i++) {
+		maxA = 0.;
+		i_max = i;
+
+		for (k = i; k < power; k++) {
+			if ((absA = fabs(A[k * power + i])) > maxA) {
+				maxA = absA;
+				i_max = k;
+			}
+			printf("A[%d][%d] = %f\t", k, i, A[k * power + i]);
+		}
+		printf("maxA = %f\n", maxA);
+		if (maxA < 0.01)
+			printf("\nMatrix is degenerate\n");
+		if (i_max != i) {
+			//pivoting P
+			j = Y[i];
+			Y[i] = Y[i_max];
+			Y[i_max] = j;
+
+			//pivoting rows of A
+			for (j = 0; j < power; ++j) {
+				T[j] = A[i * power + j];
+				A[i * power + j] = A[i_max * power + j];
+				A[i_max * power + j] = T[j];
+			}
+		}
+
+		for (j = i + 1; j < power; j++) {
+			A[j * power + i] /= A[i * power + i];
+
+			for (k = i + 1; k < power; k++)
+				A[j * power + k] -= A[j * power + i] * A[i * power + k];
+		}
+	}
+	delete[]T;
+}
+
+void initializeA(cl_double* xSet, cl_double* A, const cl_int& power, const cl_int& setSize, cl_int* Y) {
+	int i, j, k;
+	float suma;
+	float normalizing = (float)1 / (setSize + 1);
+
+	for (i = 0; i < power; ++i) {
+		for (j = 0; j < power; ++j) {
+			A[i * power + j] = 0;
+			suma = (float)0.;
+			for (k = 0; k < setSize; ++k) {
+				suma += pow(xSet[k], i + j);
+			}
+			A[i * power + j] = normalizing * suma;
+			//printf("A[%d][%d] = %f\t", i, j, A[i * power + j]);
+		}
+		//printf("\n");
+	}
+
+	int i_max;
+	float maxA, absA;
+	cl_double* T = new cl_double[power];
+	for (i = 0; i < power; i++)
+		Y[i] = i;					//Unit permutation matrix
+	printf("\n\n");
+	for (i = 0; i < power; i++) {
+		maxA = 0.;
+		i_max = i;
+
+		for (k = i; k < power; k++) {
+			if ((absA = fabs(A[k * power + i])) > maxA) {
+				maxA = absA;
+				i_max = k;
+			}
+			printf("A[%d][%d] = %f\t", k, i, A[k * power + i]);
+		}
+		printf("maxA = %f\n", maxA);
+		if (maxA < 0.01)
+			printf("\nMatrix is degenerate\n");
+		if (i_max != i) {
+			//pivoting P
+			j = Y[i];
+			Y[i] = Y[i_max];
+			Y[i_max] = j;
+
+			//pivoting rows of A
+			for (j = 0; j < power; ++j) {
+				T[j] = A[i * power + j];
+				A[i * power + j] = A[i_max * power + j];
+				A[i_max * power + j] = T[j];
+			}
+		}
+
+		for (j = i + 1; j < power; j++) {
+			A[j * power + i] /= A[i * power + i];
+
+			for (k = i + 1; k < power; k++)
+				A[j * power + k] -= A[j * power + i] * A[i * power + k];
+		}
+	}
+	delete[]T;
+}
+
 
 double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, cl_device_id &device, cl_kernel &kernel,
 	cl_float* x_input, cl_float *f_input,
 	cl_int input_width, cl_int input_hight,
-	cl_float* A_input, cl_float *B_input, cl_float *C_input, cl_float *P_input,
-	cl_int polinome_power,
-	cl_float* T) {
-
+	cl_float* A_input, cl_float *B_input, cl_float *C_input, cl_int *P_input,
+	cl_int polinome_power) {
+	initializeA(x_input, A_input, polinome_power, input_width, P_input);
 	cl_int err = CL_SUCCESS;
 	// CREATING BUFFERS FOR x, f, A, b, P, T and C
 	// AND CHECKING FOR ERRORS
@@ -237,7 +361,7 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 	cl_mem A_buffer = clCreateBuffer(
 		context,
 		CL_MEM_USE_HOST_PTR,
-		sizeof(cl_float) * polinome_power * polinome_power,
+		sizeof(cl_float) * polinome_power * polinome_power * input_hight,
 		A_input,
 		&err);
 	checkErr(err, "A_buffer");
@@ -249,7 +373,7 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 	cl_mem B_buffer = clCreateBuffer(
 		context,
 		CL_MEM_USE_HOST_PTR,
-		sizeof(cl_float) * polinome_power,
+		sizeof(cl_float) * polinome_power * input_hight,
 		B_input,
 		&err);
 	checkErr(err, "B_buffer");
@@ -261,7 +385,7 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 	cl_mem P_buffer = clCreateBuffer(
 		context,
 		CL_MEM_USE_HOST_PTR,
-		sizeof(cl_float) * (polinome_power + 1),
+		sizeof(cl_int) * (polinome_power + 1),
 		P_input,
 		&err);
 	checkErr(err, "P_buffer");
@@ -279,19 +403,6 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 	checkErr(err, "C_buffer");
 
 	if (C_buffer == (cl_mem)0)
-	{
-		throw  "Failed to create input data Buffer\n";
-	}
-
-	cl_mem T_buffer = clCreateBuffer(
-		context,
-		CL_MEM_USE_HOST_PTR,
-		sizeof(cl_float) * polinome_power,
-		T,
-		&err);
-	checkErr(err, "T_buffer");
-
-	if (T_buffer == (cl_mem)0)
 	{
 		throw  "Failed to create input data Buffer\n";
 	}
@@ -319,10 +430,7 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 	err = clSetKernelArg(kernel, 6, sizeof(cl_uint), &input_width);
 	checkErr(err, "clSetKernelArg : width(7)");
 
-	err = clSetKernelArg(kernel, 7, sizeof(T_buffer), (void *)& T_buffer);
-	checkErr(err, "clSetKernelArg : T(8)");
-
-	err = clSetKernelArg(kernel, 8, sizeof(cl_uint),  &polinome_power);
+	err = clSetKernelArg(kernel, 7, sizeof(cl_uint),  &polinome_power);
 	checkErr(err, "clSetKernelArg : power(3)");
 
 	const clock_t perf_start = clock();
@@ -363,168 +471,153 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 }
 
 
-//double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, cl_device_id &device, cl_kernel &kernel,
-//	cl_double* x_input, cl_double *f_input,
-//	cl_int input_width, cl_int input_hight,
-//	cl_double* A_input, cl_double *B_input, cl_double *C_input, cl_double *P_input,
-//	cl_int polinome_power,
-//	cl_double* T) {
-//
-//	cl_int err = CL_SUCCESS;
-//	// CREATING BUFFERS FOR x, f, A, b, P, T and C
-//	// AND CHECKING FOR ERRORS
-//
-//	cl_mem x_input_buffer = clCreateBuffer(
-//		context,
-//		CL_MEM_COPY_HOST_PTR,
-//		sizeof(cl_double) * input_width,
-//		x_input,
-//		&err);
-//	checkErr(err, "x_input_buffer");
-//
-//	if (x_input_buffer == (cl_mem)0)
-//	{
-//		throw  "Failed to create input data Buffer\n";
-//	}
-//	cl_mem f_input_buffer = clCreateBuffer(
-//		context,
-//		CL_MEM_COPY_HOST_PTR,
-//		sizeof(cl_double) * input_hight * input_width,
-//		f_input,
-//		&err);
-//	checkErr(err, "f_input_buffer");
-//
-//	if (f_input_buffer == (cl_mem)0)
-//	{
-//		throw  "Failed to create input data Buffer\n";
-//	}
-//	cl_mem A_buffer = clCreateBuffer(
-//		context,
-//		CL_MEM_USE_HOST_PTR,
-//		sizeof(cl_double) * input_hight * polinome_power,
-//		A_input,
-//		&err);
-//	checkErr(err, "A_buffer");
-//
-//	if (A_buffer == (cl_mem)0)
-//	{
-//		throw  "Failed to create input data Buffer\n";
-//	}
-//	cl_mem B_buffer = clCreateBuffer(
-//		context,
-//		CL_MEM_USE_HOST_PTR,
-//		sizeof(cl_double) * polinome_power,
-//		B_input,
-//		&err);
-//	checkErr(err, "B_buffer");
-//
-//	if (B_buffer == (cl_mem)0)
-//	{
-//		throw  "Failed to create input data Buffer\n";
-//	}
-//	cl_mem P_buffer = clCreateBuffer(
-//		context,
-//		CL_MEM_USE_HOST_PTR,
-//		sizeof(cl_double) * (polinome_power + 1),
-//		P_input,
-//		&err);
-//	checkErr(err, "P_buffer");
-//
-//	if (P_buffer == (cl_mem)0)
-//	{
-//		throw  "Failed to create input data Buffer\n";
-//	}
-//	cl_mem C_buffer = clCreateBuffer(
-//		context,
-//		CL_MEM_USE_HOST_PTR,
-//		sizeof(cl_double) * polinome_power * input_hight,
-//		C_input,
-//		&err);
-//	checkErr(err, "C_buffer");
-//
-//	if (C_buffer == (cl_mem)0)
-//	{
-//		throw  "Failed to create input data Buffer\n";
-//	}
-//
-//	cl_mem T_buffer = clCreateBuffer(
-//		context,
-//		CL_MEM_USE_HOST_PTR,
-//		sizeof(cl_double) * polinome_power,
-//		T,
-//		&err);
-//	checkErr(err, "T_buffer");
-//
-//	if (T_buffer == (cl_mem)0)
-//	{
-//		throw  "Failed to create input data Buffer\n";
-//	}
-//
-//
-//	// SETTING UP KERNEL ARGUMENTS + CHECKING FOR ERRORS
-//	err = clSetKernelArg(kernel, 0, sizeof(x_input_buffer), (void *)& x_input_buffer);
-//	checkErr(err, "clSetKernelArg : x(0)");
-//
-//	err = clSetKernelArg(kernel, 1, sizeof(f_input_buffer), (void *)& f_input_buffer);
-//	checkErr(err, "clSetKernelArg : f(1)");
-//
-//	err = clSetKernelArg(kernel, 2, sizeof(C_buffer), (void *)& C_buffer);
-//	checkErr(err, "clSetKernelArg : C(2)");
-//
-//	err = clSetKernelArg(kernel, 3, sizeof(A_buffer), (void *)& A_buffer);
-//	checkErr(err, "clSetKernelArg : A(4)");
-//
-//	err = clSetKernelArg(kernel, 4, sizeof(B_buffer), (void *)& B_buffer);
-//	checkErr(err, "clSetKernelArg : B(5)");
-//
-//	err = clSetKernelArg(kernel, 5, sizeof(P_buffer), (void *)& P_buffer);
-//	checkErr(err, "clSetKernelArg : P(6)");
-//
-//	err = clSetKernelArg(kernel, 6, sizeof(cl_uint), &input_width);
-//	checkErr(err, "clSetKernelArg : width(7)");
-//
-//	err = clSetKernelArg(kernel, 7, sizeof(T_buffer), (void *)& T_buffer);
-//	checkErr(err, "clSetKernelArg : T(8)");
-//
-//	err = clSetKernelArg(kernel, 8, sizeof(cl_uint),  &polinome_power);
-//	checkErr(err, "clSetKernelArg : power(3)");
-//
-//	const clock_t perf_start = clock();
-//	int dim = 1;
-//	size_t global[] = { input_hight, 1, 0 };
-//	size_t local[] = { 1, 1, 0 };
-//	err = clEnqueueNDRangeKernel(queue, kernel,
-//		dim,
-//		nullptr,
-//		global, local,
-//		0, nullptr, nullptr);
-//	checkErr(err, "clEnqueueNDRangeKernel");
-//
-//	const clock_t perf_stop = clock();
-//
-//	err = clFinish(queue);
-//	checkErr(err, "clFinish");
-//
-//	// READING FROM BUFFER
-//	err = clEnqueueReadBuffer(queue, C_buffer, CL_TRUE, 0, sizeof(cl_double) * polinome_power* input_hight, C_input, NULL, NULL, NULL);
-//	checkErr(err, "clEnqueueReadBuffer : couldn't read from buffer");
-//
-//	// RELEASING BUFFERS
-//	err = clReleaseMemObject(x_input_buffer);
-//	checkErr(err, "clReleaseMemObject : x");
-//	err = clReleaseMemObject(f_input_buffer);
-//	checkErr(err, "clReleaseMemObject : f");
-//	err = clReleaseMemObject(A_buffer);
-//	checkErr(err, "clReleaseMemObject : A");
-//	err = clReleaseMemObject(B_buffer);
-//	checkErr(err, "clReleaseMemObject : B");
-//	err = clReleaseMemObject(P_buffer);
-//	checkErr(err, "clReleaseMemObject : P");
-//	err = clReleaseMemObject(C_buffer);
-//	checkErr(err, "clReleaseMemObject : C");
-//
-//	return (float)(perf_stop - perf_start) / CLOCKS_PER_SEC;
-//}
+double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, cl_device_id &device, cl_kernel &kernel,
+	cl_double* x_input, cl_double *f_input,
+	cl_int input_width, cl_int input_hight,
+	cl_double* A_input, cl_double *B_input, cl_double *C_input, cl_int *P_input,
+	cl_int polinome_power) {
+
+	initializeA(x_input, A_input, polinome_power, input_width, P_input);
+	cl_int err = CL_SUCCESS;
+	// CREATING BUFFERS FOR x, f, A, b, P, T and C
+	// AND CHECKING FOR ERRORS
+
+	cl_mem x_input_buffer = clCreateBuffer(
+		context,
+		CL_MEM_COPY_HOST_PTR,
+		sizeof(cl_double) * input_width,
+		x_input,
+		&err);
+	checkErr(err, "x_input_buffer");
+
+	if (x_input_buffer == (cl_mem)0)
+	{
+		throw  "Failed to create input data Buffer\n";
+	}
+	cl_mem f_input_buffer = clCreateBuffer(
+		context,
+		CL_MEM_COPY_HOST_PTR,
+		sizeof(cl_double) * input_hight * input_width,
+		f_input,
+		&err);
+	checkErr(err, "f_input_buffer");
+
+	if (f_input_buffer == (cl_mem)0)
+	{
+		throw  "Failed to create input data Buffer\n";
+	}
+	cl_mem A_buffer = clCreateBuffer(
+		context,
+		CL_MEM_USE_HOST_PTR,
+		sizeof(cl_double) * input_hight * polinome_power,
+		A_input,
+		&err);
+	checkErr(err, "A_buffer");
+
+	if (A_buffer == (cl_mem)0)
+	{
+		throw  "Failed to create input data Buffer\n";
+	}
+	cl_mem B_buffer = clCreateBuffer(
+		context,
+		CL_MEM_USE_HOST_PTR,
+		sizeof(cl_double) * polinome_power,
+		B_input,
+		&err);
+	checkErr(err, "B_buffer");
+
+	if (B_buffer == (cl_mem)0)
+	{
+		throw  "Failed to create input data Buffer\n";
+	}
+	cl_mem P_buffer = clCreateBuffer(
+		context,
+		CL_MEM_USE_HOST_PTR,
+		sizeof(cl_int) * polinome_power,
+		P_input,
+		&err);
+	checkErr(err, "P_buffer");
+
+	if (P_buffer == (cl_mem)0)
+	{
+		throw  "Failed to create input data Buffer\n";
+	}
+	cl_mem C_buffer = clCreateBuffer(
+		context,
+		CL_MEM_USE_HOST_PTR,
+		sizeof(cl_double) * polinome_power * input_hight,
+		C_input,
+		&err);
+	checkErr(err, "C_buffer");
+
+	if (C_buffer == (cl_mem)0)
+	{
+		throw  "Failed to create input data Buffer\n";
+	}
+
+
+
+	// SETTING UP KERNEL ARGUMENTS + CHECKING FOR ERRORS
+	err = clSetKernelArg(kernel, 0, sizeof(x_input_buffer), (void *)& x_input_buffer);
+	checkErr(err, "clSetKernelArg : x(0)");
+
+	err = clSetKernelArg(kernel, 1, sizeof(f_input_buffer), (void *)& f_input_buffer);
+	checkErr(err, "clSetKernelArg : f(1)");
+
+	err = clSetKernelArg(kernel, 2, sizeof(C_buffer), (void *)& C_buffer);
+	checkErr(err, "clSetKernelArg : C(2)");
+
+	err = clSetKernelArg(kernel, 3, sizeof(A_buffer), (void *)& A_buffer);
+	checkErr(err, "clSetKernelArg : A(4)");
+
+	err = clSetKernelArg(kernel, 4, sizeof(B_buffer), (void *)& B_buffer);
+	checkErr(err, "clSetKernelArg : B(5)");
+
+	err = clSetKernelArg(kernel, 5, sizeof(P_buffer), (void *)& P_buffer);
+	checkErr(err, "clSetKernelArg : P(6)");
+
+	err = clSetKernelArg(kernel, 6, sizeof(cl_uint), &input_width);
+	checkErr(err, "clSetKernelArg : width(7)");
+
+	err = clSetKernelArg(kernel, 7, sizeof(cl_uint),  &polinome_power);
+	checkErr(err, "clSetKernelArg : power(3)");
+
+	const clock_t perf_start = clock();
+	int dim = 1;
+	size_t global[] = { input_hight, 1, 0 };
+	size_t local[] = { 1, 1, 0 };
+	err = clEnqueueNDRangeKernel(queue, kernel,
+		dim,
+		nullptr,
+		global, local,
+		0, nullptr, nullptr);
+	checkErr(err, "clEnqueueNDRangeKernel");
+
+	const clock_t perf_stop = clock();
+
+	err = clFinish(queue);
+	checkErr(err, "clFinish");
+
+	// READING FROM BUFFER
+	err = clEnqueueReadBuffer(queue, C_buffer, CL_TRUE, 0, sizeof(cl_double) * polinome_power* input_hight, C_input, NULL, NULL, NULL);
+	checkErr(err, "clEnqueueReadBuffer : couldn't read from buffer");
+
+	// RELEASING BUFFERS
+	err = clReleaseMemObject(x_input_buffer);
+	checkErr(err, "clReleaseMemObject : x");
+	err = clReleaseMemObject(f_input_buffer);
+	checkErr(err, "clReleaseMemObject : f");
+	err = clReleaseMemObject(A_buffer);
+	checkErr(err, "clReleaseMemObject : A");
+	err = clReleaseMemObject(B_buffer);
+	checkErr(err, "clReleaseMemObject : B");
+	err = clReleaseMemObject(P_buffer);
+	checkErr(err, "clReleaseMemObject : P");
+	err = clReleaseMemObject(C_buffer);
+	checkErr(err, "clReleaseMemObject : C");
+
+	return (float)(perf_stop - perf_start) / CLOCKS_PER_SEC;
+}
 
 
 double Approx_Polinomes_Run_Kernel(cl::Context context, cl::Device &device, cl::Kernel &kernel,

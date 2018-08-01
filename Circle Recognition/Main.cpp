@@ -262,9 +262,9 @@ void openclCalculating(float* x, float*f_x, float* Polinomes, const int& hight, 
 	int ret = EXIT_SUCCESS;
 		
 	// Build kernel
-	cl_float* A = new cl_float[power*power];//*hight];
-	cl_float* B = new cl_float[power];
-	cl_float* P = new cl_float[power];
+	cl_float* A = new cl_float[power*power];
+	cl_float* B = new cl_float[power*hight];
+	cl_int* P = new cl_int[power];
 	cl_float* T = new cl_float[power];
 	try
 	{
@@ -310,7 +310,7 @@ void RenderApproximation(void) {
 
 	// CONVENTIONAL METHOD
 	double** MatrixLARGE = loadMatrix(filepath_LARGE, SIZE_LARGE, SIZE_LARGE);
-	double* x_LARGE = xCreateSet(0, SIZE_LARGE, SIZE_LARGE);
+	double* x_LARGE = xCreateSet(0, 4, SIZE_LARGE);
 	double** polinomes_LARGE = buidPolinome(x_LARGE, MatrixLARGE, SIZE_LARGE, POLINOME_POWER_LARGE, 1);
 	//double** MatrixLARGE_2 = loadMatrix(filepath_LARGE_2, SIZE_LARGE, SIZE_LARGE);
 	//double* x_LARGE_2 = xCreateSet(0, SIZE_LARGE, SIZE_LARGE);
@@ -405,7 +405,7 @@ void RenderPoints(void) {
 void RenderFast(void) {
 	string filepath_LARGE = "idle_test_data_set\\idle_4\\2_x=52_y=125_sz=32.txt";
 	cl_float* MatrixLARGE = cl_loadFunc(SIZE_LARGE, SIZE_LARGE, filepath_LARGE);
-	cl_float* x_LARGE = xCreateCLSet(0, SIZE_LARGE, SIZE_LARGE);
+	cl_float* x_LARGE = xCreateCLSet(0, 4, SIZE_LARGE);
 	cl_float* polinomes = new cl_float[POLINOME_POWER_LARGE*SIZE_LARGE];
 	openclCalculating(x_LARGE, MatrixLARGE, polinomes, SIZE_LARGE, SIZE_LARGE, POLINOME_POWER_LARGE);
 

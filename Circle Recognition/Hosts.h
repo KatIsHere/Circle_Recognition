@@ -12,9 +12,8 @@ double Approx_Polinomes_Kernel_squareRoot(cl_command_queue &queue, cl_context co
 double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, cl_device_id &device, cl_kernel &kernel,
 	cl_float* x_input, cl_float *f_input,
 	cl_int input_width, cl_int input_hight,
-	cl_float* A_input, cl_float *B_input, cl_float *C_input, cl_float *P_input,
-	cl_int polinome_power,
-	cl_float* T);
+	cl_float* A_input, cl_float *B_input, cl_float *C_input, cl_int *P_input,
+	cl_int polinome_power);
 double Approx_Polinomes_Run_Kernel(cl::Context context, cl::Device &device, cl::Kernel &kernel,
 	cl_float* x_input, cl_float *f_input,
 	cl_int input_width, cl_int input_hight,
@@ -24,6 +23,5 @@ double Approx_Polinomes_Run_Kernel(cl::Context context, cl::Device &device, cl::
 double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, cl_device_id &device, cl_kernel &kernel,
 	cl_double* x_input, cl_double *f_input,
 	cl_int input_width, cl_int input_hight,
-	cl_double* A_input, cl_double *B_input, cl_double *C_input, cl_double *P_input,
-	cl_int polinome_power,
-	cl_double* T);
+	cl_double* A_input, cl_double *B_input, cl_double *C_input, cl_int *P_input,
+	cl_int polinome_power);
