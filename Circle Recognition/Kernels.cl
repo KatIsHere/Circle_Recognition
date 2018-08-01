@@ -1,6 +1,104 @@
 #pragma OPENCL EXTENSION cl_intel_printf : enable
 #define POWER 6
 
+//#ifdef cl_khr_fp64
+//#pragma OPENCL EXTENSION cl_khr_fp64 : enable
+//#elif defined(cl_amd_fp64)
+//#pragma OPENCL EXTENSION cl_amd_fp64 : enable
+//#else
+//#error "Double precision floating point not supported by OpenCL implementation."
+//#endif
+
+//__kernel void build_polinome_double(__global const double* xSet, __global const double* fSet, __global double* C,
+//	__global double* A, __global double* B, __global int* Y,
+//	const int setSize,
+//	__global double* T,
+//	const int power) {
+//	int i, j, k;
+//	float normalizing = (float)1 / (setSize + 1);					// 1/(b-a)
+//
+//	float suma;
+//
+//	const int id = get_global_id(0);
+//
+//	for (i = 0; i < power; ++i) {
+//		for (j = 0; j < power; ++j) {
+//			suma = 0.;
+//			for (k = 0; k < setSize; ++k) {
+//				suma += pown(xSet[k], i + j);
+//			}
+//
+//			A[i * power + j] = normalizing * suma;
+//		}
+//		suma = 0.;
+//		for (j = 0; j < setSize; ++j) {
+//			suma += pown(xSet[j], i) * fSet[id * setSize + j];
+//		}
+//		B[i] = suma * normalizing;
+//	}
+//
+//
+//	// LINEAR EQUATIONS SOLVE
+//	// LUP decompose
+//	int i_max;
+//	float maxA, absA;
+//
+//	for (i = 0; i <= power; i++)
+//		Y[i] = i;					//Unit permutation matrix
+//
+//	for (i = 0; i < power; i++) {
+//		maxA = 0.;
+//		i_max = i;
+//
+//		for (k = i; k < power; k++)
+//			if ((absA = fabs(A[k * power + i])) > maxA) {
+//				maxA = absA;
+//				i_max = k;
+//			}
+//
+//		if (i_max != i) {
+//			//pivoting P
+//			j = Y[i];
+//			Y[i] = Y[i_max];
+//			Y[i_max] = j;
+//
+//			//pivoting rows of A
+//			for (j = 0; j < power; ++j) {
+//				T[j] = A[i*power + j];
+//				A[i*power + j] = A[i_max*power + j];
+//				A[i_max*power + j] = T[j];
+//			}
+//		}
+//
+//		for (j = i + 1; j < power; j++) {
+//			A[j * power + i] /= A[i * power + i];
+//
+//			for (k = i + 1; k < power; k++)
+//				A[j * power + k] -= A[j*power + i] * A[i*power + k];
+//		}
+//	}
+//
+//	// LUP solve
+//	for (i = 0; i < power; i++) {
+//		C[id * power + i] = B[Y[i]];
+//
+//		for (int k = 0; k < i; k++) {
+//			C[id * power + i] -= A[i * power + k] * C[id * power + k];
+//			printf("A[%d][%d] = %f\t", i, k, A[i*power + k]);
+//		}
+//		printf("\n");
+//	}
+//
+//	for (i = power - 1; i >= 0; i--) {
+//		for (k = i + 1; k < power; k++)
+//			C[id * power + i] -= A[i * power + k] * C[id * power + k];
+//
+//		C[id * power + i] /= A[i * power + i];
+//		printf("C[%d] = %f\t", id * power + i, C[id*power + i]);
+//	}
+//	printf("\n");
+//}
+
 
 // POLINOME POWER = 5  ----- >  POLINOME = 6 (because 6 coefs)
 __kernel void build_polinome(__global const float* xSet, __global const float* fSet, __global float* C, 
@@ -89,34 +187,34 @@ __kernel void build_polinome(__global const float* xSet, __global const float* f
 	
 	// LINEAR EQUATIONS SOLVE
 	// decomposing LUP
-	int imax;
+	int i_max;
 	float maxA, absA;
 	Y[0] = 0; Y[1] = 1; Y[2] = 2; Y[3] = 3; Y[4] = 4; Y[5] = 5; Y[6] = 6;
 
 
 	// I = 0
-	imax = 0;
+	i_max = 0;
 	maxA = 0.;
 
 	for (k = 0; k < POWER; k++) {
 		absA = fabs(A[k * POWER]);
 		if (absA > maxA) {
 			maxA = absA;
-			imax = k;
+			i_max = k;
 		}
 	}
 
-	if (imax != 0) {
+	if (i_max != 0) {
 		//pivoting P
 		j = Y[0];
-		Y[0] = Y[imax];
-		Y[imax] = j;
+		Y[0] = Y[i_max];
+		Y[i_max] = j;
 
 		//pivoting rows of A
 		for (j = 0; j < POWER; ++j) {
 			T[j] = A[j];
-			A[j] = A[imax*POWER + j];
-			A[imax*POWER + j] = T[j];
+			A[j] = A[i_max*POWER + j];
+			A[i_max*POWER + j] = T[j];
 		}
 	}
 
@@ -130,28 +228,28 @@ __kernel void build_polinome(__global const float* xSet, __global const float* f
 
 	// I = 1
 	maxA = 0.;
-	imax = 1;
+	i_max = 1;
 
 	for (k = 1; k < POWER; k++) {
 		absA = fabs(A[k * POWER + 1]);
 		if (absA > maxA) {
 			maxA = absA;
-			imax = k;
+			i_max = k;
 		}
 	}
 
-	if (imax != 1) {
+	if (i_max != 1) {
 		//pivoting P
 		j = Y[1];
-		Y[1] = Y[imax];
-		Y[imax] = j;
+		Y[1] = Y[i_max];
+		Y[i_max] = j;
 
 		//pivoting rows of A
 
 		for (j = 0; j < POWER; ++j) {
 			T[j] = A[POWER + j];
-			A[POWER + j] = A[imax*POWER + j];
-			A[imax*POWER + j] = T[j];
+			A[POWER + j] = A[i_max*POWER + j];
+			A[i_max*POWER + j] = T[j];
 		}
 	}
 
@@ -166,28 +264,28 @@ __kernel void build_polinome(__global const float* xSet, __global const float* f
 	// I = 2
 	
 	maxA = 0.;
-	imax = 2;
+	i_max = 2;
 
 	for (k = 2; k < POWER; k++) {
 		absA = fabs(A[k * POWER + 2]);
 		if (absA > maxA) {
 			maxA = absA;
-			imax = k;
+			i_max = k;
 		}
 	}
 
-	if (imax != 2) {
+	if (i_max != 2) {
 		//pivoting P
 		j = Y[2];
-		Y[2] = Y[imax];
-		Y[imax] = j;
+		Y[2] = Y[i_max];
+		Y[i_max] = j;
 
 		//pivoting rows of A
 
 		for (j = 0; j < POWER; ++j) {
 			T[j] = A[2*POWER + j];
-			A[2*POWER + j] = A[imax*POWER + j];
-			A[imax*POWER + j] = T[j];
+			A[2*POWER + j] = A[i_max*POWER + j];
+			A[i_max*POWER + j] = T[j];
 		}
 
 	}
@@ -202,28 +300,28 @@ __kernel void build_polinome(__global const float* xSet, __global const float* f
 
 	// I = 3
 	maxA = 0.;
-	imax = 3;
+	i_max = 3;
 
 	for (k = 3; k < POWER; k++) {
 		absA = fabs(A[k * POWER + 3]);
 		if (absA > maxA) {
 			maxA = absA;
-			imax = k;
+			i_max = k;
 		}
 	}
 
-	if (imax != 3) {
+	if (i_max != 3) {
 		//pivoting P
 		j = Y[3];
-		Y[3] = Y[imax];
-		Y[imax] = j;
+		Y[3] = Y[i_max];
+		Y[i_max] = j;
 
 		//pivoting rows of A
 
 		for (j = 0; j < POWER; ++j) {
 			T[j] = A[3*POWER + j];
-			A[3*POWER + j] = A[imax*POWER + j];
-			A[imax*POWER + j] = T[j];
+			A[3*POWER + j] = A[i_max*POWER + j];
+			A[i_max*POWER + j] = T[j];
 		}
 
 	}
@@ -238,28 +336,28 @@ __kernel void build_polinome(__global const float* xSet, __global const float* f
 
 	// I = 4
 	maxA = 0.;
-	imax = 4;
+	i_max = 4;
 
 	for (k = 4; k < POWER; k++) {
 		absA = fabs(A[k * POWER + 4]);
 		if (absA > maxA) {
 			maxA = absA;
-			imax = k;
+			i_max = k;
 		}
 	}
 
-	if (imax != 4) {
+	if (i_max != 4) {
 		//pivoting P
 		j = Y[4];
-		Y[4] = Y[imax];
-		Y[imax] = j;
+		Y[4] = Y[i_max];
+		Y[i_max] = j;
 
 		//pivoting rows of A
 
 		for (j = 0; j < POWER; ++j) {
 			T[j] = A[4*POWER + j];
-			A[4*POWER + j] = A[imax*POWER + j];
-			A[imax*POWER + j] = T[j];
+			A[4*POWER + j] = A[i_max*POWER + j];
+			A[i_max*POWER + j] = T[j];
 		}
 	}
 
@@ -269,26 +367,26 @@ __kernel void build_polinome(__global const float* xSet, __global const float* f
 
 	// I = 5
 	maxA = 0.;
-	imax = 5;
+	i_max = 5;
 
 	absA = fabs(A[5 * POWER + 5]);
 	if (absA > maxA) {
 		maxA = absA;
-		imax = 5;
+		i_max = 5;
 	}
 
-	if (imax != 5) {
+	if (i_max != 5) {
 		//pivoting P
 		j = Y[5];
-		Y[5] = Y[imax];
-		Y[imax] = j;
+		Y[5] = Y[i_max];
+		Y[i_max] = j;
 
 		//pivoting rows of A
 
 		for (j = 0; j < POWER; ++j) {
 			T[j] = A[i*POWER + j];
-			A[5*POWER + j] = A[imax*POWER + j];
-			A[imax*POWER + j] = T[j];
+			A[5*POWER + j] = A[i_max*POWER + j];
+			A[i_max*POWER + j] = T[j];
 		}
 	}
 	
@@ -347,6 +445,8 @@ __kernel void build_polinome(__global const float* xSet, __global const float* f
 // A size: power*power
 // B size: power
 // K size: power
+// Doesn't work in my case, because the values of the 
+// matrix A are too big(or small), so it gives nan as resoult
 __kernel void build_polinome_square_root(__global const float* xSet, __global const float* fSet, __global float* C,
 				__global float* A, __global float* B, __global int* K,
 				const int setSize,
@@ -420,28 +520,27 @@ __kernel void build_polinome_square_root(__global const float* xSet, __global co
 
 
 
-__kernel void build_polinome_UNOPTIMIZED(__global const float* xSet, __global const float* fSet, __global float* C,
+__kernel void build_polinome_unoptimized(__global const float* xSet, __global const float* fSet, __global float* C,
 					__global float* A, __global float* B, __global int* Y,
 					const int setSize,
 					__global float* T,
 					const int power) {
 	int i, j, k;
 	float normalizing = (float)1 / (setSize + 1);					// 1/(b-a)
-
 	float suma;
 
 	const int id = get_global_id(0);
 
 	for (i = 0; i < power; ++i) {
 		for (j = 0; j < power; ++j) {
-			suma = 0.;
+			suma = (float)0.;
 			for (k = 0; k < setSize; ++k) {
 				suma += pown(xSet[k], i + j);
 			}
-
 			A[i * power + j] = normalizing * suma;
+			//printf("A[%d][%d] = %f\t", id, j, A[id * power + j]);
 		}
-		suma = 0.;
+		suma = (float)0.;
 		for (j = 0; j < setSize; ++j) {
 			suma += pown(xSet[j], i) * fSet[id * setSize + j];
 		}
@@ -451,33 +550,38 @@ __kernel void build_polinome_UNOPTIMIZED(__global const float* xSet, __global co
 
 	// LINEAR EQUATIONS SOLVE
 	// LUP decompose
-	int imax;
+	int i_max;
 	float maxA, absA;
 
-	for (i = 0; i <= power; i++)
+	for (i = 0; i < power; i++)
 		Y[i] = i;					//Unit permutation matrix
 
 	for (i = 0; i < power; i++) {
 		maxA = 0.;
-		imax = i;
+		i_max = i;
 
-		for (k = i; k < power; k++)
+		for (k = i; k < power; k++) {
 			if ((absA = fabs(A[k * power + i])) > maxA) {
 				maxA = absA;
-				imax = k;
+				i_max = k;
 			}
-
-		if (imax != i) {
+			printf("A[%d]][%d][%d] = %f\t", id, k, i, A[k * power + i]);
+		}
+		printf("\n");
+		//printf("maxA = %f\n", maxA);
+		if (maxA < 0.1)
+			printf("\nMatrix is degenerate\n");
+		if (i_max != i) {
 			//pivoting P
 			j = Y[i];
-			Y[i] = Y[imax];
-			Y[imax] = j;
+			Y[i] = Y[i_max];
+			Y[i_max] = j;
 
 			//pivoting rows of A
 			for (j = 0; j < power; ++j) {
 				T[j] = A[i*power + j];
-				A[i*power + j] = A[imax*power + j];
-				A[imax*power + j] = T[j];
+				A[i*power + j] = A[i_max*power + j];
+				A[i_max*power + j] = T[j];
 			}
 		}
 
@@ -495,9 +599,9 @@ __kernel void build_polinome_UNOPTIMIZED(__global const float* xSet, __global co
 
 		for (int k = 0; k < i; k++) {
 			C[id * power + i] -= A[i * power + k] * C[id * power + k];
-			printf("A[%d][%d] = %f\t", i, k, A[i*power + k]);
+			//printf("A[%d][%d] = %f\t", i, k, A[i*power + k]);
 		}
-		printf("\n");
+		//printf("\n");
 	}
 
 	for (i = power - 1; i >= 0; i--) {
@@ -505,9 +609,9 @@ __kernel void build_polinome_UNOPTIMIZED(__global const float* xSet, __global co
 			C[id * power + i] -= A[i * power + k] * C[id * power + k];
 
 		C[id * power + i] /= A[i * power + i];
-		printf("C[%d] = %f\t", id * power + i, C[id*power + i]);
+		//printf("C[%d] = %f\t", id * power + i, C[id*power + i]);
 	}
-	printf("\n");
+	//printf("\n");
 }
 
 

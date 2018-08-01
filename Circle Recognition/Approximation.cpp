@@ -55,8 +55,8 @@ double* approximation_coefs(double* xSet, double* fSet, const int& setSize, cons
 	double* C = new double[polinomialPower];
 	if (functions == "polinome") {
 		int* P = new int[polinomialPower + 1];
-		LUPDecompose(A, polinomialPower, SystemTolerance, P);
-		LUPSolve(A, P, B, polinomialPower, C);
+		LUPDecomposition(A, polinomialPower, SystemTolerance, P);
+		LUPSystemSolve(A, P, B, polinomialPower, C);
 	}
 	else if (functions == "exp") {
 		C = GaussMethod(A, B, polinomialPower);
@@ -78,7 +78,7 @@ double* approximation_polinome(double* xSet, double* fSet, const int& setSize, c
 	double** A = new double*[polinomialPower];
 	double* B = new double[polinomialPower];
 	int i, j, k;
-	double normalizing = float(1) / (setSize + 1);	// 1/(b-a)
+	double normalizing = double(1) / (setSize + 1);	// 1/(b-a)
 	double sumaA, sumaB;
 
 	for (i = 0; i < polinomialPower; ++i) {
@@ -89,7 +89,8 @@ double* approximation_polinome(double* xSet, double* fSet, const int& setSize, c
 			for (k = 0; k < setSize; ++k) {
 				sumaA += pow(xSet[k], i + j);					
 			}					
-			A[i][j] = normalizing * sumaA;						
+			A[i][j] = normalizing * sumaA;		
+			//std::cout << "A[" << i << "][" << j << "] = " << A[i][j] << "\t";
 		}
 		sumaB = 0.;
 		for (j = 0; j < setSize; ++j) {
@@ -100,9 +101,8 @@ double* approximation_polinome(double* xSet, double* fSet, const int& setSize, c
 
 	double* C = new double[polinomialPower];
 	int* P = new int[polinomialPower + 1];
-	LUPDecompose(A, polinomialPower, SystemTolerance, P);
-	LUPSolve(A, P, B, polinomialPower, C);
-
+	LUPDecomposition(A, polinomialPower, SystemTolerance, P);
+	LUPSystemSolve(A, P, B, polinomialPower, C);
 	for (i = 0; i < polinomialPower; i++)
 		delete[]A[i];
 	delete[]B;	delete[]A;

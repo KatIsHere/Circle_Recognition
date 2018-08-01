@@ -1,138 +1,142 @@
 #include <cmath>
-
-double* squre_solve(double* A, double* B, const int power) {
+#include <iostream> // for debuging
+/*
+* The method is efficient for solving any system of linear equations
+* with symmetric coefficients
+* Input: A - array of pointers to rows of a square matrix having dimension N; b - resoults vector
+* Output: x - solution vector of A*x=b
+*/
+void squre_root_solve(double** A, double* B, const int& N, double* x) {
 	float sum;
-	double* T = new double[power*power];
-	double* d = new double[power];
-	T[0] = sqrt(abs(A[0]));
-	d[0] = A[0] > 0 ? 1 : -1;
-	for (int j = 1; j < power; ++j) {
-		T[j] = A[j] / T[0];
+	double* S = new double[N*N];
+	double* K = new double[N];
+	int i, j, k;
+	double suma = 0;
+
+	// Step 1
+	S[0] = sqrt(A[0][0]);
+	for (j = 1; j < N; ++j) {
+		S[j] = A[0][j] / S[0];
 	}
-	for (int i = 1; i < power; ++i) {
-		for (int j = 0; j < power; ++j) {
-			sum = 0;
-			if (i == j) {
-				for (int l = 0; l < i; ++l) {
-					sum += T[l*power + i] * T[l * power + i] * d[l];
-				}
-				T[i * power + i] = sqrt(abs(A[i*power + i] - sum));
-				d[i] = ((A[i * power + i] - sum > 0 ? 1 : -1));
+	for (i = 1; i < N; ++i) {
+		suma = A[i][i];
+		for (k = 0; k < i - 1; ++k)
+			suma -= S[k*N + i] * S[k*N + i];
+		S[i*N + i] = sqrt(suma);
+		for (j = i + 1; j < N; ++j) {
+			suma = A[i][j];
+
+			for (k = 0; k < i - 1; ++k) {
+				suma -= S[k*N + i] * S[k*N + j];
 			}
-			else if (i < j) {
-				for (int l = 0; l < i; ++l) {
-					sum += T[l * power + i] * d[l] * T[l * power + j];
-				}
-				T[i*power + j] = (A[i*power + j] - sum) / (T[i * power + i] * d[i]);
-			}
-			else T[i*power + j] = 0;
+			S[i*N + j] = suma / S[i*N + i];
 		}
 	}
-	double* Y = new double[power];
-	double* C = new double[power];
-	Y[0] = B[0] / T[0];
-	for (int i = 1; i < power; ++i) {
-		sum = 0;
-		for (int j = 0; j < i; ++j) {
-			sum += T[j * power + i] * Y[j] * d[j];
-		}
-		Y[i] = (B[i] - sum) / (T[i*power + i] * d[i]);
+
+	// Step 2
+	K[0] = B[0] / S[0];
+	for (i = 1; i < N; ++i) {
+		suma = B[i];
+		for (j = 0; j < i - 1; ++j)
+			suma -= K[j] * S[j*N + i];
+		K[i] = suma / S[i*N + i];
 	}
-	C[power - 1] = Y[power - 1] / T[power*power - 1];
-	for (int i = power - 2; i >= 0; --i) {
-		sum = 0;
-		for (int j = i; j < power; ++j) {
-			sum += T[i*power + j] * C[j];
-		}
-		C[i] = (Y[i] - sum) / T[i*power + i];
+
+	// Step 3 - solution
+	x[N - 1] = K[N - 1] / S[N*N - 1];
+	for (i = N - 2; i >= 0; --i) {
+		suma = K[i];
+		for (k = i + 1; k < N; ++k)
+			suma -= S[i*N + k] * x[k];
+		x[i] = suma / S[i*N + i];
 	}
-	return C;
+
+	delete[]S, delete[]K;
 }
 
 
-/* INPUT: A - array of pointers to rows of a square matrix having dimension N
+/* Input: A - square matrix having dimension N
 *        Tol - small tolerance number to detect failure when the matrix is near degenerate
-*  OUTPUT: Matrix A is changed, it contains both matrices L-E and U as A=(L-E)+U such that P*A=L*U.
+*  Output: Matrix A is changed, it contains both matrices L-E and U as A=(L-E)+U such that P*A=L*U.
 *        The permutation matrix is not stored as a matrix, but in an integer vector P of size N+1
 *        containing column indexes where the permutation matrix has "1". The last element P[N]=S+N,
 *        where S is the number of row exchanges needed for determinant computation, det(P)=(-1)^S
+*  Exceptions: matrix is degenerate
 */
-int LUPDecompose(double **A, const int& N, double Tol, int *P) {
+int LUPDecomposition(double **A, const int& N, double Tol, int *P) {
 
-	int i, j, k, imax;
-	double maxA, absA;
+	int i, j, k, i_max;
+	double max_a, absA;
 	double *ptr = new double[N];
 
 	for (i = 0; i <= N; i++)
-		P[i] = i; //Unit permutation matrix, P[N] initialized with N
+		P[i] = i;
 
 	for (i = 0; i < N; i++) {
-		maxA = 0.0;
-		imax = i;
+		max_a = 0.0;
+		i_max = i;
 
-		for (k = i; k < N; k++)
-			if ((absA = fabs(A[k][i])) > maxA) {			// 1 KERNEL
-				maxA = absA;
-				imax = k;
+		for (k = i; k < N; k++) {
+			if ((absA = fabs(A[k][i])) > max_a) {			// 1 KERNEL
+				max_a = absA;
+				i_max = k;
 			}
+			//printf("A[%d][%d] = %f\t", k, i, A[k][i]);
+		}
+		//printf("maxA = %f\n", max_a);
+		if (max_a < Tol) throw "Matrix is degenerate, try another method";
 
-		//failure, matrix is degenerate
-		if (maxA < Tol) throw "Matrix is degenerate, try another method";
-
-		if (imax != i) {
-			//pivoting P
+		if (i_max != i) {
 			j = P[i];
-			P[i] = P[imax];
-			P[imax] = j;
+			P[i] = P[i_max];
+			P[i_max] = j;
 
 			for (int j = 0; j < N; ++j) {
 				ptr[j] = A[i][j];
-				A[i][j] = A[imax][j];
-				A[imax][j] = ptr[j];
+				A[i][j] = A[i_max][j];
+				A[i_max][j] = ptr[j];
 			}
-
-			//counting pivots starting from N (for determinant)
 			P[N]++;
 		}
 
 		for (j = i + 1; j < N; j++) {
-			A[j][i] /= A[i][i];								// 2 KERNEL
+			A[j][i] /= A[i][i];								
 
 			for (k = i + 1; k < N; k++)
-				A[j][k] -= A[j][i] * A[i][k];				// 3 KERNEL
+				A[j][k] -= A[j][i] * A[i][k];				
 		}
 	}
 	delete[] ptr;
-	// decomposition done 
 	return 1;			
 }
 
 
-/* INPUT: A,P filled in LUPDecompose; b - rhs vector; N - dimension
-*  OUTPUT: x - solution vector of A*x=b
+/* 
+* Input: A,P filled in LUPDecompose; b - resoults vector; N - dimension
+* Output: x - solution vector of A*x=b
 */
-void LUPSolve(double **A, int *P, double *b, const int& N, double *x) {
-
+void LUPSystemSolve(double **A, int *P, double *b, const int& N, double *x) {
 	for (int i = 0; i < N; i++) {
 		x[i] = b[P[i]];
 
 		for (int k = 0; k < i; k++)
-			x[i] -= A[i][k] * x[k];							// 3 KERNEL
+			x[i] -= A[i][k] * x[k];				
 	}
 
 	for (int i = N - 1; i >= 0; i--) {
 		for (int k = i + 1; k < N; k++)
-			x[i] -= A[i][k] * x[k];							// 3 KERNEL
+			x[i] -= A[i][k] * x[k];						
 
-		x[i] = x[i] / A[i][i];								// 2 KERNEL
+		x[i] = x[i] / A[i][i];							
 	}
 }
 
 
-/* INPUT: A,P filled in LUPDecompose; N - dimension
-*  OUTPUT: IA is the inverse of the initial matrix
+/* 
+* Input: A,P filled in LUPDecompose; N - dimension
+* Output: IA is the inverse of the initial matrix
 */
-void LUPInvert(double **A, int *P, const int& N, double **IA) {
+void LUPInvertMatrix(double **A, int *P, const int& N, double **IA) {
 
 	for (int j = 0; j < N; j++) {
 		for (int i = 0; i < N; i++) {
@@ -155,8 +159,9 @@ void LUPInvert(double **A, int *P, const int& N, double **IA) {
 }
 
 
-/* INPUT: A,P filled in LUPDecompose; N - dimension.
-*  OUTPUT: Function returns the determinant of the initial matrix
+/* 
+* Input: A,P filled in LUPDecompose; N - dimension.
+* Output: Function returns the determinant of the initial matrix
 */
 double LUPDeterminant(double **A, int *P, const int& N) {
 
@@ -194,8 +199,6 @@ double* BaireissSolve(double** A, double* b, const int & N) {
 		}
 	}
 
-
-
 	for (i = 0; i < N; ++i) {
 		delete[]A_copy[i];
 	}
@@ -205,6 +208,14 @@ double* BaireissSolve(double** A, double* b, const int & N) {
 }
 
 
+/*
+* Gauss Method is a method for solving linear equations
+* It is considered slow, but effective and should work for 
+* all types of matrixes, given the solution exists
+* Input: A matrix; b - resoults vector; N - dimension.
+* Output: Function returns the solutions of system of linear equations A*x = b 
+* Exceptions: no solution exists
+*/
 double* GaussMethod(double** A, double*b, const int& n) {
 	/* Finds a solution to the system of linear equations
 	using Gauss method*/
@@ -267,6 +278,12 @@ double* GaussMethod(double** A, double*b, const int& n) {
 }
 
 
+/*
+* Tridiagonal Method is a method for solving linear equations with tridiagonal matrixes
+* Input: a, b, c - arrays, representing left, center and right non-zero lines of values; 
+* d - resoults vector; N - dimension.
+* Output: Function returns the solutions of system of linear equations A*x = b
+*/
 double* TridiagonalSolve(const double *a, const double *b, double *c, double *d, const int& n) {
 	// a[0] == 0
 	// c[n-1] == 0

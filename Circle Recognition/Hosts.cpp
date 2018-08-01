@@ -2,9 +2,6 @@
 #include <iostream>
 #include "Hosts.h"
 
-#include "basic.hpp"
-#include "cmdparser.hpp"
-#include "oclobject.hpp"
 using namespace std;
 
 // helper functions
@@ -57,7 +54,7 @@ double Approx_Polinomes_Kernel_squareRoot(cl_command_queue &queue, cl_context co
 
 	if (x_input_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 	cl_mem f_input_buffer = clCreateBuffer(
 		context,
@@ -69,7 +66,7 @@ double Approx_Polinomes_Kernel_squareRoot(cl_command_queue &queue, cl_context co
 
 	if (f_input_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 	cl_mem A_buffer = clCreateBuffer(
 		context,
@@ -81,7 +78,7 @@ double Approx_Polinomes_Kernel_squareRoot(cl_command_queue &queue, cl_context co
 
 	if (A_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 	cl_mem B_buffer = clCreateBuffer(
 		context,
@@ -93,7 +90,7 @@ double Approx_Polinomes_Kernel_squareRoot(cl_command_queue &queue, cl_context co
 
 	if (B_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 	cl_mem K_buffer = clCreateBuffer(
 		context,
@@ -105,7 +102,7 @@ double Approx_Polinomes_Kernel_squareRoot(cl_command_queue &queue, cl_context co
 
 	if (K_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 	cl_mem C_buffer = clCreateBuffer(
 		context,
@@ -117,7 +114,7 @@ double Approx_Polinomes_Kernel_squareRoot(cl_command_queue &queue, cl_context co
 
 	if (C_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 
 	cl_mem S_buffer = clCreateBuffer(
@@ -130,7 +127,7 @@ double Approx_Polinomes_Kernel_squareRoot(cl_command_queue &queue, cl_context co
 
 	if (S_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 
 	// SETTING UP KERNEL ARGUMENTS + CHECKING FOR ERRORS
@@ -223,7 +220,7 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 
 	if (x_input_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 	cl_mem f_input_buffer = clCreateBuffer(
 		context,
@@ -235,19 +232,19 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 
 	if (f_input_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 	cl_mem A_buffer = clCreateBuffer(
 		context,
 		CL_MEM_USE_HOST_PTR,
-		sizeof(cl_float) * input_hight * polinome_power,
+		sizeof(cl_float) * polinome_power * polinome_power,
 		A_input,
 		&err);
 	checkErr(err, "A_buffer");
 
 	if (A_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 	cl_mem B_buffer = clCreateBuffer(
 		context,
@@ -259,7 +256,7 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 
 	if (B_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 	cl_mem P_buffer = clCreateBuffer(
 		context,
@@ -271,7 +268,7 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 
 	if (P_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 	cl_mem C_buffer = clCreateBuffer(
 		context,
@@ -283,7 +280,7 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 
 	if (C_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 
 	cl_mem T_buffer = clCreateBuffer(
@@ -296,7 +293,7 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 
 	if (T_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 
 
@@ -325,8 +322,8 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 	err = clSetKernelArg(kernel, 7, sizeof(T_buffer), (void *)& T_buffer);
 	checkErr(err, "clSetKernelArg : T(8)");
 
-	//err = clSetKernelArg(kernel, 8, sizeof(cl_uint),  &polinome_power);
-	//checkErr(err, "clSetKernelArg : power(3)");
+	err = clSetKernelArg(kernel, 8, sizeof(cl_uint),  &polinome_power);
+	checkErr(err, "clSetKernelArg : power(3)");
 
 	const clock_t perf_start = clock();
 	int dim = 1;
@@ -365,6 +362,169 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 	return (float)(perf_stop - perf_start) / CLOCKS_PER_SEC;
 }
 
+
+//double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, cl_device_id &device, cl_kernel &kernel,
+//	cl_double* x_input, cl_double *f_input,
+//	cl_int input_width, cl_int input_hight,
+//	cl_double* A_input, cl_double *B_input, cl_double *C_input, cl_double *P_input,
+//	cl_int polinome_power,
+//	cl_double* T) {
+//
+//	cl_int err = CL_SUCCESS;
+//	// CREATING BUFFERS FOR x, f, A, b, P, T and C
+//	// AND CHECKING FOR ERRORS
+//
+//	cl_mem x_input_buffer = clCreateBuffer(
+//		context,
+//		CL_MEM_COPY_HOST_PTR,
+//		sizeof(cl_double) * input_width,
+//		x_input,
+//		&err);
+//	checkErr(err, "x_input_buffer");
+//
+//	if (x_input_buffer == (cl_mem)0)
+//	{
+//		throw  "Failed to create input data Buffer\n";
+//	}
+//	cl_mem f_input_buffer = clCreateBuffer(
+//		context,
+//		CL_MEM_COPY_HOST_PTR,
+//		sizeof(cl_double) * input_hight * input_width,
+//		f_input,
+//		&err);
+//	checkErr(err, "f_input_buffer");
+//
+//	if (f_input_buffer == (cl_mem)0)
+//	{
+//		throw  "Failed to create input data Buffer\n";
+//	}
+//	cl_mem A_buffer = clCreateBuffer(
+//		context,
+//		CL_MEM_USE_HOST_PTR,
+//		sizeof(cl_double) * input_hight * polinome_power,
+//		A_input,
+//		&err);
+//	checkErr(err, "A_buffer");
+//
+//	if (A_buffer == (cl_mem)0)
+//	{
+//		throw  "Failed to create input data Buffer\n";
+//	}
+//	cl_mem B_buffer = clCreateBuffer(
+//		context,
+//		CL_MEM_USE_HOST_PTR,
+//		sizeof(cl_double) * polinome_power,
+//		B_input,
+//		&err);
+//	checkErr(err, "B_buffer");
+//
+//	if (B_buffer == (cl_mem)0)
+//	{
+//		throw  "Failed to create input data Buffer\n";
+//	}
+//	cl_mem P_buffer = clCreateBuffer(
+//		context,
+//		CL_MEM_USE_HOST_PTR,
+//		sizeof(cl_double) * (polinome_power + 1),
+//		P_input,
+//		&err);
+//	checkErr(err, "P_buffer");
+//
+//	if (P_buffer == (cl_mem)0)
+//	{
+//		throw  "Failed to create input data Buffer\n";
+//	}
+//	cl_mem C_buffer = clCreateBuffer(
+//		context,
+//		CL_MEM_USE_HOST_PTR,
+//		sizeof(cl_double) * polinome_power * input_hight,
+//		C_input,
+//		&err);
+//	checkErr(err, "C_buffer");
+//
+//	if (C_buffer == (cl_mem)0)
+//	{
+//		throw  "Failed to create input data Buffer\n";
+//	}
+//
+//	cl_mem T_buffer = clCreateBuffer(
+//		context,
+//		CL_MEM_USE_HOST_PTR,
+//		sizeof(cl_double) * polinome_power,
+//		T,
+//		&err);
+//	checkErr(err, "T_buffer");
+//
+//	if (T_buffer == (cl_mem)0)
+//	{
+//		throw  "Failed to create input data Buffer\n";
+//	}
+//
+//
+//	// SETTING UP KERNEL ARGUMENTS + CHECKING FOR ERRORS
+//	err = clSetKernelArg(kernel, 0, sizeof(x_input_buffer), (void *)& x_input_buffer);
+//	checkErr(err, "clSetKernelArg : x(0)");
+//
+//	err = clSetKernelArg(kernel, 1, sizeof(f_input_buffer), (void *)& f_input_buffer);
+//	checkErr(err, "clSetKernelArg : f(1)");
+//
+//	err = clSetKernelArg(kernel, 2, sizeof(C_buffer), (void *)& C_buffer);
+//	checkErr(err, "clSetKernelArg : C(2)");
+//
+//	err = clSetKernelArg(kernel, 3, sizeof(A_buffer), (void *)& A_buffer);
+//	checkErr(err, "clSetKernelArg : A(4)");
+//
+//	err = clSetKernelArg(kernel, 4, sizeof(B_buffer), (void *)& B_buffer);
+//	checkErr(err, "clSetKernelArg : B(5)");
+//
+//	err = clSetKernelArg(kernel, 5, sizeof(P_buffer), (void *)& P_buffer);
+//	checkErr(err, "clSetKernelArg : P(6)");
+//
+//	err = clSetKernelArg(kernel, 6, sizeof(cl_uint), &input_width);
+//	checkErr(err, "clSetKernelArg : width(7)");
+//
+//	err = clSetKernelArg(kernel, 7, sizeof(T_buffer), (void *)& T_buffer);
+//	checkErr(err, "clSetKernelArg : T(8)");
+//
+//	err = clSetKernelArg(kernel, 8, sizeof(cl_uint),  &polinome_power);
+//	checkErr(err, "clSetKernelArg : power(3)");
+//
+//	const clock_t perf_start = clock();
+//	int dim = 1;
+//	size_t global[] = { input_hight, 1, 0 };
+//	size_t local[] = { 1, 1, 0 };
+//	err = clEnqueueNDRangeKernel(queue, kernel,
+//		dim,
+//		nullptr,
+//		global, local,
+//		0, nullptr, nullptr);
+//	checkErr(err, "clEnqueueNDRangeKernel");
+//
+//	const clock_t perf_stop = clock();
+//
+//	err = clFinish(queue);
+//	checkErr(err, "clFinish");
+//
+//	// READING FROM BUFFER
+//	err = clEnqueueReadBuffer(queue, C_buffer, CL_TRUE, 0, sizeof(cl_double) * polinome_power* input_hight, C_input, NULL, NULL, NULL);
+//	checkErr(err, "clEnqueueReadBuffer : couldn't read from buffer");
+//
+//	// RELEASING BUFFERS
+//	err = clReleaseMemObject(x_input_buffer);
+//	checkErr(err, "clReleaseMemObject : x");
+//	err = clReleaseMemObject(f_input_buffer);
+//	checkErr(err, "clReleaseMemObject : f");
+//	err = clReleaseMemObject(A_buffer);
+//	checkErr(err, "clReleaseMemObject : A");
+//	err = clReleaseMemObject(B_buffer);
+//	checkErr(err, "clReleaseMemObject : B");
+//	err = clReleaseMemObject(P_buffer);
+//	checkErr(err, "clReleaseMemObject : P");
+//	err = clReleaseMemObject(C_buffer);
+//	checkErr(err, "clReleaseMemObject : C");
+//
+//	return (float)(perf_stop - perf_start) / CLOCKS_PER_SEC;
+//}
 
 
 double Approx_Polinomes_Run_Kernel(cl::Context context, cl::Device &device, cl::Kernel &kernel,
@@ -465,7 +625,7 @@ double Extremums_Run_Kernel(cl_command_queue &queue, cl_context context, cl_devi
 
 	if (coefs_input_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 	cl_mem start_buffer = clCreateBuffer(
 		context,
@@ -477,7 +637,7 @@ double Extremums_Run_Kernel(cl_command_queue &queue, cl_context context, cl_devi
 
 	if (start_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 	cl_mem firstDer_buffer = clCreateBuffer(
 		context,
@@ -489,7 +649,7 @@ double Extremums_Run_Kernel(cl_command_queue &queue, cl_context context, cl_devi
 
 	if (firstDer_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 	cl_mem secondDer_buffer = clCreateBuffer(
 		context,
@@ -501,7 +661,7 @@ double Extremums_Run_Kernel(cl_command_queue &queue, cl_context context, cl_devi
 
 	if (secondDer_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 	cl_mem x_extrems_buffer = clCreateBuffer(
 		context,
@@ -513,7 +673,7 @@ double Extremums_Run_Kernel(cl_command_queue &queue, cl_context context, cl_devi
 
 	if (x_extrems_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 	cl_mem y_extrems_buffer = clCreateBuffer(
 		context,
@@ -525,7 +685,7 @@ double Extremums_Run_Kernel(cl_command_queue &queue, cl_context context, cl_devi
 
 	if (y_extrems_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 
 	// SETTING UP KERNEL ARGUMENTS + CHECKING FOR ERRORS
@@ -619,7 +779,7 @@ double Features_Run_Kernel(cl_command_queue &queue, cl_context context, cl_devic
 
 	if (x_extrems_input_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 	cl_mem y_extrems_input_buffer = clCreateBuffer(
 		context,
@@ -631,7 +791,7 @@ double Features_Run_Kernel(cl_command_queue &queue, cl_context context, cl_devic
 
 	if (y_extrems_input_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw "Failed to create input data Buffer\n";
 	}
 	cl_mem distances_buffer = clCreateBuffer(
 		context,
@@ -643,7 +803,7 @@ double Features_Run_Kernel(cl_command_queue &queue, cl_context context, cl_devic
 
 	if (distances_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw "Failed to create input data Buffer\n";
 	}
 	cl_mem angles_buffer = clCreateBuffer(
 		context,
@@ -655,7 +815,7 @@ double Features_Run_Kernel(cl_command_queue &queue, cl_context context, cl_devic
 
 	if (angles_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 	cl_mem x_center_buffer = clCreateBuffer(
 		context,
@@ -667,7 +827,7 @@ double Features_Run_Kernel(cl_command_queue &queue, cl_context context, cl_devic
 
 	if (x_center_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 
 	cl_mem y_center_buffer = clCreateBuffer(
@@ -680,7 +840,7 @@ double Features_Run_Kernel(cl_command_queue &queue, cl_context context, cl_devic
 
 	if (y_center_buffer == (cl_mem)0)
 	{
-		throw Error("Failed to create input data Buffer\n");
+		throw  "Failed to create input data Buffer\n";
 	}
 
 

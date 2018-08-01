@@ -48,13 +48,13 @@ void Draw(int argc, char ** argv) {
 	glutCreateWindow("Approximation graph, Opencl");
 	glutDisplayFunc(RenderFast);
 
-	//// Render simple approximation
-	//glutInit(&argc, argv);
-	//glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-	//glutInitWindowSize(WindowWidth, WindowHeight);
-	//glutInitWindowPosition(WindowPosX, WindowPosY);
-	//glutCreateWindow("Approximation graph");
-	//glutDisplayFunc(RenderApproximation);
+	// Render simple approximation
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+	glutInitWindowSize(WindowWidth, WindowHeight);
+	glutInitWindowPosition(WindowPosX, WindowPosY);
+	glutCreateWindow("Approximation graph");
+	glutDisplayFunc(RenderApproximation);
 
 	// Points
 	//glutInit(&argc, argv);
@@ -124,40 +124,36 @@ char* read_source(const char *file_name, size_t* file_size)
 	return src;
 };
 
-void openclCalculating(float* x, float*f_x, float* Polinomes, const int& hight, const int& width, const int power) {
-	// Choosing the platform --->
-							   //  0 - GPU
-							   //  1 - CPU
-	const int GCPU = 1;
-	const cl_int available_platforms = 2;
-	// old code version
-	//std::vector< cl::Platform > platformList;
-	//cl::Platform::get(&platformList);
-	//checkErr(platformList.size() != 0 ? CL_SUCCESS : -1, "cl::Platform::get");
-	//cl::Platform default_platform = platformList[GCPU];
-	//std::cout << "Using platform: " << default_platform.getInfo<CL_PLATFORM_NAME>() << "\n";
+void openclCalculatiog_v2(float* x, float*f_x, float* Polinomes, const int& hight, const int& width, const int power) {
+	cl_int err;
+	cl_int GCPU = 0;
+	std::vector< cl::Platform > platformList;
+	cl::Platform::get(&platformList);
+	checkErr(platformList.size() != 0 ? CL_SUCCESS : -1, "cl::Platform::get");
+	cl::Platform default_platform = platformList[GCPU];
+	std::cout << "Using platform: " << default_platform.getInfo<CL_PLATFORM_NAME>() << "\n";
 	// get default device of the default platform
-	//std::vector<cl::Device> all_devices;
-	//default_platform.getDevices(CL_DEVICE_TYPE_ALL, &all_devices);
-	//if (all_devices.size() == 0) {
-	//	std::cout << " No devices found. Check OpenCL installation!\n";
-	//	exit(1);
-	//}
-	//cl::Device default_device = all_devices[GCPU];
-	//std::cout << "Using device: " << default_device.getInfo<CL_DEVICE_NAME>() << "\n";
-	// // platform vendor info and create context
-	//std::string platformVendor;
-	//platformList[GCPU].getInfo((cl_platform_info)CL_PLATFORM_VENDOR, &platformVendor);
-	//std::cerr << "Platform is by: " << platformVendor << "\n";
-	//cl_context_properties cprops[3] = { CL_CONTEXT_PLATFORM, (cl_context_properties)(platformList[GCPU])(), 0 };
-	//cl::Context context(
-	//	default_device,
-	//	cprops,
-	//	nullptr,
-	//	nullptr,
-	//	&err);
-	//checkErr(err, "Conext::Context()");
-	/*
+	std::vector<cl::Device> all_devices;
+	default_platform.getDevices(CL_DEVICE_TYPE_ALL, &all_devices);
+	if (all_devices.size() == 0) {
+		std::cout << " No devices found. Check OpenCL installation!\n";
+		exit(1);
+	}
+	cl::Device default_device = all_devices[GCPU];
+	std::cout << "Using device: " << default_device.getInfo<CL_DEVICE_NAME>() << "\n";
+	// platform vendor info and create context
+	std::string platformVendor;
+	platformList[GCPU].getInfo((cl_platform_info)CL_PLATFORM_VENDOR, &platformVendor);
+	std::cerr << "Platform is by: " << platformVendor << "\n";
+	cl_context_properties cprops[3] = { CL_CONTEXT_PLATFORM, (cl_context_properties)(platformList[GCPU])(), 0 };
+	cl::Context context(
+		default_device,
+		cprops,
+		nullptr,
+		nullptr,
+		&err);
+	checkErr(err, "Conext::Context()");
+
 	std::ifstream file("Kernels.cl");
 	checkErr(file.is_open() ? CL_SUCCESS : -1, "Kernels.cl");
 
@@ -170,7 +166,7 @@ void openclCalculating(float* x, float*f_x, float* Polinomes, const int& hight, 
 	std::make_pair(prog.c_str(), prog.length() + 1));
 
 	cl::Program program(context, source);
-	//err = program.build({default_device});								// for GPU
+	err = program.build({default_device});								// for GPU
 	err = program.build({ default_device }, "-g -s ..\\..\\Kernels.cl", nullptr);	// for CPU
 	if (err == -11) {
 	// Determine the size of the log
@@ -181,8 +177,17 @@ void openclCalculating(float* x, float*f_x, float* Polinomes, const int& hight, 
 	checkErr(err, "Program::build()");
 	cl::Kernel kernel(program, "build_polinome", &err);
 	checkErr(err, "Kernel::Kernel()");
-	*/
+	
+	
+}
 
+
+void openclCalculating(float* x, float*f_x, float* Polinomes, const int& hight, const int& width, const int power) {
+	// Choosing the platform --->
+							   //  0 - GPU
+							   //  1 - CPU
+	const int GCPU = 1;
+	const cl_int available_platforms = 2;
 	cl_int err;
 
 	// get default platform
@@ -251,21 +256,20 @@ void openclCalculating(float* x, float*f_x, float* Polinomes, const int& hight, 
 	//err = clBuildProgram(program, 0, NULL, "Kernels.cl", NULL, NULL);
 	checkErr(err, "clBuildProgram");
 
-	cl_kernel kernel = clCreateKernel(program, "build_polinome_square_root", &err);
+	cl_kernel kernel = clCreateKernel(program, "build_polinome_unoptimized", &err);
 	checkErr(err, "clCreateKernel");
-
 
 	int ret = EXIT_SUCCESS;
 		
 	// Build kernel
-	cl_float* A = new cl_float[power*power];
+	cl_float* A = new cl_float[power*power];//*hight];
 	cl_float* B = new cl_float[power];
 	cl_float* P = new cl_float[power];
-	cl_float* T = new cl_float[power*power];
+	cl_float* T = new cl_float[power];
 	try
 	{
 		printf("Executing OpenCL kernel...\n");
-		float ocl_time = Approx_Polinomes_Kernel_squareRoot(queue, context, default_device, kernel, x, f_x, width, hight, A, B, Polinomes, P, power, T);
+		float ocl_time = Approx_Polinomes_Run_Kernel(queue, context, default_device, kernel, x, f_x, width, hight, A, B, Polinomes, P, power, T);
 		printf("\nNDRange perf. counter time %f s.\n", ocl_time);
 
 		//cout << "\n\nPolinomes second:\n";
@@ -300,11 +304,9 @@ void RenderApproximation(void) {
 	string filepath_LARGE = "idle_test_data_set\\idle_4\\2_x=52_y=125_sz=32.txt";
 	//string filepath_LARGE_2 = "idle_test_data_set\\idle_4\\2_x=52_y=125_sz=12.txt";
 	//string filepath_SMALL = "idle_test_data_set\\idle_1\\10_x=45_y=22_sz=17.txt";
-
 	//double** MatrixSMALL = loadMatrix(filepath_SMALL, SIZE_SMALL, SIZE_SMALL);
 	//double* x_SMALL = xCreateSet(0, SIZE_SMALL, SIZE_SMALL);
 	//double** polinomes_SMALL = buidPolinome(x_SMALL, MatrixSMALL, SIZE_SMALL, POLINOME_POWER_SMALL, 0); 
-
 
 	// CONVENTIONAL METHOD
 	double** MatrixLARGE = loadMatrix(filepath_LARGE, SIZE_LARGE, SIZE_LARGE);
@@ -313,7 +315,6 @@ void RenderApproximation(void) {
 	//double** MatrixLARGE_2 = loadMatrix(filepath_LARGE_2, SIZE_LARGE, SIZE_LARGE);
 	//double* x_LARGE_2 = xCreateSet(0, SIZE_LARGE, SIZE_LARGE);
 	//double** polinomes_LARGE_2 = buidPolinome(x_LARGE_2, MatrixLARGE_2, SIZE_LARGE, POLINOME_POWER_LARGE, 1);
-
 
 	glClearColor(0.98f, 0.98f, 0.98f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -378,7 +379,7 @@ void RenderReversed(void) {
 	for (int i = 0; i < SIZE_LARGE; ++i)
 		delete[]Matrix[i];
 	delete[]Matrix;
-	//delete[]x_LARGE;
+	delete[]x_LARGE;
 }
 
 
