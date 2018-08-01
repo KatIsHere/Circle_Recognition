@@ -520,9 +520,9 @@ __kernel void build_polinome_UNOPTIMIZED(__global const float* xSet, __global co
 // secondDerivative: [width - 2]
 // extrems: [hight*(width - 1)]
 // values: [hight*(width - 1)]
-__kernel Extremums_Newton(__global float* polinome_coefs, const int width, 
+__kernel void Extremums_Newton(__global float* polinome_coefs, const int width, 
 					__global float *start, const float finish, 
-					__global float* firstDerivative, __global float* secondDerivative, 
+					__global float* firstDeivative, __global float* secondDerivative,
 					__global float* extrems, __global float* values,
 					const float Eps, const float h){ 
 	const int id_dimi = get_global_id(0);
@@ -532,7 +532,7 @@ __kernel Extremums_Newton(__global float* polinome_coefs, const int width,
 	// filling out first derivative coefs
 	for (i = 0; i < width - 2; ++i) {
 		firstDeivative[i] = (i + 1)*polinome_coefs[id_dimi*width + i + 1];
-		secondDerivative[i] = (i + 1)*firstDeivative[i + 1];
+		secondDerivative[i] = (i + 1) * firstDeivative[i + 1];
 		polinome += firstDeivative[i] * pown(x0, i);
 	}
 	firstDeivative[width - 2] = (width - 1)*polinome_coefs[id_dimi*width + width - 1];
@@ -577,7 +577,7 @@ __kernel Extremums_Newton(__global float* polinome_coefs, const int width,
 // center_y: [hight]
 // extrems_x: [hight*(power - 1)]
 //  extrems_y: [hight*(power - 1)]
-__kernel features(__global float* extrems_x, __global float* extrems_y, const int width, 
+__kernel void features(__global float* extrems_x, __global float* extrems_y, const int width, 
 					__global float* distances, __global float* angles, 
 					__global float* center_x, __global float* center_y){ 
 	const int id = get_global_id(0);
@@ -589,7 +589,7 @@ __kernel features(__global float* extrems_x, __global float* extrems_y, const in
 		distances[id*width + i] = sqrt((center_x[id*width + i + 1] - center_x[id*width + i])*(center_x[id*width + i + 1] - center_x[id*width + i]) +
 			(center_y[id*width + i + 1] - center_y[id*width + i])*(center_y[id*width + i + 1] - center_y[id*width + i]));
 	}
-	const int anglesNumb = int(width + 1) / 2;
+	const int anglesNumb = (int)(width + 1) / 2;
 	float c;
 	// cos of angles between amplitudes
 	for(i = 0; i < anglesNumb; ++i){ 

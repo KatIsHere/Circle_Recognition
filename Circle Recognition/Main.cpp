@@ -48,13 +48,13 @@ void Draw(int argc, char ** argv) {
 	glutCreateWindow("Approximation graph, Opencl");
 	glutDisplayFunc(RenderFast);
 
-	// Render simple approximation
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-	glutInitWindowSize(WindowWidth, WindowHeight);
-	glutInitWindowPosition(WindowPosX, WindowPosY);
-	glutCreateWindow("Approximation graph");
-	glutDisplayFunc(RenderApproximation);
+	//// Render simple approximation
+	//glutInit(&argc, argv);
+	//glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+	//glutInitWindowSize(WindowWidth, WindowHeight);
+	//glutInitWindowPosition(WindowPosX, WindowPosY);
+	//glutCreateWindow("Approximation graph");
+	//glutDisplayFunc(RenderApproximation);
 
 	// Points
 	//glutInit(&argc, argv);

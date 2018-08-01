@@ -5,13 +5,6 @@
 #include "Polinoms.h"
 #include <ctime>
 
-//
-//const int SIZE_SMALL = 17;
-//const int SIZE_MEDDIUM = 28;
-//const int SIZE_LARGE = 32;
-//const int POLINOME_POWER = 7;
-//const double TOLERANCE = 0.5;
-
 double* normalizePolinoms(double** vectorSet, const int& vectorCount, const int& vectorSize, std::string norm = "avarage") {
 	int i, j;
 	double* normalizedPol = new double[vectorSize];
@@ -54,7 +47,6 @@ double** create_approx_polinomes(double* xSet, double **matrix, const int& hight
 	}
 	return polinomes;
 }
-
 
 
 double** PolinomeSetValues(double*x, double** PolinomeCoefs, const int& height, 

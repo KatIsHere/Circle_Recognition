@@ -146,6 +146,7 @@ double HalleyMethodPolinome(double* coefs, const int& N, const double&start, con
 	/*
 	* A root-finding algorithm used for functions of one real variable 
 	* with a continuous second derivative
+	* has ~cubic speed
 	*/
 	double* FirstDerivative = polinome_derivative(coefs, N);
 	double* SecondDerivative = polinome_derivative(FirstDerivative, N - 1);
@@ -168,6 +169,7 @@ double HalleyMethodPolinome(double* coefs, const int& N, const double&start, con
 double NewtonMethod(double* coefs, const int& N, const double& start, const double& Eps = 0.00001) {
 	/*
 	* A method for finding approximations to the roots of a real-valued function
+	* one of the fastests methods for root finding
 	*/
 	double* FirstDerivative = polinome_derivative(coefs, N);
 	double x0 = start, res, polinome = Polinome_Power(x0, coefs, N), 
@@ -181,31 +183,6 @@ double NewtonMethod(double* coefs, const int& N, const double& start, const doub
 	delete[]FirstDerivative;
 	return x0;
 }
-
-
-//TODO
-//double LaguerreMethod(double* coefs, const int& N, const double& start, const double& Eps = 1e-10) {
-//	/* 
-//	* Laguerre’s method is exclusively for polynomial zerofinding;
-//	* It belongs to a class of methods for more general that includes 
-//	* other methods such as Newton’s and Ostrowski’s
-//	*/
-//	double* FirstDerivative = polinome_derivative(coefs, N);
-//	double* SecondDerivative = polinome_derivative(FirstDerivative, N - 1);
-//
-//	double x0 = start, res; 
-//	double polinome = Polinome_Power(x0, coefs, N), firstDer = Polinome_Power(x0, FirstDerivative, N - 1);
-//	double Beta;
-//	while ((abs(polinome) >= Eps)) {
-//		res = polinome / firstDer;
-//		x0 = x0 - res / (1 - res * Polinome_Power(x0, SecondDerivative, N - 2) / (2 * firstDer));
-//		polinome = Polinome_Power(x0, coefs, N);
-//		firstDer = Polinome_Power(x0, FirstDerivative, N - 1);
-//	}
-//
-//	delete[]FirstDerivative; delete[]SecondDerivative;
-//	return x0;
-//}
 
 
 // FINDING ALL ROOTS IN A POLINOME

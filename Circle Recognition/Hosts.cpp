@@ -33,6 +33,7 @@ checkErr(cl_int err, const char * name)
 	}
 }
 
+// HOSTS FUNCTIONS
 
 double Approx_Polinomes_Kernel_squareRoot(cl_command_queue &queue, cl_context context, cl_device_id &device, cl_kernel &kernel,
 	cl_float* x_input, cl_float *f_input,

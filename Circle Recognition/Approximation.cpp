@@ -68,15 +68,12 @@ double* approximation_coefs(double* xSet, double* fSet, const int& setSize, cons
 	return C;
 }
 
-// POSSIBLE KERNELS:
-// POW AND SUM AND ASSIGHN
-// ADD AND ASSIGHN
-// MULTIPLY AND ASSIGHN
+
 double* approximation_polinome(double* xSet, double* fSet, const int& setSize, const int& polinomialPower = 5, double SystemTolerance = 0.1) {
 	/*
 	* Approximation of a table function with a polinome of power n, using mean square ethod forapproximation
 	* Returns an array of coeficients ci for polinome: Pn(x) = c0 + c1*x + c2*x**2 + ...
-	* Faster than approximation_coefs(), because it doesn't have additional ifs
+	* Faster than approximation_coefs(), because it doesn't have additional if's
 	*/
 	double** A = new double*[polinomialPower];
 	double* B = new double[polinomialPower];
@@ -90,15 +87,15 @@ double* approximation_polinome(double* xSet, double* fSet, const int& setSize, c
 		for (j = 0; j < polinomialPower; ++j) {
 			sumaA = 0.;
 			for (k = 0; k < setSize; ++k) {
-				sumaA += pow(xSet[k], i + j);					// 1 KERNEL
+				sumaA += pow(xSet[k], i + j);					
 			}					
-			A[i][j] = normalizing * sumaA;						// 2 KERNEL
+			A[i][j] = normalizing * sumaA;						
 		}
 		sumaB = 0.;
 		for (j = 0; j < setSize; ++j) {
-			sumaB += pow(xSet[j], i)*fSet[j];					// 1 KERNEL
+			sumaB += pow(xSet[j], i)*fSet[j];					
 		}				
-		B[i] = sumaB * normalizing;								// 2 KERNEL
+		B[i] = sumaB * normalizing;								
 	}
 
 	double* C = new double[polinomialPower];
@@ -182,10 +179,12 @@ double sigma_sum(double* xSet, double* Fset, const int& setSize, double* func_co
 	return suma;
 }
 
+
 int approximation_optimal_N(double* xSet, double* FSet, const int& setSize, std::string approx = "polinome", const double& eps = 0.01) {
 	/*
 	* Retunrs optimal power for approximating a function
 	* Helps to prevent overfitting when choosing an approximation function
+	* Realy slow
 	*/
 	double suma = 0;
 	int N = 0;
