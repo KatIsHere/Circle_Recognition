@@ -20,8 +20,8 @@ double Approx_Polinomes_Run_Kernel(cl::Context context, cl::Device &device, cl::
 	cl_float* A_input, cl_float *B_input, cl_float *C_input, cl_float *P_input,
 	cl_int polinome_power,
 	cl_float* T);
-double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, cl_device_id &device, cl_kernel &kernel,
-	cl_double* x_input, cl_double *f_input,
+double Approx_Polinomes_Run_Kernel_DOUBLES(cl_command_queue &queue, cl_context context, cl_device_id &device, cl_kernel &kernel,
+	cl_float* x_input, cl_float *f_input,
 	cl_int input_width, cl_int input_hight,
 	cl_double* A_input, cl_double *B_input, cl_double *C_input, cl_int *P_input,
 	cl_int polinome_power);

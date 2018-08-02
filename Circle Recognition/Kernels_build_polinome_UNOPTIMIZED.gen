@@ -672,7 +672,7 @@ LABEL6120
 (W)      mov      (1|M0)         r108.0<1>:ud  r112.7<0;1,0>:ud                
          math.fdiv (16|M0)        r13.0<1>:f    r104.0<8;8,1>:f   r106.0<0;1,0>:f  {Compacted}
          send     (16|M0)        null:uw       r11:ud            0xC       0x8025E03 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #3
-(W)      send     (1|M0)         r113:ud       r107:ud           0xC       0x410B708 //  hdc.dc1  wr:2, rd:1, at.usurf msc:55, to #8
+(W)      send     (1|M0)         r113:ud       r107:ud           0xC       0x410B707 //  hdc.dc1  wr:2, rd:1, at.usurf msc:55, to #7
          add      (16|M0)        r21.0<1>:d    r111.0<8;8,1>:d   r113.0<0;1,0>:ud
          add      (16|M0)        r21.0<1>:ud   r21.0<8;8,1>:ud   0xFFFFFFEC:ud   
          add      (16|M0)        r115.0<1>:ud  r21.0<8;8,1>:ud   0x14:ud          {Compacted}
@@ -684,13 +684,13 @@ LABEL6632
          mov      (16|M0)        r123.0<1>:ud  0x3:ud                           {Compacted}
          add      (16|M0)        r3.0<1>:ud    r121.0<8;8,1>:ud  0x4:ud           {Compacted}
          mov      (16|M0)        r9.0<1>:ud    0x4:ud                           {Compacted}
-         send     (16|M0)        null:uw       r21:uw            0xC       0x8025E08 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #8
+         send     (16|M0)        null:uw       r21:uw            0xC       0x8025E07 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #7
          add      (16|M0)        r7.0<1>:ud    r3.0<8;8,1>:ud    0x4:ud           {Compacted}
-         send     (16|M0)        null:uw       r121:uw           0xC       0x8025E08 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #8
-         send     (16|M0)        null:uw       r3:uw             0xC       0x8025E08 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #8
+         send     (16|M0)        null:uw       r121:uw           0xC       0x8025E07 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #7
+         send     (16|M0)        null:uw       r3:uw             0xC       0x8025E07 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #7
          add      (16|M0)        r11.0<1>:ud   r7.0<8;8,1>:ud    0x4:ud           {Compacted}
-         send     (16|M0)        null:uw       r7:uw             0xC       0x8025E08 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #8
-         send     (16|M0)        null:uw       r11:uw            0xC       0x8025E08 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #8
+         send     (16|M0)        null:uw       r7:uw             0xC       0x8025E07 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #7
+         send     (16|M0)        null:uw       r11:uw            0xC       0x8025E07 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #7
          else     (16|M0)                    LABEL6864                       
 LABEL6784
          add      (16|M0)        r15.0<1>:ud   r21.0<8;8,1>:ud   0x4:ud           {Compacted}
@@ -698,7 +698,7 @@ LABEL6784
 (f0.0)   if       (16|M0)                    LABEL6848         LABEL6848       
 LABEL6816
          mov      (16|M0)        r23.0<1>:ud   0xFFFFFFFF:ud                   
-         send     (16|M0)        null:uw       r21:uw            0xC       0x8025E08 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #8
+         send     (16|M0)        null:uw       r21:uw            0xC       0x8025E07 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #7
 LABEL6848
          endif    (16|M0)                    LABEL6864                       
 LABEL6864
@@ -735,7 +735,7 @@ LABEL6936
 (W)      add      (16|M0)        r34.0<1>:ud   r34.0<8;8,1>:ud   r28.0<8;8,1>:ud  {Compacted}
 (W)      add      (8|M0)         r35.0<1>:ud   r34.0<8;8,1>:ud   r35.0<8;8,1>:ud  {Compacted}
 (W)      mov      (1|M0)         r31.0<1>:ud   r35.7<0;1,0>:ud                 
-(W)      send     (1|M0)         r36:ud        r30:ud            0xC       0x410B708 //  hdc.dc1  wr:2, rd:1, at.usurf msc:55, to #8
+(W)      send     (1|M0)         r36:ud        r30:ud            0xC       0x410B707 //  hdc.dc1  wr:2, rd:1, at.usurf msc:55, to #7
          add      (16|M0)        r42.0<1>:d    r34.0<8;8,1>:d    r36.0<0;1,0>:ud 
          add      (16|M0)        r42.0<1>:ud   r42.0<8;8,1>:ud   0xFFFFFFFC:ud   
          add      (16|M0)        r40.0<1>:ud   r42.0<8;8,1>:ud   0x4:ud           {Compacted}
@@ -743,14 +743,14 @@ LABEL6936
 (f0.0)   if       (16|M0)                    LABEL7352         LABEL7424       
 LABEL7312
          mov      (16|M0)        r44.0<1>:ud   0x1:ud                           {Compacted}
-         send     (16|M0)        null:uw       r42:uw            0xC       0x8025E08 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #8
+         send     (16|M0)        null:uw       r42:uw            0xC       0x8025E07 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #7
          else     (16|M0)                    LABEL7424                       
 LABEL7352
          cmp      (16|M0)  [(le)f0.0]  r40.0<1>:d    r40.0<8;8,1>:d    r2.4<0;1,0>:d    {Compacted}
 (f0.0)   if       (16|M0)                    LABEL7408         LABEL7408       
 LABEL7376
          mov      (16|M0)        r44.0<1>:ud   0xFFFFFFFF:ud                   
-         send     (16|M0)        null:uw       r42:uw            0xC       0x8025E08 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #8
+         send     (16|M0)        null:uw       r42:uw            0xC       0x8025E07 //  hdc.dc1  wr:4, rd:0, wr.usurf msc:30, to #7
 LABEL7408
          endif    (16|M0)                    LABEL7424                       
 LABEL7424

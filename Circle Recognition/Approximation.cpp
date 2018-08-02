@@ -90,13 +90,13 @@ double* approximation_polinome(double* xSet, double* fSet, const int& setSize, c
 				sumaA += pow(xSet[k], i + j);					
 			}					
 			A[i][j] = normalizing * sumaA;		
-			//std::cout << "A[" << i << "][" << j << "] = " << A[i][j] << "\t";
 		}
 		sumaB = 0.;
 		for (j = 0; j < setSize; ++j) {
 			sumaB += pow(xSet[j], i)*fSet[j];					
 		}				
-		B[i] = sumaB * normalizing;								
+		B[i] = sumaB * normalizing;
+		std::cout << "B[" << i << "] = " << B[i] << "\t";
 	}
 
 	double* C = new double[polinomialPower];

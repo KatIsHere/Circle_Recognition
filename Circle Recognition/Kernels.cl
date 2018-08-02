@@ -1,18 +1,17 @@
 #pragma OPENCL EXTENSION cl_intel_printf : enable
 #define POWER 6
 
-//#ifdef cl_khr_fp64
+#ifdef cl_khr_fp64
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
-//#elif defined(cl_amd_fp64)
-//#pragma OPENCL EXTENSION cl_amd_fp64 : enable
-//#else
-//#error "Double precision floating point not supported by OpenCL implementation."
-//#endif
+#elif defined(cl_amd_fp64)
+#pragma OPENCL EXTENSION cl_amd_fp64 : enable
+#else
+#error "Double precision floating point not supported by OpenCL implementation."
+#endif
 
 __kernel void build_polinome_double(__global const double* xSet, __global const double* fSet, __global double* C,
-	__global double* A, __global double* B, __global int* Y,
-	const int setSize,
-	const int power) {
+			__global double* A, __global double* B, __global int* Y,
+			const int setSize, const int power) {
 	int i, j, k;
 	float normalizing = (float)1 / (setSize + 1);					// 1/(b-a)
 
@@ -25,20 +24,19 @@ __kernel void build_polinome_double(__global const double* xSet, __global const 
 		for (j = 0; j < setSize; ++j) {
 			suma += pown(xSet[j], i) * fSet[id * setSize + j];
 		}
-		B[i] = suma * normalizing;
+		B[id*power + i] = suma * normalizing;
+		printf("B[%d][%d] = %f\t", id, i, B[id*power + i]);
 	}
 
-
+	printf("\n\n");
 	// LINEAR EQUATIONS SOLVE
 	// LUP solve
 	for (i = 0; i < power; i++) {
-		C[id * power + i] = B[Y[i]];
+		C[id * power + i] = B[id*power + Y[i]];
 
 		for (int k = 0; k < i; k++) {
 			C[id * power + i] -= A[i * power + k] * C[id * power + k];
-			printf("A[%d][%d] = %f\t", i, k, A[i*power + k]);
 		}
-		printf("\n");
 	}
 
 	for (i = power - 1; i >= 0; i--) {
@@ -474,8 +472,7 @@ __kernel void build_polinome_square_root(__global const float* xSet, __global co
 
 __kernel void build_polinome_unoptimized(__global const float* xSet, __global const float* fSet, __global float* C,
 					__global float* A, __global float* B, __global int* Y,
-					const int setSize,
-					const int power) {
+					const int setSize, const int power) {
 	int i, j, k;
 	float normalizing = (float)1 / (setSize + 1);					// 1/(b-a)
 	float suma;

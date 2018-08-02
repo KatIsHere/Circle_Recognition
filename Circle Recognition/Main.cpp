@@ -182,7 +182,7 @@ void openclCalculatiog_v2(float* x, float*f_x, float* Polinomes, const int& high
 }
 
 
-void openclCalculating(float* x, float*f_x, float* Polinomes, const int& hight, const int& width, const int power) {
+void openclCalculating(cl_float* x, cl_float*f_x, cl_double* Polinomes, const int& hight, const int& width, const int power) {
 	// Choosing the platform --->
 							   //  0 - GPU
 							   //  1 - CPU
@@ -254,22 +254,30 @@ void openclCalculating(float* x, float*f_x, float* Polinomes, const int& hight, 
 
 	err = clBuildProgram(program, 0, NULL, "-g -s Kernels.cl", NULL, NULL);
 	//err = clBuildProgram(program, 0, NULL, "Kernels.cl", NULL, NULL);
-	checkErr(err, "clBuildProgram");
+	if (err != CL_SUCCESS) {
+		char *buildFailre = new char[1024];
+		clGetProgramBuildInfo(program, default_device, CL_PROGRAM_BUILD_LOG, 1024, buildFailre, NULL);
+		std::cerr << "Build Failure: " << buildFailre 
+			<< "\n Press Enter to exit the program...";
+		cin.get();
+		delete[]buildFailre;
+		exit(1);
+	}
 
-	cl_kernel kernel = clCreateKernel(program, "build_polinome_unoptimized", &err);
+	cl_kernel kernel = clCreateKernel(program, "build_polinome_double", &err);
 	checkErr(err, "clCreateKernel");
 
 	int ret = EXIT_SUCCESS;
 		
 	// Build kernel
-	cl_float* A = new cl_float[power*power];
-	cl_float* B = new cl_float[power*hight];
+	cl_double* A = new cl_double[power*power];
+	cl_double* B = new cl_double[power*hight];
 	cl_int* P = new cl_int[power];
-	cl_float* T = new cl_float[power];
+	cl_double* T = new cl_double[power];
 	try
 	{
 		printf("Executing OpenCL kernel...\n");
-		float ocl_time = Approx_Polinomes_Run_Kernel(queue, context, default_device, kernel, x, f_x, width, hight, A, B, Polinomes, P, power, T);
+		float ocl_time = Approx_Polinomes_Run_Kernel_DOUBLES(queue, context, default_device, kernel, x, f_x, width, hight, A, B, Polinomes, P, power);
 		printf("\nNDRange perf. counter time %f s.\n", ocl_time);
 
 		//cout << "\n\nPolinomes second:\n";
@@ -310,7 +318,7 @@ void RenderApproximation(void) {
 
 	// CONVENTIONAL METHOD
 	double** MatrixLARGE = loadMatrix(filepath_LARGE, SIZE_LARGE, SIZE_LARGE);
-	double* x_LARGE = xCreateSet(0, 4, SIZE_LARGE);
+	double* x_LARGE = xCreateSet(0, SIZE_LARGE, SIZE_LARGE);
 	double** polinomes_LARGE = buidPolinome(x_LARGE, MatrixLARGE, SIZE_LARGE, POLINOME_POWER_LARGE, 1);
 	//double** MatrixLARGE_2 = loadMatrix(filepath_LARGE_2, SIZE_LARGE, SIZE_LARGE);
 	//double* x_LARGE_2 = xCreateSet(0, SIZE_LARGE, SIZE_LARGE);
@@ -405,8 +413,8 @@ void RenderPoints(void) {
 void RenderFast(void) {
 	string filepath_LARGE = "idle_test_data_set\\idle_4\\2_x=52_y=125_sz=32.txt";
 	cl_float* MatrixLARGE = cl_loadFunc(SIZE_LARGE, SIZE_LARGE, filepath_LARGE);
-	cl_float* x_LARGE = xCreateCLSet(0, 4, SIZE_LARGE);
-	cl_float* polinomes = new cl_float[POLINOME_POWER_LARGE*SIZE_LARGE];
+	cl_float* x_LARGE = xCreateCLSet(0, SIZE_LARGE, SIZE_LARGE);
+	cl_double* polinomes = new cl_double[POLINOME_POWER_LARGE*SIZE_LARGE];
 	openclCalculating(x_LARGE, MatrixLARGE, polinomes, SIZE_LARGE, SIZE_LARGE, POLINOME_POWER_LARGE);
 
 

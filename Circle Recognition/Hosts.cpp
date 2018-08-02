@@ -261,7 +261,11 @@ void initializeA(cl_float* xSet, cl_float* A, const cl_int& power, const cl_int&
 	delete[]T;
 }
 
-void initializeA(cl_double* xSet, cl_double* A, const cl_int& power, const cl_int& setSize, cl_int* Y) {
+void initializeA(cl_float* xSet, cl_double* A, const cl_int& power, const cl_int& setSize, cl_int* Y) {
+	/*
+	* Creates decomposed A matrix, wich is the same for every polinome
+	* Works fine, bugs not sighted
+	*/
 	int i, j, k;
 	float suma;
 	float normalizing = (float)1 / (setSize + 1);
@@ -274,9 +278,7 @@ void initializeA(cl_double* xSet, cl_double* A, const cl_int& power, const cl_in
 				suma += pow(xSet[k], i + j);
 			}
 			A[i * power + j] = normalizing * suma;
-			//printf("A[%d][%d] = %f\t", i, j, A[i * power + j]);
 		}
-		//printf("\n");
 	}
 
 	int i_max;
@@ -294,9 +296,7 @@ void initializeA(cl_double* xSet, cl_double* A, const cl_int& power, const cl_in
 				maxA = absA;
 				i_max = k;
 			}
-			printf("A[%d][%d] = %f\t", k, i, A[k * power + i]);
 		}
-		printf("maxA = %f\n", maxA);
 		if (maxA < 0.01)
 			printf("\nMatrix is degenerate\n");
 		if (i_max != i) {
@@ -471,8 +471,8 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 }
 
 
-double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, cl_device_id &device, cl_kernel &kernel,
-	cl_double* x_input, cl_double *f_input,
+double Approx_Polinomes_Run_Kernel_DOUBLES(cl_command_queue &queue, cl_context context, cl_device_id &device, cl_kernel &kernel,
+	cl_float* x_input, cl_float *f_input,
 	cl_int input_width, cl_int input_hight,
 	cl_double* A_input, cl_double *B_input, cl_double *C_input, cl_int *P_input,
 	cl_int polinome_power) {
@@ -521,7 +521,7 @@ double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, 
 	cl_mem B_buffer = clCreateBuffer(
 		context,
 		CL_MEM_USE_HOST_PTR,
-		sizeof(cl_double) * polinome_power,
+		sizeof(cl_double) * polinome_power * input_hight,
 		B_input,
 		&err);
 	checkErr(err, "B_buffer");
