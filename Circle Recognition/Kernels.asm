@@ -10,14 +10,10 @@
 	.long	5
 	.long	6
 	.long	7
-.LCPI0_3:
-	.zero	32
 	.section	.rodata.cst4,"aM",@progbits,4
 	.align	4
 .LCPI0_1:
 	.long	1065353216
-.LCPI0_2:
-	.long	8
 	.text
 	.globl	build_polinome_double
 	.align	16, 0x90
@@ -36,7 +32,7 @@ build_polinome_double:
 	pushl	%edi
 	pushl	%esi
 	andl	$-32, %esp
-	subl	$1184, %esp
+	subl	$448, %esp
 .Ltmp6:
 	.cfi_offset %esi, -20
 .Ltmp7:
@@ -44,1396 +40,823 @@ build_polinome_double:
 .Ltmp8:
 	.cfi_offset %ebx, -12
 	movl	8(%ebp), %eax
-	movl	28(%eax), %ebx
-	movl	%ebx, 632(%esp)
-	movl	24(%eax), %ecx
-	movl	%ecx, 488(%esp)
-	movl	20(%eax), %ecx
-	movl	%ecx, 460(%esp)
-	movl	16(%eax), %ecx
-	movl	%ecx, 584(%esp)
-	movl	12(%eax), %ecx
-	movl	%ecx, 484(%esp)
-	movl	8(%eax), %ecx
-	movl	%ecx, 720(%esp)
-	movl	(%eax), %ecx
-	movl	%ecx, 696(%esp)
-	movl	4(%eax), %ecx
-	movl	%ecx, 180(%esp)
-	movl	36(%eax), %esi
-	movl	%esi, 24(%esp)
+	movl	28(%eax), %edi
+	movl	%edi, 304(%esp)
+	testl	%edi, %edi
+	jle	.LBB0_46
 	movl	12(%ebp), %ecx
-	movl	(%ecx), %ecx
-	movl	60(%eax), %edi
-	movl	60(%eax), %edx
-	movl	%edx, 184(%esp)
-	movl	96(%eax), %eax
-	movl	%eax, 588(%esp)
-	imull	%ecx, %edi
-	movl	%edi, 28(%esp)
-	leal	(%edi,%esi), %eax
-	movl	%eax, 492(%esp)
-	sarl	$3, %edx
-	movl	%edx, 176(%esp)
-	je	.LBB0_23
-	movl	488(%esp), %edx
-	vmovd	%edx, %xmm0
-	vpxor	%ymm2, %ymm2, %ymm2
-	vpermd	%ymm0, %ymm2, %ymm0
-	movl	492(%esp), %edi
-	vmovd	%edi, %xmm1
+	movl	(%ecx), %edx
+	movl	60(%eax), %ecx
+	movl	%ecx, 120(%esp)
+	imull	%ecx, %edx
+	addl	36(%eax), %edx
+	movl	%edx, 20(%esp)
+	movl	24(%eax), %edx
+	movl	%edx, 292(%esp)
+	movl	20(%eax), %edx
+	movl	%edx, 284(%esp)
+	movl	16(%eax), %edx
+	movl	%edx, 300(%esp)
+	movl	12(%eax), %edx
+	movl	%edx, 296(%esp)
+	movl	8(%eax), %edx
+	movl	%edx, 396(%esp)
+	movl	(%eax), %edx
+	movl	%edx, 392(%esp)
+	movl	4(%eax), %eax
+	movl	%eax, 116(%esp)
+	sarl	$3, %ecx
+	movl	%ecx, 112(%esp)
+	je	.LBB0_22
+	movl	292(%esp), %edx
+	vmovd	%edx, %xmm1
+	vpxor	%ymm0, %ymm0, %ymm0
+	vpermd	%ymm1, %ymm0, %ymm2
+	movl	20(%esp), %eax
+	vmovd	%eax, %xmm1
 	vbroadcastss	%xmm1, %ymm1
 	vpaddd	.LCPI0_0, %ymm1, %ymm1
-	vmovdqa	%ymm1, 224(%esp)
-	vpmulld	%ymm0, %ymm1, %ymm0
-	vmovdqa	%ymm0, 192(%esp)
-	vmovd	%xmm0, %ecx
-	vpextrd	$1, %xmm0, %eax
+	vpmulld	%ymm2, %ymm1, %ymm3
+	vmovd	%xmm3, %ecx
+	vpextrd	$1, %xmm3, %eax
 	subl	%ecx, %eax
 	shll	$3, %eax
-	vmovd	%eax, %xmm0
-	vbroadcastss	%xmm0, %ymm0
-	vmovaps	%ymm0, 128(%esp)
-	vmovd	%ebx, %xmm0
-	vpermd	%ymm0, %ymm2, %ymm0
-	vpmulld	%ymm0, %ymm1, %ymm0
-	vmovdqa	%ymm0, 320(%esp)
-	vmovd	%xmm0, %ecx
-	vpextrd	$1, %xmm0, %eax
+	vmovd	%eax, %xmm2
+	vbroadcastss	%xmm2, %ymm2
+	vmovaps	%ymm2, 64(%esp)
+	vmovd	%edi, %xmm2
+	vpermd	%ymm2, %ymm0, %ymm2
+	vpmulld	%ymm2, %ymm1, %ymm4
+	vmovd	%xmm4, %ecx
+	vpextrd	$1, %xmm4, %eax
 	subl	%ecx, %eax
 	shll	$3, %eax
-	vmovd	%eax, %xmm0
-	vbroadcastss	%xmm0, %ymm0
-	vmovaps	%ymm0, 96(%esp)
-	movl	720(%esp), %eax
-	leal	(%eax,%ebx,8), %eax
-	movl	%eax, 92(%esp)
-	leal	(,%ebx,8), %eax
-	movl	%eax, 316(%esp)
+	vmovd	%eax, %xmm1
+	vbroadcastss	%xmm1, %ymm1
+	vmovaps	%ymm1, 32(%esp)
+	movl	396(%esp), %eax
+	leal	(%eax,%edi,8), %eax
+	movl	%eax, 28(%esp)
+	leal	(,%edi,8), %eax
+	movl	%eax, 276(%esp)
 	movl	$-8, %ecx
 	subl	%eax, %ecx
-	movl	%ecx, 312(%esp)
-	movl	%ebx, %eax
+	movl	%ecx, 272(%esp)
+	movl	%edi, %eax
 	imull	%eax, %eax
-	movl	484(%esp), %ecx
+	movl	296(%esp), %ecx
 	leal	(%ecx,%eax,8), %eax
-	movl	%eax, 88(%esp)
+	movl	%eax, 24(%esp)
 	leal	1(%edx), %eax
-	vcvtsi2ssl	%eax, %xmm0, %xmm0
-	vmovss	.LCPI0_1, %xmm1
-	vdivss	%xmm0, %xmm1, %xmm0
-	vpermps	%ymm0, %ymm2, %ymm1
-	vmovaps	%ymm1, 256(%esp)
-	vxorps	%xmm1, %xmm1, %xmm1
-	vmulss	%xmm1, %xmm0, %xmm0
+	vcvtsi2ssl	%eax, %xmm0, %xmm1
+	vmovss	.LCPI0_1, %xmm2
+	vdivss	%xmm1, %xmm2, %xmm1
+	vpermps	%ymm1, %ymm0, %ymm0
+	vmovaps	%ymm0, 224(%esp)
+	vxorps	%xmm0, %xmm0, %xmm0
+	vmulss	%xmm0, %xmm1, %xmm0
 	vcvtss2sd	%xmm0, %xmm0, %xmm0
-	vmovsd	%xmm0, 624(%esp)
+	vmovsd	%xmm0, 216(%esp)
 	xorl	%eax, %eax
-	vpbroadcastd	.LCPI0_2, %ymm0
-	vmovdqa	%ymm0, 32(%esp)
-	movl	%edi, %ecx
 	.align	16, 0x90
-.LBB0_2:
-	movl	%ecx, 480(%esp)
-	movl	%eax, 188(%esp)
-	testl	%ebx, %ebx
-	jle	.LBB0_3
-	vmovdqa	224(%esp), %ymm1
-	vextracti128	$1, %ymm1, %xmm0
+.LBB0_3:
+	movl	%eax, 124(%esp)
+	vmovaps	%ymm4, 128(%esp)
+	vextracti128	$1, %ymm4, %xmm0
 	vpextrd	$3, %xmm0, %eax
-	movl	%eax, 544(%esp)
-	vpextrd	$2, %xmm0, %eax
-	movl	%eax, 512(%esp)
-	vpextrd	$1, %xmm0, %eax
-	movl	%eax, 496(%esp)
-	vmovd	%xmm0, 476(%esp)
-	vpextrd	$3, %xmm1, %eax
-	movl	%eax, 472(%esp)
-	vpextrd	$2, %xmm1, %eax
-	movl	%eax, 468(%esp)
-	vpextrd	$1, %xmm1, %eax
-	movl	%eax, 464(%esp)
-	vmovdqa	320(%esp), %ymm1
-	vextracti128	$1, %ymm1, %xmm0
+	vpextrd	$2, %xmm0, %ecx
+	vpextrd	$1, %xmm0, %edx
+	movl	%edx, 416(%esp)
+	vmovd	%xmm0, %esi
+	vpextrd	$3, %xmm4, %edi
+	vpextrd	$2, %xmm4, %ebx
+	vpextrd	$1, %xmm4, %edx
+	movl	%edx, 424(%esp)
+	vmovd	%xmm4, %edx
+	cmpl	$0, 292(%esp)
+	jle	.LBB0_8
+	movl	%edx, 400(%esp)
+	movl	%ebx, 404(%esp)
+	movl	%edi, 408(%esp)
+	movl	%esi, 412(%esp)
+	movl	%ecx, 420(%esp)
+	movl	%eax, 348(%esp)
+	vextracti128	$1, %ymm3, %xmm0
 	vpextrd	$3, %xmm0, %edx
-	vpextrd	$2, %xmm0, %edi
-	vpextrd	$1, %xmm0, %eax
-	movl	%eax, 724(%esp)
-	vmovd	%xmm0, 712(%esp)
-	vpextrd	$3, %xmm1, %ecx
-	vpextrd	$2, %xmm1, %eax
-	vpextrd	$1, %xmm1, %esi
-	vmovd	%xmm1, %ebx
-	cmpl	$0, 488(%esp)
-	jle	.LBB0_9
-	movl	%ebx, 700(%esp)
-	movl	%esi, 704(%esp)
-	movl	%eax, 708(%esp)
-	movl	%ecx, 716(%esp)
-	movl	%edi, 728(%esp)
-	movl	%edx, 636(%esp)
-	vmovdqa	192(%esp), %ymm1
-	vextracti128	$1, %ymm1, %xmm0
-	vpextrd	$3, %xmm0, %esi
 	vpextrd	$2, %xmm0, %eax
-	movl	%eax, 616(%esp)
+	movl	%eax, 336(%esp)
 	vpextrd	$1, %xmm0, %eax
-	movl	%eax, 640(%esp)
-	vmovd	%xmm0, 672(%esp)
-	vpextrd	$3, %xmm1, %ecx
-	vpextrd	$2, %xmm1, %eax
-	vpextrd	$1, %xmm1, %ebx
-	vmovd	%xmm1, %edi
-	movl	180(%esp), %edx
-	leal	(%edx,%esi,8), %esi
-	movl	%esi, 620(%esp)
-	movl	616(%esp), %esi
-	leal	(%edx,%esi,8), %esi
-	movl	%esi, 616(%esp)
-	movl	640(%esp), %esi
-	leal	(%edx,%esi,8), %esi
-	movl	%esi, 612(%esp)
-	movl	672(%esp), %esi
-	leal	(%edx,%esi,8), %esi
-	movl	%esi, 608(%esp)
-	leal	(%edx,%ecx,8), %ecx
-	movl	%ecx, 604(%esp)
-	leal	(%edx,%eax,8), %eax
-	movl	%eax, 600(%esp)
-	leal	(%edx,%ebx,8), %eax
-	movl	%eax, 596(%esp)
-	leal	(%edx,%edi,8), %eax
-	movl	%eax, 592(%esp)
+	movl	%eax, 344(%esp)
+	vmovd	%xmm0, 352(%esp)
+	vpextrd	$3, %xmm3, %ecx
+	vpextrd	$2, %xmm3, %eax
+	vpextrd	$1, %xmm3, %ebx
+	vmovd	%xmm3, %edi
+	vmovaps	%ymm3, 160(%esp)
+	movl	116(%esp), %esi
+	leal	(%esi,%edx,4), %edx
+	movl	%edx, 340(%esp)
+	movl	336(%esp), %edx
+	leal	(%esi,%edx,4), %edx
+	movl	%edx, 336(%esp)
+	movl	344(%esp), %edx
+	leal	(%esi,%edx,4), %edx
+	movl	%edx, 332(%esp)
+	movl	352(%esp), %edx
+	leal	(%esi,%edx,4), %edx
+	movl	%edx, 328(%esp)
+	leal	(%esi,%ecx,4), %ecx
+	movl	%ecx, 324(%esp)
+	leal	(%esi,%eax,4), %eax
+	movl	%eax, 320(%esp)
+	leal	(%esi,%ebx,4), %eax
+	movl	%eax, 312(%esp)
+	leal	(%esi,%edi,4), %eax
+	movl	%eax, 308(%esp)
 	xorl	%ecx, %ecx
 	.align	16, 0x90
-.LBB0_8:
-	vxorpd	%ymm1, %ymm1, %ymm1
-	movl	488(%esp), %eax
+.LBB0_7:
+	movl	%ecx, 344(%esp)
+	vxorps	%ymm1, %ymm1, %ymm1
+	movl	292(%esp), %esi
 	xorl	%edi, %edi
-	xorl	%edx, %edx
+	xorl	%ebx, %ebx
 	.align	16, 0x90
-.LBB0_6:
-	vmovapd	%ymm1, 640(%esp)
-	movl	%edx, 672(%esp)
-	movl	696(%esp), %edx
-	vmovsd	(%edx,%edi), %xmm0
+.LBB0_5:
+	vmovaps	%ymm1, 352(%esp)
+	movl	392(%esp), %eax
+	vmovss	(%eax,%edi), %xmm0
 	movl	%ecx, (%esp)
-	movl	%ecx, %esi
-	movl	%eax, %ebx
 	vzeroupper
-	calll	__ocl_svml_s9_pown1
-	movl	672(%esp), %edx
-	movl	%ebx, %eax
-	movl	%esi, %ecx
-	movl	600(%esp), %esi
-	vmovsd	(%esi,%edi), %xmm1
-	movl	604(%esp), %esi
-	vmovhpd	(%esi,%edi), %xmm1, %xmm1
-	movl	592(%esp), %esi
-	vmovsd	(%esi,%edi), %xmm2
-	movl	596(%esp), %esi
-	vmovhpd	(%esi,%edi), %xmm2, %xmm2
+	calll	__ocl_svml_s9_pownf1
+	movl	344(%esp), %ecx
+	movl	328(%esp), %eax
+	vmovss	(%eax,%edi), %xmm1
+	movl	332(%esp), %eax
+	vinsertps	$16, (%eax,%edi), %xmm1, %xmm1
+	movl	336(%esp), %eax
+	vinsertps	$32, (%eax,%edi), %xmm1, %xmm1
+	movl	340(%esp), %eax
+	vinsertps	$48, (%eax,%edi), %xmm1, %xmm1
+	movl	308(%esp), %eax
+	vmovss	(%eax,%edi), %xmm2
+	movl	312(%esp), %eax
+	vinsertps	$16, (%eax,%edi), %xmm2, %xmm2
+	movl	320(%esp), %eax
+	vinsertps	$32, (%eax,%edi), %xmm2, %xmm2
+	movl	324(%esp), %eax
+	vinsertps	$48, (%eax,%edi), %xmm2, %xmm2
 	vinsertf128	$1, %xmm1, %ymm2, %ymm1
-	vbroadcastsd	%xmm0, %ymm0
-	vmovapd	640(%esp), %ymm4
-	vcvtps2pd	%xmm4, %ymm2
-	vfmadd213pd	%ymm2, %ymm0, %ymm1
-	vcvtpd2psy	%ymm1, %xmm1
-	movl	616(%esp), %esi
-	vmovsd	(%esi,%edi), %xmm2
-	movl	620(%esp), %esi
-	vmovhpd	(%esi,%edi), %xmm2, %xmm2
-	movl	608(%esp), %esi
-	vmovsd	(%esi,%edi), %xmm3
-	movl	612(%esp), %esi
-	vmovhpd	(%esi,%edi), %xmm3, %xmm3
-	vinsertf128	$1, %xmm2, %ymm3, %ymm2
-	vextractf128	$1, %ymm4, %xmm3
-	vcvtps2pd	%xmm3, %ymm3
-	vfmadd213pd	%ymm3, %ymm0, %ymm2
-	vcvtpd2psy	%ymm2, %xmm0
-	vinsertf128	$1, %xmm0, %ymm1, %ymm1
-	addl	$8, %edi
-	adcl	$0, %edx
-	decl	%eax
-	jne	.LBB0_6
-	movl	584(%esp), %eax
+	vbroadcastss	%xmm0, %ymm0
+	vfmadd213ps	352(%esp), %ymm1, %ymm0
+	addl	$4, %edi
+	adcl	$0, %ebx
+	decl	%esi
+	vmovaps	%ymm0, %ymm1
+	jne	.LBB0_5
+	movl	300(%esp), %eax
 	leal	(%eax,%ecx,8), %eax
-	vmovaps	256(%esp), %ymm0
-	vmulps	%ymm1, %ymm0, %ymm0
-	vcvtps2pd	%xmm0, %ymm2
-	vmovapd	%ymm2, 416(%esp)
-	movl	%ecx, %ebx
-	movl	700(%esp), %ecx
-	vmovlpd	%xmm2, (%eax,%ecx,8)
-	movl	704(%esp), %ecx
-	vmovhpd	%xmm2, (%eax,%ecx,8)
-	vextractf128	$1, %ymm2, %xmm1
-	vmovapd	%xmm1, 560(%esp)
-	movl	708(%esp), %ecx
+	vmovaps	224(%esp), %ymm1
+	vmulps	%ymm0, %ymm1, %ymm0
+	vcvtps2pd	%xmm0, %ymm1
+	movl	%ecx, %esi
+	movl	400(%esp), %ecx
 	vmovlpd	%xmm1, (%eax,%ecx,8)
-	movl	716(%esp), %ecx
+	movl	424(%esp), %ecx
+	vmovhpd	%xmm1, (%eax,%ecx,8)
+	vextractf128	$1, %ymm1, %xmm1
+	movl	404(%esp), %ecx
+	vmovlpd	%xmm1, (%eax,%ecx,8)
+	movl	408(%esp), %ecx
 	vmovhpd	%xmm1, (%eax,%ecx,8)
 	vextractf128	$1, %ymm0, %xmm0
 	vcvtps2pd	%xmm0, %ymm0
-	vmovapd	%ymm0, 640(%esp)
-	movl	712(%esp), %ecx
+	movl	412(%esp), %ecx
 	vmovlpd	%xmm0, (%eax,%ecx,8)
-	movl	724(%esp), %ecx
+	movl	416(%esp), %ecx
 	vmovhpd	%xmm0, (%eax,%ecx,8)
 	vextractf128	$1, %ymm0, %xmm0
-	vmovapd	%xmm0, 672(%esp)
-	movl	728(%esp), %ecx
+	movl	420(%esp), %ecx
 	vmovlpd	%xmm0, (%eax,%ecx,8)
-	movl	636(%esp), %ecx
+	movl	348(%esp), %ecx
 	vmovhpd	%xmm0, (%eax,%ecx,8)
-	movl	480(%esp), %eax
-	movl	%eax, 740(%esp)
-	movl	%ebx, 744(%esp)
-	vmovlpd	%xmm2, 748(%esp)
-	movl	16(%ebp), %edi
-	movl	%edi, 12(%esp)
-	movl	588(%esp), %esi
-	movl	%esi, 8(%esp)
-	leal	740(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	vzeroupper
-	calll	opencl_printf
-	movl	464(%esp), %eax
-	movl	%eax, 756(%esp)
-	movl	%ebx, 760(%esp)
-	vmovapd	416(%esp), %ymm0
-	vmovhpd	%xmm0, 764(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	756(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	vzeroupper
-	calll	opencl_printf
-	movl	468(%esp), %eax
-	movl	%eax, 772(%esp)
-	movl	%ebx, 776(%esp)
-	vmovapd	560(%esp), %xmm0
-	vmovlpd	%xmm0, 780(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	772(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	calll	opencl_printf
-	movl	472(%esp), %eax
-	movl	%eax, 788(%esp)
-	movl	%ebx, 792(%esp)
-	vmovapd	560(%esp), %xmm0
-	vmovhpd	%xmm0, 796(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	788(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	calll	opencl_printf
-	movl	476(%esp), %eax
-	movl	%eax, 804(%esp)
-	movl	%ebx, 808(%esp)
-	vmovapd	640(%esp), %ymm0
-	vmovlpd	%xmm0, 812(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	804(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	vzeroupper
-	calll	opencl_printf
-	movl	496(%esp), %eax
-	movl	%eax, 820(%esp)
-	movl	%ebx, 824(%esp)
-	vmovapd	640(%esp), %ymm0
-	vmovhpd	%xmm0, 828(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	820(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	vzeroupper
-	calll	opencl_printf
-	movl	512(%esp), %eax
-	movl	%eax, 836(%esp)
-	movl	%ebx, 840(%esp)
-	vmovapd	672(%esp), %xmm0
-	vmovlpd	%xmm0, 844(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	836(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	calll	opencl_printf
-	movl	544(%esp), %eax
-	movl	%eax, 852(%esp)
-	movl	%ebx, 856(%esp)
-	vmovapd	672(%esp), %xmm0
-	vmovhpd	%xmm0, 860(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	852(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	calll	opencl_printf
-	movl	%ebx, %ecx
+	movl	%esi, %ecx
 	incl	%ecx
-	movl	632(%esp), %eax
-	cmpl	%eax, %ecx
-	jne	.LBB0_8
-	jmp	.LBB0_11
+	cmpl	304(%esp), %ecx
+	jne	.LBB0_7
+	jmp	.LBB0_10
 	.align	16, 0x90
-.LBB0_3:
-	movl	16(%ebp), %edi
-	movl	%edi, 12(%esp)
-	movl	588(%esp), %esi
-	movl	%esi, 8(%esp)
-	leal	732(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	vzeroupper
-	calll	opencl_printf
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	733(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	calll	opencl_printf
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	734(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	calll	opencl_printf
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	735(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	calll	opencl_printf
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	736(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	calll	opencl_printf
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	737(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	calll	opencl_printf
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	738(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	calll	opencl_printf
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	739(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	calll	opencl_printf
-	movl	720(%esp), %edi
-	jmp	.LBB0_22
+.LBB0_8:
+	vmovaps	%ymm3, 160(%esp)
+	movl	%edi, 408(%esp)
+	movl	%esi, %edi
+	movl	%ecx, %esi
+	movl	%eax, %ecx
+	leal	(,%ecx,8), %eax
+	movl	%eax, 352(%esp)
+	movl	%ecx, 348(%esp)
+	leal	(,%esi,8), %eax
+	movl	%eax, 344(%esp)
+	movl	%esi, 420(%esp)
+	movl	416(%esp), %eax
+	leal	(,%eax,8), %eax
+	movl	%eax, 340(%esp)
+	leal	(,%edi,8), %eax
+	movl	%eax, 336(%esp)
+	movl	%edi, 412(%esp)
+	movl	408(%esp), %eax
+	leal	(,%eax,8), %eax
+	movl	%eax, 332(%esp)
+	movl	%ebx, 404(%esp)
+	leal	(,%ebx,8), %ebx
+	movl	424(%esp), %eax
+	leal	(,%eax,8), %eax
+	leal	(,%edx,8), %ecx
+	movl	%edx, 400(%esp)
+	movl	304(%esp), %edx
+	movl	300(%esp), %esi
 	.align	16, 0x90
 .LBB0_9:
-	movl	%eax, 708(%esp)
-	movl	%edi, %eax
-	movl	%edx, %edi
-	leal	(,%edi,8), %edx
-	movl	%edx, 640(%esp)
-	movl	%edi, 636(%esp)
-	leal	(,%eax,8), %edx
-	movl	%edx, 620(%esp)
-	movl	%eax, 728(%esp)
-	movl	724(%esp), %eax
-	leal	(,%eax,8), %edx
-	movl	%edx, 616(%esp)
-	movl	712(%esp), %eax
-	leal	(,%eax,8), %edx
-	movl	%edx, 612(%esp)
-	leal	(,%ecx,8), %edx
-	movl	%edx, 608(%esp)
-	movl	%ecx, 716(%esp)
-	movl	708(%esp), %eax
-	leal	(,%eax,8), %ecx
-	movl	%ecx, 604(%esp)
-	leal	(,%esi,8), %eax
-	movl	%eax, 600(%esp)
-	movl	%esi, 704(%esp)
-	leal	(,%ebx,8), %eax
-	movl	%eax, 596(%esp)
-	movl	%ebx, 700(%esp)
-	xorl	%ebx, %ebx
-	movl	584(%esp), %ecx
-	.align	16, 0x90
+	vmovsd	216(%esp), %xmm0
+	vmovsd	%xmm0, (%esi,%ecx)
+	vmovsd	%xmm0, (%esi,%eax)
+	vmovsd	%xmm0, (%esi,%ebx)
+	movl	332(%esp), %edi
+	vmovsd	%xmm0, (%esi,%edi)
+	movl	336(%esp), %edi
+	vmovsd	%xmm0, (%esi,%edi)
+	movl	340(%esp), %edi
+	vmovsd	%xmm0, (%esi,%edi)
+	movl	344(%esp), %edi
+	vmovsd	%xmm0, (%esi,%edi)
+	movl	352(%esp), %edi
+	vmovsd	%xmm0, (%esi,%edi)
+	addl	$8, %esi
+	decl	%edx
+	jne	.LBB0_9
 .LBB0_10:
-	movl	%ecx, 672(%esp)
-	vmovsd	624(%esp), %xmm0
-	movl	596(%esp), %eax
-	vmovsd	%xmm0, (%ecx,%eax)
-	movl	600(%esp), %eax
-	vmovsd	%xmm0, (%ecx,%eax)
-	movl	604(%esp), %eax
-	vmovsd	%xmm0, (%ecx,%eax)
-	movl	608(%esp), %eax
-	vmovsd	%xmm0, (%ecx,%eax)
-	movl	612(%esp), %eax
-	vmovsd	%xmm0, (%ecx,%eax)
-	movl	616(%esp), %eax
-	vmovsd	%xmm0, (%ecx,%eax)
-	movl	620(%esp), %eax
-	vmovsd	%xmm0, (%ecx,%eax)
-	movl	640(%esp), %eax
-	vmovsd	%xmm0, (%ecx,%eax)
-	movl	480(%esp), %eax
-	movl	%eax, 868(%esp)
-	movl	%ebx, 872(%esp)
-	vmovsd	%xmm0, 876(%esp)
-	movl	16(%ebp), %eax
-	movl	%eax, 12(%esp)
-	movl	%eax, %edi
-	movl	588(%esp), %eax
-	movl	%eax, 8(%esp)
-	movl	%eax, %esi
-	leal	868(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	vzeroupper
-	calll	opencl_printf
-	movl	464(%esp), %eax
-	movl	%eax, 884(%esp)
-	movl	%ebx, 888(%esp)
-	vmovsd	624(%esp), %xmm0
-	vmovsd	%xmm0, 892(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	884(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	calll	opencl_printf
-	movl	468(%esp), %eax
-	movl	%eax, 900(%esp)
-	movl	%ebx, 904(%esp)
-	vmovsd	624(%esp), %xmm0
-	vmovsd	%xmm0, 908(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	movl	%esi, %edi
-	leal	900(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	calll	opencl_printf
-	movl	472(%esp), %eax
-	movl	%eax, 916(%esp)
-	movl	%ebx, 920(%esp)
-	vmovsd	624(%esp), %xmm0
-	vmovsd	%xmm0, 924(%esp)
-	movl	16(%ebp), %esi
-	movl	%esi, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	916(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	calll	opencl_printf
-	movl	476(%esp), %eax
-	movl	%eax, 932(%esp)
-	movl	%ebx, 936(%esp)
-	vmovsd	624(%esp), %xmm0
-	vmovsd	%xmm0, 940(%esp)
-	movl	%esi, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	932(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	calll	opencl_printf
-	movl	496(%esp), %eax
-	movl	%eax, 948(%esp)
-	movl	%ebx, 952(%esp)
-	vmovsd	624(%esp), %xmm0
-	vmovsd	%xmm0, 956(%esp)
-	movl	%esi, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	948(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	calll	opencl_printf
-	movl	512(%esp), %eax
-	movl	%eax, 964(%esp)
-	movl	%ebx, 968(%esp)
-	vmovsd	624(%esp), %xmm0
-	vmovsd	%xmm0, 972(%esp)
-	movl	%esi, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	964(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	calll	opencl_printf
-	movl	544(%esp), %eax
-	movl	%eax, 980(%esp)
-	movl	%ebx, 984(%esp)
-	vmovsd	624(%esp), %xmm0
-	vmovsd	%xmm0, 988(%esp)
-	movl	%esi, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	980(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	calll	opencl_printf
-	movl	672(%esp), %ecx
-	addl	$8, %ecx
-	incl	%ebx
-	cmpl	%ebx, 632(%esp)
-	jne	.LBB0_10
-.LBB0_11:
-	movl	16(%ebp), %ebx
-	movl	%ebx, 12(%esp)
-	movl	588(%esp), %esi
-	movl	%esi, 8(%esp)
-	leal	996(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	calll	opencl_printf
-	movl	%ebx, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	997(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	calll	opencl_printf
-	movl	%ebx, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	998(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	calll	opencl_printf
-	movl	%ebx, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	999(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	calll	opencl_printf
-	movl	%ebx, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1000(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	calll	opencl_printf
-	movl	%ebx, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1001(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	calll	opencl_printf
-	movl	%ebx, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1002(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	calll	opencl_printf
-	movl	%ebx, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1003(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	movl	720(%esp), %eax
-	movl	636(%esp), %ecx
+	movl	396(%esp), %eax
+	movl	348(%esp), %ecx
 	leal	(%eax,%ecx,8), %ecx
-	movl	%ecx, 620(%esp)
-	movl	728(%esp), %ecx
+	movl	%ecx, 340(%esp)
+	movl	420(%esp), %ecx
 	leal	(%eax,%ecx,8), %ecx
-	movl	%ecx, 616(%esp)
-	movl	724(%esp), %ebx
-	leal	(%eax,%ebx,8), %ecx
-	movl	%ecx, 612(%esp)
-	movl	712(%esp), %esi
+	movl	%ecx, 336(%esp)
+	movl	416(%esp), %ecx
+	leal	(%eax,%ecx,8), %ecx
+	movl	%ecx, 332(%esp)
+	movl	412(%esp), %edx
+	leal	(%eax,%edx,8), %ecx
+	movl	%ecx, 328(%esp)
+	movl	408(%esp), %ecx
+	leal	(%eax,%ecx,8), %ecx
+	movl	%ecx, 324(%esp)
+	movl	404(%esp), %ecx
+	leal	(%eax,%ecx,8), %ecx
+	movl	%ecx, 320(%esp)
+	movl	424(%esp), %esi
 	leal	(%eax,%esi,8), %ecx
-	movl	%ecx, 608(%esp)
-	movl	716(%esp), %ecx
-	leal	(%eax,%ecx,8), %ecx
-	movl	%ecx, 604(%esp)
-	movl	708(%esp), %ecx
-	leal	(%eax,%ecx,8), %ecx
-	movl	%ecx, 600(%esp)
-	movl	704(%esp), %ecx
-	leal	(%eax,%ecx,8), %ecx
-	movl	%ecx, 596(%esp)
-	movl	700(%esp), %ecx
+	movl	%ecx, 312(%esp)
+	movl	400(%esp), %ecx
 	leal	(%eax,%ecx,8), %eax
-	movl	%eax, 592(%esp)
-	calll	opencl_printf
-	xorl	%eax, %eax
-	movl	484(%esp), %ecx
+	movl	%eax, 308(%esp)
+	xorl	%ecx, %ecx
+	movl	296(%esp), %eax
 	.align	16, 0x90
-.LBB0_12:
-	movl	%eax, %edi
-	movl	%edi, 640(%esp)
-	movl	%ecx, 672(%esp)
-	movl	460(%esp), %edx
-	movl	(%edx,%edi,4), %edx
-	movl	%esi, %ecx
-	movl	584(%esp), %esi
-	leal	(%esi,%edx,8), %edx
-	movl	636(%esp), %eax
-	vmovsd	(%edx,%eax,8), %xmm0
-	movl	728(%esp), %eax
-	vmovsd	(%edx,%eax,8), %xmm5
-	vmovsd	(%edx,%ebx,8), %xmm4
-	vmovsd	(%edx,%ecx,8), %xmm7
-	movl	716(%esp), %ecx
-	vmovsd	(%edx,%ecx,8), %xmm1
-	movl	708(%esp), %ebx
-	vmovsd	(%edx,%ebx,8), %xmm3
-	movl	704(%esp), %esi
-	vmovsd	(%edx,%esi,8), %xmm2
-	movl	700(%esp), %eax
-	vmovsd	(%edx,%eax,8), %xmm6
-	movl	720(%esp), %edx
-	leal	(%edx,%edi,8), %edx
-	vmovsd	%xmm6, (%edx,%eax,8)
-	vmovsd	%xmm2, (%edx,%esi,8)
-	vmovsd	%xmm3, (%edx,%ebx,8)
-	vmovsd	%xmm1, (%edx,%ecx,8)
-	movl	712(%esp), %eax
-	vmovsd	%xmm7, (%edx,%eax,8)
-	movl	724(%esp), %eax
-	vmovsd	%xmm4, (%edx,%eax,8)
-	movl	728(%esp), %eax
-	vmovsd	%xmm5, (%edx,%eax,8)
-	movl	636(%esp), %eax
-	vmovsd	%xmm0, (%edx,%eax,8)
-	testl	%edi, %edi
-	movl	%edi, %ecx
-	jle	.LBB0_15
+.LBB0_11:
+	movl	%ecx, %ebx
+	movl	%ebx, 344(%esp)
+	movl	%eax, 352(%esp)
+	movl	284(%esp), %eax
+	movl	(%eax,%ebx,4), %eax
+	movl	300(%esp), %ecx
+	leal	(%ecx,%eax,8), %eax
+	movl	348(%esp), %ecx
+	vmovsd	(%eax,%ecx,8), %xmm0
+	movl	420(%esp), %ecx
+	vmovsd	(%eax,%ecx,8), %xmm5
+	movl	416(%esp), %ecx
+	vmovsd	(%eax,%ecx,8), %xmm4
+	vmovsd	(%eax,%edx,8), %xmm7
+	movl	408(%esp), %edx
+	vmovsd	(%eax,%edx,8), %xmm1
+	movl	404(%esp), %ecx
+	vmovsd	(%eax,%ecx,8), %xmm3
+	vmovsd	(%eax,%esi,8), %xmm2
+	movl	400(%esp), %edi
+	vmovsd	(%eax,%edi,8), %xmm6
+	movl	396(%esp), %eax
+	leal	(%eax,%ebx,8), %esi
+	vmovsd	%xmm6, (%esi,%edi,8)
+	movl	424(%esp), %eax
+	vmovsd	%xmm2, (%esi,%eax,8)
+	vmovsd	%xmm3, (%esi,%ecx,8)
+	vmovsd	%xmm1, (%esi,%edx,8)
+	movl	412(%esp), %eax
+	vmovsd	%xmm7, (%esi,%eax,8)
+	movl	416(%esp), %eax
+	vmovsd	%xmm4, (%esi,%eax,8)
+	movl	420(%esp), %eax
+	vmovsd	%xmm5, (%esi,%eax,8)
+	movl	348(%esp), %eax
+	vmovsd	%xmm0, (%esi,%eax,8)
+	movl	%eax, %edx
+	testl	%ebx, %ebx
+	jle	.LBB0_14
 	vunpcklpd	%xmm0, %xmm5, %xmm0
 	vunpcklpd	%xmm4, %xmm7, %xmm4
 	vinsertf128	$1, %xmm0, %ymm4, %ymm0
 	vunpcklpd	%xmm1, %xmm3, %xmm1
 	vunpcklpd	%xmm2, %xmm6, %xmm2
 	vinsertf128	$1, %xmm1, %ymm2, %ymm2
-	xorl	%ebx, %ebx
-	xorl	%esi, %esi
 	xorl	%edi, %edi
+	xorl	%eax, %eax
+	xorl	%ecx, %ecx
 	.align	16, 0x90
-.LBB0_14:
-	movl	600(%esp), %ecx
-	vmovsd	(%ecx,%ebx), %xmm1
-	movl	604(%esp), %ecx
-	vmovhpd	(%ecx,%ebx), %xmm1, %xmm1
-	movl	592(%esp), %ecx
-	vmovsd	(%ecx,%ebx), %xmm3
-	movl	596(%esp), %ecx
-	vmovhpd	(%ecx,%ebx), %xmm3, %xmm3
+.LBB0_13:
+	movl	320(%esp), %ebx
+	vmovsd	(%ebx,%edi), %xmm1
+	movl	324(%esp), %ebx
+	vmovhpd	(%ebx,%edi), %xmm1, %xmm1
+	movl	308(%esp), %ebx
+	vmovsd	(%ebx,%edi), %xmm3
+	movl	312(%esp), %ebx
+	vmovhpd	(%ebx,%edi), %xmm3, %xmm3
 	vinsertf128	$1, %xmm1, %ymm3, %ymm1
-	movl	672(%esp), %ecx
-	vbroadcastsd	(%ecx,%ebx), %ymm4
+	movl	352(%esp), %ebx
+	vbroadcastsd	(%ebx,%edi), %ymm4
 	vfnmadd213pd	%ymm2, %ymm4, %ymm1
-	movl	616(%esp), %ecx
-	vmovsd	(%ecx,%ebx), %xmm2
-	movl	620(%esp), %ecx
-	vmovhpd	(%ecx,%ebx), %xmm2, %xmm2
-	movl	608(%esp), %ecx
-	vmovsd	(%ecx,%ebx), %xmm3
-	movl	612(%esp), %ecx
-	vmovhpd	(%ecx,%ebx), %xmm3, %xmm3
-	movl	700(%esp), %ecx
-	vmovlpd	%xmm1, (%edx,%ecx,8)
-	movl	704(%esp), %ecx
-	vmovhpd	%xmm1, (%edx,%ecx,8)
+	movl	336(%esp), %ebx
+	vmovsd	(%ebx,%edi), %xmm2
+	movl	340(%esp), %ebx
+	vmovhpd	(%ebx,%edi), %xmm2, %xmm2
+	movl	328(%esp), %ebx
+	vmovsd	(%ebx,%edi), %xmm3
+	movl	332(%esp), %ebx
+	vmovhpd	(%ebx,%edi), %xmm3, %xmm3
+	movl	400(%esp), %ebx
+	vmovlpd	%xmm1, (%esi,%ebx,8)
+	movl	424(%esp), %ebx
+	vmovhpd	%xmm1, (%esi,%ebx,8)
 	vextractf128	$1, %ymm1, %xmm5
-	movl	708(%esp), %ecx
-	vmovlpd	%xmm5, (%edx,%ecx,8)
-	movl	716(%esp), %ecx
-	vmovhpd	%xmm5, (%edx,%ecx,8)
+	movl	404(%esp), %ebx
+	vmovlpd	%xmm5, (%esi,%ebx,8)
+	movl	408(%esp), %ebx
+	vmovhpd	%xmm5, (%esi,%ebx,8)
 	vinsertf128	$1, %xmm2, %ymm3, %ymm3
 	vfnmadd213pd	%ymm0, %ymm4, %ymm3
-	movl	712(%esp), %ecx
-	vmovlpd	%xmm3, (%edx,%ecx,8)
-	movl	724(%esp), %ecx
-	vmovhpd	%xmm3, (%edx,%ecx,8)
+	movl	412(%esp), %ebx
+	vmovlpd	%xmm3, (%esi,%ebx,8)
+	movl	416(%esp), %ebx
+	vmovhpd	%xmm3, (%esi,%ebx,8)
 	vextractf128	$1, %ymm3, %xmm0
-	movl	728(%esp), %ecx
-	vmovlpd	%xmm0, (%edx,%ecx,8)
-	vmovhpd	%xmm0, (%edx,%eax,8)
-	addl	$8, %ebx
-	adcl	$0, %esi
-	incl	%edi
-	movl	640(%esp), %ecx
-	cmpl	%edi, %ecx
+	movl	420(%esp), %ebx
+	vmovlpd	%xmm0, (%esi,%ebx,8)
+	vmovhpd	%xmm0, (%esi,%edx,8)
+	addl	$8, %edi
+	adcl	$0, %eax
+	incl	%ecx
+	movl	344(%esp), %ebx
+	cmpl	%ecx, %ebx
 	vmovapd	%ymm1, %ymm2
 	vmovapd	%ymm3, %ymm0
-	jne	.LBB0_14
-.LBB0_15:
-	movl	672(%esp), %edx
-	addl	316(%esp), %edx
-	incl	%ecx
-	cmpl	632(%esp), %ecx
-	movl	%ecx, %eax
-	movl	724(%esp), %ebx
-	movl	712(%esp), %esi
-	movl	%edx, %ecx
-	jne	.LBB0_12
-	movl	92(%esp), %eax
-	movl	700(%esp), %ecx
-	leal	(%eax,%ecx,8), %ecx
-	movl	%ecx, 640(%esp)
-	movl	704(%esp), %ecx
-	leal	(%eax,%ecx,8), %ecx
-	movl	%ecx, 620(%esp)
-	movl	708(%esp), %ecx
-	leal	(%eax,%ecx,8), %ecx
-	movl	%ecx, 616(%esp)
-	movl	716(%esp), %ecx
-	leal	(%eax,%ecx,8), %ecx
-	movl	%ecx, 612(%esp)
-	leal	(%eax,%esi,8), %ecx
-	movl	%ecx, 608(%esp)
-	leal	(%eax,%ebx,8), %ecx
-	movl	%ecx, 604(%esp)
-	movl	728(%esp), %ecx
-	leal	(%eax,%ecx,8), %ecx
-	movl	%ecx, 600(%esp)
-	movl	636(%esp), %ecx
-	leal	(%eax,%ecx,8), %eax
-	movl	%eax, 596(%esp)
-	xorl	%edx, %edx
-	movl	88(%esp), %eax
-	movl	632(%esp), %ebx
+	jne	.LBB0_13
+.LBB0_14:
+	movl	352(%esp), %eax
+	addl	276(%esp), %eax
+	incl	%ebx
+	cmpl	304(%esp), %ebx
 	movl	%ebx, %ecx
-	movl	720(%esp), %edi
+	movl	412(%esp), %edx
+	movl	424(%esp), %esi
+	jne	.LBB0_11
+	movl	28(%esp), %eax
+	movl	400(%esp), %ecx
+	leal	(%eax,%ecx,8), %ecx
+	movl	%ecx, 344(%esp)
+	leal	(%eax,%esi,8), %ecx
+	movl	%ecx, 340(%esp)
+	movl	404(%esp), %ecx
+	leal	(%eax,%ecx,8), %ecx
+	movl	%ecx, 336(%esp)
+	movl	408(%esp), %ecx
+	leal	(%eax,%ecx,8), %ecx
+	movl	%ecx, 332(%esp)
+	leal	(%eax,%edx,8), %ecx
+	movl	%ecx, 328(%esp)
+	movl	416(%esp), %esi
+	leal	(%eax,%esi,8), %ecx
+	movl	%ecx, 324(%esp)
+	movl	420(%esp), %ecx
+	leal	(%eax,%ecx,8), %ecx
+	movl	%ecx, 320(%esp)
+	movl	348(%esp), %ebx
+	leal	(%eax,%ebx,8), %eax
+	movl	%eax, 312(%esp)
+	movl	$0, 288(%esp)
+	movl	24(%esp), %eax
+	movl	304(%esp), %edx
+	movl	%edx, %ecx
+	movl	%edx, %edi
+	movl	%esi, %edx
 	.align	16, 0x90
-.LBB0_17:
-	movl	%eax, 672(%esp)
-	leal	-8(%edi,%ecx,8), %eax
+.LBB0_16:
+	movl	%eax, 352(%esp)
+	movl	396(%esp), %eax
+	leal	-8(%eax,%ecx,8), %eax
 	leal	-1(%ecx), %esi
-	movl	%esi, 560(%esp)
-	movl	%esi, %edi
-	imull	%ebx, %edi
-	movl	%edi, 544(%esp)
-	vmovd	%esi, %xmm0
-	vxorpd	%ymm1, %ymm1, %ymm1
-	vpermd	%ymm0, %ymm1, %ymm0
-	vpaddd	320(%esp), %ymm0, %ymm0
-	vextracti128	$1, %ymm0, %xmm1
-	vpextrd	$3, %xmm1, %esi
-	movl	%esi, 476(%esp)
-	vpextrd	$2, %xmm1, %esi
-	movl	%esi, 472(%esp)
-	vpextrd	$1, %xmm1, %esi
-	movl	%esi, 468(%esp)
-	vmovd	%xmm1, 464(%esp)
-	vpextrd	$3, %xmm0, %esi
-	movl	%esi, 416(%esp)
-	vpextrd	$2, %xmm0, %esi
-	movl	%esi, 412(%esp)
-	vpextrd	$1, %xmm0, %esi
-	movl	%esi, 408(%esp)
-	vmovd	%xmm0, 404(%esp)
-	cmpl	%ebx, %ecx
-	jge	.LBB0_18
-	movl	728(%esp), %ecx
+	movl	%esi, 308(%esp)
+	imull	%edi, %esi
+	movl	%esi, 280(%esp)
+	cmpl	%edi, %ecx
+	jge	.LBB0_17
+	movl	420(%esp), %ecx
 	vmovsd	(%eax,%ecx,8), %xmm0
-	movl	636(%esp), %ecx
-	vmovhpd	(%eax,%ecx,8), %xmm0, %xmm0
-	movl	712(%esp), %ecx
+	vmovhpd	(%eax,%ebx,8), %xmm0, %xmm0
+	movl	412(%esp), %ecx
 	vmovsd	(%eax,%ecx,8), %xmm1
-	movl	724(%esp), %ecx
-	vmovhpd	(%eax,%ecx,8), %xmm1, %xmm1
+	vmovhpd	(%eax,%edx,8), %xmm1, %xmm1
 	vinsertf128	$1, %xmm0, %ymm1, %ymm0
-	movl	708(%esp), %ecx
+	movl	404(%esp), %ecx
 	vmovsd	(%eax,%ecx,8), %xmm1
-	movl	716(%esp), %ecx
+	movl	408(%esp), %ecx
 	vmovhpd	(%eax,%ecx,8), %xmm1, %xmm1
-	movl	700(%esp), %ecx
+	movl	400(%esp), %ecx
 	vmovsd	(%eax,%ecx,8), %xmm2
-	movl	704(%esp), %ecx
+	movl	424(%esp), %ecx
 	vmovhpd	(%eax,%ecx,8), %xmm2, %xmm2
 	vinsertf128	$1, %xmm1, %ymm2, %ymm3
-	xorl	%ecx, %ecx
-	xorl	%esi, %esi
-	movl	%edx, %ebx
-	movl	%edx, 592(%esp)
-	movl	596(%esp), %edi
+	xorl	%edi, %edi
+	xorl	%ebx, %ebx
+	movl	288(%esp), %ecx
+	movl	312(%esp), %edx
 	.align	16, 0x90
-.LBB0_20:
-	movl	616(%esp), %edx
-	vmovsd	(%edx,%ebx,8), %xmm1
-	movl	612(%esp), %edx
-	vmovhpd	(%edx,%ebx,8), %xmm1, %xmm1
-	movl	640(%esp), %edx
-	vmovsd	(%edx,%ebx,8), %xmm2
-	movl	620(%esp), %edx
-	vmovhpd	(%edx,%ebx,8), %xmm2, %xmm2
+.LBB0_19:
+	movl	336(%esp), %esi
+	vmovsd	(%esi,%ecx,8), %xmm1
+	movl	332(%esp), %esi
+	vmovhpd	(%esi,%ecx,8), %xmm1, %xmm1
+	movl	344(%esp), %esi
+	vmovsd	(%esi,%ecx,8), %xmm2
+	movl	340(%esp), %esi
+	vmovhpd	(%esi,%ecx,8), %xmm2, %xmm2
 	vinsertf128	$1, %xmm1, %ymm2, %ymm2
-	movl	672(%esp), %edx
-	vbroadcastsd	(%edx,%ecx), %ymm1
+	movl	352(%esp), %esi
+	vbroadcastsd	(%esi,%edi), %ymm1
 	vfnmadd213pd	%ymm3, %ymm1, %ymm2
-	movl	600(%esp), %edx
-	vmovsd	(%edx,%ebx,8), %xmm3
-	vmovhpd	(%edi,%ebx,8), %xmm3, %xmm3
-	movl	608(%esp), %edx
-	vmovsd	(%edx,%ebx,8), %xmm4
-	movl	604(%esp), %edx
-	vmovhpd	(%edx,%ebx,8), %xmm4, %xmm4
-	movl	700(%esp), %edx
-	vmovlpd	%xmm2, (%eax,%edx,8)
-	movl	704(%esp), %edx
-	vmovhpd	%xmm2, (%eax,%edx,8)
+	movl	320(%esp), %esi
+	vmovsd	(%esi,%ecx,8), %xmm3
+	vmovhpd	(%edx,%ecx,8), %xmm3, %xmm3
+	movl	328(%esp), %esi
+	vmovsd	(%esi,%ecx,8), %xmm4
+	movl	324(%esp), %esi
+	vmovhpd	(%esi,%ecx,8), %xmm4, %xmm4
+	movl	400(%esp), %esi
+	vmovlpd	%xmm2, (%eax,%esi,8)
+	movl	424(%esp), %esi
+	vmovhpd	%xmm2, (%eax,%esi,8)
 	vextractf128	$1, %ymm2, %xmm5
-	movl	708(%esp), %edx
-	vmovlpd	%xmm5, (%eax,%edx,8)
-	movl	716(%esp), %edx
-	vmovhpd	%xmm5, (%eax,%edx,8)
+	movl	404(%esp), %esi
+	vmovlpd	%xmm5, (%eax,%esi,8)
+	movl	408(%esp), %esi
+	vmovhpd	%xmm5, (%eax,%esi,8)
 	vinsertf128	$1, %xmm3, %ymm4, %ymm4
 	vfnmadd213pd	%ymm0, %ymm1, %ymm4
-	movl	712(%esp), %edx
-	vmovlpd	%xmm4, (%eax,%edx,8)
-	movl	724(%esp), %edx
-	vmovhpd	%xmm4, (%eax,%edx,8)
+	movl	412(%esp), %esi
+	vmovlpd	%xmm4, (%eax,%esi,8)
+	movl	416(%esp), %esi
+	vmovhpd	%xmm4, (%eax,%esi,8)
 	vextractf128	$1, %ymm4, %xmm0
-	movl	728(%esp), %edx
-	vmovlpd	%xmm0, (%eax,%edx,8)
-	movl	636(%esp), %edx
-	vmovhpd	%xmm0, (%eax,%edx,8)
+	movl	420(%esp), %esi
+	vmovlpd	%xmm0, (%eax,%esi,8)
+	movl	348(%esp), %esi
+	vmovhpd	%xmm0, (%eax,%esi,8)
 	vunpckhpd	%xmm0, %xmm0, %xmm1
-	addl	$8, %ecx
-	adcl	$0, %esi
-	incl	%ebx
+	addl	$8, %edi
+	adcl	$0, %ebx
+	incl	%ecx
 	vmovapd	%ymm2, %ymm3
 	vmovapd	%ymm4, %ymm0
-	jne	.LBB0_20
-	jmp	.LBB0_21
+	jne	.LBB0_19
+	jmp	.LBB0_20
 	.align	16, 0x90
-.LBB0_18:
-	movl	%edx, 592(%esp)
-	movl	636(%esp), %ecx
-	vmovsd	(%eax,%ecx,8), %xmm1
-	movl	596(%esp), %edi
-.LBB0_21:
-	movl	%edi, 596(%esp)
-	movl	700(%esp), %ebx
-	movl	704(%esp), %esi
-	movl	708(%esp), %edi
-	vmovsd	(%eax,%edi,8), %xmm0
-	movl	716(%esp), %ecx
-	vmovhpd	(%eax,%ecx,8), %xmm0, %xmm0
-	vmovsd	(%eax,%ebx,8), %xmm2
-	vmovhpd	(%eax,%esi,8), %xmm2, %xmm2
-	vinsertf128	$1, %xmm0, %ymm2, %ymm2
-	movl	544(%esp), %edx
-	addl	560(%esp), %edx
-	movl	484(%esp), %ecx
-	vbroadcastsd	(%ecx,%edx,8), %ymm0
-	vdivpd	%ymm0, %ymm2, %ymm5
-	vmovapd	%ymm5, 352(%esp)
-	movl	712(%esp), %edx
-	vmovsd	(%eax,%edx,8), %xmm2
-	movl	724(%esp), %ecx
+.LBB0_17:
+	vmovsd	(%eax,%ebx,8), %xmm1
+	movl	312(%esp), %edx
+.LBB0_20:
+	movl	%edx, 312(%esp)
+	movl	400(%esp), %edi
+	movl	404(%esp), %esi
+	movl	408(%esp), %ebx
+	vmovsd	(%eax,%esi,8), %xmm0
+	vmovhpd	(%eax,%ebx,8), %xmm0, %xmm0
+	vmovsd	(%eax,%edi,8), %xmm2
+	movl	424(%esp), %ecx
 	vmovhpd	(%eax,%ecx,8), %xmm2, %xmm2
-	movl	728(%esp), %ecx
-	vmovsd	(%eax,%ecx,8), %xmm3
-	vmovlpd	%xmm5, (%eax,%ebx,8)
-	vmovhpd	%xmm5, (%eax,%esi,8)
-	vextractf128	$1, %ymm5, %xmm4
-	vmovapd	%xmm4, 496(%esp)
-	vmovlpd	%xmm4, (%eax,%edi,8)
-	movl	716(%esp), %ecx
-	vmovhpd	%xmm4, (%eax,%ecx,8)
-	vunpcklpd	%xmm1, %xmm3, %xmm1
+	vinsertf128	$1, %xmm0, %ymm2, %ymm2
+	movl	280(%esp), %edx
+	addl	308(%esp), %edx
+	movl	296(%esp), %ecx
+	vbroadcastsd	(%ecx,%edx,8), %ymm0
+	vdivpd	%ymm0, %ymm2, %ymm3
+	movl	412(%esp), %ecx
+	vmovsd	(%eax,%ecx,8), %xmm2
+	movl	416(%esp), %edx
+	vmovhpd	(%eax,%edx,8), %xmm2, %xmm2
+	movl	420(%esp), %edx
+	vmovsd	(%eax,%edx,8), %xmm4
+	vmovlpd	%xmm3, (%eax,%edi,8)
+	movl	424(%esp), %edi
+	vmovhpd	%xmm3, (%eax,%edi,8)
+	vextractf128	$1, %ymm3, %xmm3
+	vmovlpd	%xmm3, (%eax,%esi,8)
+	vmovhpd	%xmm3, (%eax,%ebx,8)
+	vunpcklpd	%xmm1, %xmm4, %xmm1
 	vinsertf128	$1, %xmm1, %ymm2, %ymm1
 	vdivpd	%ymm0, %ymm1, %ymm0
-	vmovapd	%ymm0, 512(%esp)
-	vmovlpd	%xmm0, (%eax,%edx,8)
-	movl	724(%esp), %ecx
-	vmovhpd	%xmm0, (%eax,%ecx,8)
-	vextractf128	$1, %ymm0, %xmm0
-	vmovapd	%xmm0, 544(%esp)
-	movl	728(%esp), %ecx
 	vmovlpd	%xmm0, (%eax,%ecx,8)
-	movl	636(%esp), %ecx
-	vmovhpd	%xmm0, (%eax,%ecx,8)
-	movl	404(%esp), %eax
-	movl	%eax, 1004(%esp)
-	vmovlpd	%xmm5, 1008(%esp)
-	movl	16(%ebp), %ebx
-	movl	%ebx, 12(%esp)
-	movl	588(%esp), %esi
-	movl	%esi, 8(%esp)
-	leal	1004(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
-	vzeroupper
-	calll	opencl_printf
-	movl	408(%esp), %eax
-	movl	%eax, 1016(%esp)
-	vmovapd	352(%esp), %ymm0
-	vmovhpd	%xmm0, 1020(%esp)
-	movl	%ebx, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1016(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
-	vzeroupper
-	calll	opencl_printf
-	movl	412(%esp), %eax
-	movl	%eax, 1028(%esp)
-	vmovapd	496(%esp), %xmm0
-	vmovlpd	%xmm0, 1032(%esp)
-	movl	%ebx, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1028(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
-	calll	opencl_printf
-	movl	416(%esp), %eax
-	movl	%eax, 1040(%esp)
-	vmovapd	496(%esp), %xmm0
-	vmovhpd	%xmm0, 1044(%esp)
-	movl	%ebx, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1040(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
-	calll	opencl_printf
-	movl	464(%esp), %eax
-	movl	%eax, 1052(%esp)
-	vmovapd	512(%esp), %ymm0
-	vmovlpd	%xmm0, 1056(%esp)
-	movl	%ebx, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1052(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
-	vzeroupper
-	calll	opencl_printf
-	movl	468(%esp), %eax
-	movl	%eax, 1064(%esp)
-	vmovapd	512(%esp), %ymm0
-	vmovhpd	%xmm0, 1068(%esp)
-	movl	%ebx, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1064(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
-	vzeroupper
-	calll	opencl_printf
-	movl	472(%esp), %eax
-	movl	%eax, 1076(%esp)
-	vmovapd	544(%esp), %xmm0
-	vmovlpd	%xmm0, 1080(%esp)
-	movl	%ebx, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1076(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
-	calll	opencl_printf
-	movl	476(%esp), %eax
-	movl	%eax, 1088(%esp)
-	vmovapd	544(%esp), %xmm0
-	vmovhpd	%xmm0, 1092(%esp)
-	movl	%ebx, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1088(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
-	movl	672(%esp), %esi
-	addl	312(%esp), %esi
-	calll	opencl_printf
-	movl	592(%esp), %edx
-	decl	%edx
-	movl	560(%esp), %eax
-	testl	%eax, %eax
-	movl	%eax, %ecx
-	movl	632(%esp), %ebx
-	movl	720(%esp), %edi
-	movl	%esi, %eax
-	jg	.LBB0_17
-.LBB0_22:
-	movl	%edi, 720(%esp)
-	movl	16(%ebp), %edi
-	movl	%edi, 12(%esp)
-	movl	%edi, %esi
-	movl	588(%esp), %edi
-	movl	%edi, 8(%esp)
-	leal	1103(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
-	calll	opencl_printf
-	movl	%esi, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	1104(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
-	calll	opencl_printf
-	movl	%esi, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	1105(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
-	calll	opencl_printf
-	movl	%esi, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	1106(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
-	calll	opencl_printf
-	movl	%esi, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	1107(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
-	calll	opencl_printf
-	movl	%esi, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	1108(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
-	calll	opencl_printf
-	movl	%esi, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	1109(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
-	calll	opencl_printf
-	movl	%esi, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	1110(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
-	vmovdqa	192(%esp), %ymm0
-	vpaddd	128(%esp), %ymm0, %ymm0
-	vmovdqa	%ymm0, 192(%esp)
-	vmovdqa	320(%esp), %ymm0
-	vpaddd	96(%esp), %ymm0, %ymm0
-	vmovdqa	%ymm0, 320(%esp)
-	vmovdqa	224(%esp), %ymm0
-	vpaddd	32(%esp), %ymm0, %ymm0
-	vmovdqa	%ymm0, 224(%esp)
-	vzeroupper
-	calll	opencl_printf
-	movl	480(%esp), %ecx
-	addl	$8, %ecx
-	movl	188(%esp), %eax
+	movl	416(%esp), %edi
+	vmovhpd	%xmm0, (%eax,%edi,8)
+	vextractf128	$1, %ymm0, %xmm0
+	vmovlpd	%xmm0, (%eax,%edx,8)
+	movl	348(%esp), %esi
+	vmovhpd	%xmm0, (%eax,%esi,8)
+	movl	352(%esp), %eax
+	addl	272(%esp), %eax
+	decl	288(%esp)
+	movl	308(%esp), %ecx
+	testl	%ecx, %ecx
+	movl	%esi, %ebx
+	movl	%edi, %edx
+	movl	304(%esp), %edi
+	jg	.LBB0_16
+	vmovdqa	160(%esp), %ymm3
+	vpaddd	64(%esp), %ymm3, %ymm3
+	vmovdqa	128(%esp), %ymm4
+	vpaddd	32(%esp), %ymm4, %ymm4
+	movl	124(%esp), %eax
 	incl	%eax
-	cmpl	176(%esp), %eax
-	jne	.LBB0_2
-.LBB0_23:
-	movl	720(%esp), %esi
-	movl	184(%esp), %ecx
-	movl	%ecx, %eax
-	andl	$-8, %eax
-	cmpl	%eax, %ecx
-	movl	492(%esp), %edx
+	cmpl	112(%esp), %eax
+	jne	.LBB0_3
+.LBB0_22:
+	movl	120(%esp), %eax
+	movl	%eax, %ebx
+	andl	$-8, %ebx
+	cmpl	%ebx, %eax
+	movl	396(%esp), %eax
 	je	.LBB0_46
-	subl	%eax, 184(%esp)
-	addl	%eax, %edx
-	leal	(,%ebx,8), %eax
-	movl	%eax, 700(%esp)
-	movl	$-8, %ecx
-	subl	%eax, %ecx
-	movl	%ecx, 640(%esp)
-	movl	%ebx, %eax
+	subl	%ebx, 120(%esp)
+	movl	20(%esp), %esi
+	addl	%esi, %ebx
+	movl	%edi, 304(%esp)
+	leal	(,%edi,8), %ecx
+	movl	%ecx, 352(%esp)
+	movl	$-8, %edx
+	subl	%ecx, %edx
+	movl	%edx, 348(%esp)
+	movl	%eax, %edx
+	movl	%edi, %eax
 	imull	%eax, %eax
-	movl	484(%esp), %ecx
+	movl	296(%esp), %ecx
 	leal	(%ecx,%eax,8), %eax
-	movl	%eax, 612(%esp)
-	movl	28(%esp), %ecx
-	addl	24(%esp), %ecx
-	movl	176(%esp), %edi
-	leal	1(%ecx,%edi,8), %eax
-	imull	%ebx, %eax
-	leal	(%esi,%eax,8), %eax
-	movl	%eax, 620(%esp)
-	leal	(%ecx,%edi,8), %ecx
-	movl	%ebx, %eax
+	movl	%eax, 324(%esp)
+	movl	112(%esp), %ecx
+	leal	1(%esi,%ecx,8), %eax
+	imull	%edi, %eax
+	leal	(%edx,%eax,8), %eax
+	movl	%eax, 340(%esp)
+	leal	(%esi,%ecx,8), %eax
+	movl	%edi, %ecx
+	imull	%eax, %ecx
+	movl	%ecx, 320(%esp)
+	leal	(%edx,%ecx,8), %esi
+	movl	292(%esp), %ecx
 	imull	%ecx, %eax
-	leal	(%esi,%eax,8), %esi
-	movl	%esi, 716(%esp)
-	movl	%edx, %esi
-	movl	488(%esp), %edx
-	imull	%edx, %ecx
-	movl	180(%esp), %edi
-	leal	(%edi,%ecx,8), %ecx
-	movl	%ecx, 712(%esp)
-	movl	588(%esp), %edi
-	movl	584(%esp), %ecx
-	leal	(%ecx,%eax,8), %eax
-	movl	%eax, 672(%esp)
-	leal	1(%edx), %eax
+	movl	116(%esp), %edx
+	leal	(%edx,%eax,4), %edx
+	leal	1(%ecx), %eax
 	vcvtsi2ssl	%eax, %xmm0, %xmm0
 	vmovss	.LCPI0_1, %xmm1
 	vdivss	%xmm0, %xmm1, %xmm1
-	vmovss	%xmm1, 636(%esp)
+	vmovss	%xmm1, 344(%esp)
 	vxorps	%xmm0, %xmm0, %xmm0
 	vmulss	%xmm0, %xmm1, %xmm0
 	vcvtss2sd	%xmm0, %xmm0, %xmm0
-	vmovsd	%xmm0, 624(%esp)
-	leal	(,%edx,8), %eax
-	movl	%eax, 608(%esp)
-	movl	%esi, %eax
-	movl	716(%esp), %esi
-	xorl	%ecx, %ecx
+	vmovsd	%xmm0, 312(%esp)
+	movl	%edi, %eax
+	negl	%eax
+	movl	%eax, 308(%esp)
+	leal	(,%ecx,4), %eax
+	movl	%eax, 288(%esp)
+	movl	%esi, %ecx
+	movl	%edi, %eax
+	andl	$1, %eax
+	movl	%eax, 280(%esp)
+	xorl	%eax, %eax
+	movl	300(%esp), %esi
+	movl	%esi, 336(%esp)
 	.align	16, 0x90
-.LBB0_25:
-	movl	%ecx, 616(%esp)
-	movl	%esi, 716(%esp)
-	testl	%ebx, %ebx
-	jle	.LBB0_26
-	movl	%eax, %esi
-	movl	%eax, %edx
-	imull	%ebx, %esi
-	movl	%esi, 708(%esp)
-	cmpl	$0, 488(%esp)
-	jle	.LBB0_28
-	xorl	%ecx, %ecx
-	movl	%edx, 492(%esp)
+.LBB0_24:
+	movl	%eax, 328(%esp)
+	movl	%edx, 412(%esp)
+	movl	%ecx, 416(%esp)
+	movl	%ebx, 332(%esp)
+	imull	304(%esp), %ebx
+	movl	%ebx, 408(%esp)
+	cmpl	$0, 292(%esp)
+	movl	$0, %edx
+	jle	.LBB0_25
+	.align	16, 0x90
+.LBB0_40:
+	movl	%edx, 420(%esp)
+	xorl	%esi, %esi
+	vxorpd	%xmm0, %xmm0, %xmm0
+	xorl	%ebx, %ebx
+	movl	292(%esp), %edi
 	.align	16, 0x90
 .LBB0_41:
-	movl	%ecx, 724(%esp)
-	vxorps	%xmm1, %xmm1, %xmm1
-	xorl	%edi, %edi
-	xorl	%ebx, %ebx
-	movl	488(%esp), %esi
-	.align	16, 0x90
-.LBB0_38:
-	vmovss	%xmm1, 728(%esp)
-	movl	696(%esp), %eax
-	vmovsd	(%eax,%edi), %xmm0
-	movl	%ecx, (%esp)
-	calll	__ocl_svml_s9_pown1
-	movl	724(%esp), %ecx
-	movl	712(%esp), %eax
-	vmovsd	(%eax,%edi), %xmm1
-	vmovss	728(%esp), %xmm2
-	vcvtss2sd	%xmm2, %xmm2, %xmm2
-	vfmadd213sd	%xmm2, %xmm0, %xmm1
-	vcvtsd2ss	%xmm1, %xmm1, %xmm1
-	addl	$8, %edi
+	vmovss	%xmm0, 424(%esp)
+	movl	392(%esp), %eax
+	vmovss	(%eax,%esi), %xmm0
+	movl	%edx, (%esp)
+	vzeroupper
+	calll	__ocl_svml_s9_pownf1
+	movl	420(%esp), %edx
+	movl	412(%esp), %eax
+	vmovss	(%eax,%esi), %xmm1
+	vfmadd213ss	424(%esp), %xmm0, %xmm1
+	addl	$4, %esi
 	adcl	$0, %ebx
-	decl	%esi
-	jne	.LBB0_38
-	movl	708(%esp), %eax
-	leal	(%ecx,%eax), %eax
-	vmovss	636(%esp), %xmm0
+	decl	%edi
+	vmovapd	%xmm1, %xmm0
+	jne	.LBB0_41
+	movl	408(%esp), %eax
+	leal	(%edx,%eax), %eax
+	vmovss	344(%esp), %xmm0
 	vmulss	%xmm1, %xmm0, %xmm0
 	vcvtss2sd	%xmm0, %xmm0, %xmm0
-	movl	%ecx, %esi
-	movl	584(%esp), %ecx
+	movl	300(%esp), %ecx
 	vmovsd	%xmm0, (%ecx,%eax,8)
-	movl	492(%esp), %eax
-	movl	%eax, 1112(%esp)
-	movl	%esi, 1116(%esp)
-	vmovsd	%xmm0, 1120(%esp)
-	movl	16(%ebp), %eax
-	movl	%eax, 12(%esp)
-	movl	588(%esp), %eax
-	movl	%eax, 8(%esp)
-	leal	1112(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	calll	opencl_printf
-	movl	%esi, %ecx
-	incl	%ecx
-	movl	632(%esp), %eax
-	cmpl	%eax, %ecx
-	jne	.LBB0_41
-	jmp	.LBB0_30
+	incl	%edx
+	xorl	%eax, %eax
+	movl	304(%esp), %ecx
+	cmpl	%ecx, %edx
+	jne	.LBB0_40
+	movl	296(%esp), %ecx
+	jmp	.LBB0_31
 	.align	16, 0x90
-.LBB0_26:
-	movl	%eax, 492(%esp)
-	movl	16(%ebp), %eax
-	movl	%eax, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	1111(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	calll	opencl_printf
-	jmp	.LBB0_45
-	.align	16, 0x90
-.LBB0_28:
-	xorl	%esi, %esi
-	xorl	%edi, %edi
-	xorl	%ebx, %ebx
-	movl	%edx, 492(%esp)
+.LBB0_25:
+	cmpl	$0, 280(%esp)
+	movl	$0, %edx
+	vmovsd	312(%esp), %xmm0
+	je	.LBB0_27
+	movl	300(%esp), %ecx
+	movl	408(%esp), %edx
+	vmovsd	%xmm0, (%ecx,%edx,8)
+	movl	$1, %edx
+.LBB0_27:
+	cmpl	$2, 304(%esp)
+	jb	.LBB0_30
+	movl	308(%esp), %ecx
+	leal	(%ecx,%edx), %ecx
+	movl	336(%esp), %esi
+	leal	(%esi,%edx,8), %edx
+	movl	320(%esp), %esi
 	.align	16, 0x90
 .LBB0_29:
-	movl	672(%esp), %eax
-	vmovsd	624(%esp), %xmm0
-	vmovsd	%xmm0, (%eax,%esi)
-	movl	492(%esp), %eax
-	movl	%eax, 1128(%esp)
-	movl	%ebx, 1132(%esp)
-	vmovsd	%xmm0, 1136(%esp)
-	movl	16(%ebp), %eax
-	movl	%eax, 12(%esp)
-	movl	588(%esp), %eax
-	movl	%eax, 8(%esp)
-	leal	1128(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	addl	$8, %esi
-	adcl	$0, %edi
-	calll	opencl_printf
-	incl	%ebx
-	cmpl	%ebx, 632(%esp)
+	vmovsd	%xmm0, (%edx,%esi,8)
+	vmovsd	%xmm0, 8(%edx,%esi,8)
+	addl	$2, %esi
+	addl	$2, %ecx
 	jne	.LBB0_29
 .LBB0_30:
-	movl	16(%ebp), %eax
-	movl	%eax, 12(%esp)
-	movl	588(%esp), %eax
-	movl	%eax, 8(%esp)
-	leal	1147(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	calll	opencl_printf
+	movl	296(%esp), %ecx
 	xorl	%eax, %eax
-	movl	484(%esp), %ecx
 	.align	16, 0x90
 .LBB0_31:
-	movl	%ecx, 724(%esp)
-	movl	460(%esp), %edx
-	movl	(%edx,%eax,4), %edx
-	movl	708(%esp), %edi
-	addl	%edi, %edx
-	movl	584(%esp), %esi
-	vmovsd	(%esi,%edx,8), %xmm0
-	leal	(%eax,%edi), %esi
-	movl	%esi, 728(%esp)
-	movl	720(%esp), %edx
-	vmovsd	%xmm0, (%edx,%esi,8)
+	movl	%ecx, 424(%esp)
+	movl	284(%esp), %ecx
+	movl	(%ecx,%eax,4), %ecx
+	movl	408(%esp), %edx
+	addl	%edx, %ecx
+	movl	300(%esp), %esi
+	vmovsd	(%esi,%ecx,8), %xmm0
+	leal	(%eax,%edx), %edx
+	movl	396(%esp), %ecx
+	vmovsd	%xmm0, (%ecx,%edx,8)
 	testl	%eax, %eax
-	movl	716(%esp), %edx
 	jle	.LBB0_34
 	xorl	%esi, %esi
 	xorl	%edi, %edi
 	xorl	%ebx, %ebx
 	.align	16, 0x90
 .LBB0_33:
-	vmovsd	(%ecx,%esi), %xmm2
-	vmovsd	(%edx,%esi), %xmm1
-	vfnmadd213sd	%xmm0, %xmm2, %xmm1
-	movl	728(%esp), %ecx
-	movl	%eax, %edx
-	movl	720(%esp), %eax
-	vmovsd	%xmm1, (%eax,%ecx,8)
+	movl	%eax, %ecx
 	movl	%edx, %eax
-	movl	716(%esp), %edx
-	movl	724(%esp), %ecx
+	movl	424(%esp), %edx
+	vmovsd	(%edx,%esi), %xmm2
+	movl	%eax, %edx
+	movl	416(%esp), %eax
+	vmovsd	(%eax,%esi), %xmm1
+	movl	%ecx, %eax
+	vfnmadd213sd	%xmm0, %xmm2, %xmm1
+	movl	396(%esp), %ecx
+	vmovsd	%xmm1, (%ecx,%edx,8)
 	addl	$8, %esi
 	adcl	$0, %edi
 	incl	%ebx
 	cmpl	%ebx, %eax
-	vmovaps	%xmm1, %xmm0
+	vmovapd	%xmm1, %xmm0
 	jne	.LBB0_33
 .LBB0_34:
-	addl	700(%esp), %ecx
+	movl	424(%esp), %ecx
+	addl	352(%esp), %ecx
 	incl	%eax
-	xorl	%edi, %edi
-	cmpl	632(%esp), %eax
+	cmpl	304(%esp), %eax
 	jne	.LBB0_31
-	movl	612(%esp), %esi
-	movl	620(%esp), %eax
-	movl	632(%esp), %ebx
-	movl	%ebx, %ecx
+	movl	$0, 404(%esp)
+	movl	324(%esp), %esi
+	movl	340(%esp), %ecx
+	movl	304(%esp), %eax
+	movl	396(%esp), %ebx
 	.align	16, 0x90
 .LBB0_36:
-	movl	%ecx, 704(%esp)
-	movl	%edi, 724(%esp)
+	movl	%eax, 400(%esp)
+	movl	%ecx, 420(%esp)
+	movl	%esi, %edx
 	movl	%eax, %edi
-	movl	708(%esp), %eax
-	leal	-1(%ecx,%eax), %eax
-	movl	720(%esp), %edx
-	vmovsd	(%edx,%eax,8), %xmm1
-	cmpl	%ebx, %ecx
+	movl	408(%esp), %eax
+	leal	-1(%edi,%eax), %esi
+	vmovsd	(%ebx,%esi,8), %xmm1
+	cmpl	304(%esp), %edi
 	jge	.LBB0_37
-	xorl	%ecx, %ecx
-	xorl	%edx, %edx
 	xorl	%ebx, %ebx
-	movl	%edi, 728(%esp)
-	movl	%eax, %edi
+	xorl	%edi, %edi
+	xorl	%eax, %eax
+	movl	%edx, 424(%esp)
+	movl	404(%esp), %ecx
 	.align	16, 0x90
 .LBB0_43:
-	vmovsd	(%esi,%edx), %xmm2
-	movl	728(%esp), %eax
-	vmovsd	(%eax,%edx), %xmm0
+	movl	424(%esp), %edx
+	vmovsd	(%edx,%edi), %xmm2
+	movl	420(%esp), %edx
+	vmovsd	(%edx,%edi), %xmm0
 	vfnmadd213sd	%xmm1, %xmm2, %xmm0
-	movl	720(%esp), %eax
-	vmovsd	%xmm0, (%eax,%edi,8)
-	addl	$8, %edx
-	adcl	$0, %ebx
-	incl	%ecx
-	cmpl	724(%esp), %ecx
-	vmovaps	%xmm0, %xmm1
+	movl	396(%esp), %edx
+	vmovsd	%xmm0, (%edx,%esi,8)
+	addl	$8, %edi
+	adcl	$0, %eax
+	incl	%ebx
+	cmpl	%ecx, %ebx
+	vmovapd	%xmm0, %xmm1
 	jne	.LBB0_43
 	jmp	.LBB0_44
 	.align	16, 0x90
 .LBB0_37:
-	vmovaps	%xmm1, %xmm0
-	movl	%edi, 728(%esp)
-	movl	%eax, %edi
+	vmovapd	%xmm1, %xmm0
+	movl	%edx, 424(%esp)
+	movl	404(%esp), %ecx
 .LBB0_44:
-	movl	704(%esp), %ebx
-	decl	%ebx
-	movl	%ebx, %ecx
-	imull	632(%esp), %ecx
-	addl	%ebx, %ecx
-	movl	484(%esp), %edx
-	vdivsd	(%edx,%ecx,8), %xmm0, %xmm0
-	movl	720(%esp), %eax
-	vmovsd	%xmm0, (%eax,%edi,8)
-	movl	%edi, 1148(%esp)
-	vmovsd	%xmm0, 1152(%esp)
-	movl	16(%ebp), %eax
-	movl	%eax, 12(%esp)
-	movl	588(%esp), %eax
-	movl	%eax, 8(%esp)
-	leal	1148(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
-	addl	640(%esp), %esi
-	calll	opencl_printf
-	movl	%ebx, %ecx
-	movl	632(%esp), %ebx
-	movl	728(%esp), %eax
-	addl	$-8, %eax
-	movl	724(%esp), %edx
-	incl	%edx
-	testl	%ecx, %ecx
-	movl	%edx, %edi
-	jg	.LBB0_36
-.LBB0_45:
-	movl	16(%ebp), %eax
-	movl	%eax, 12(%esp)
-	movl	588(%esp), %edi
-	movl	%edi, 8(%esp)
-	leal	1163(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
-	movl	700(%esp), %eax
-	addl	%eax, 620(%esp)
-	movl	716(%esp), %esi
-	addl	%eax, %esi
-	movl	608(%esp), %ecx
-	addl	%ecx, 712(%esp)
-	addl	%eax, 672(%esp)
-	calll	opencl_printf
-	movl	492(%esp), %eax
-	incl	%eax
-	movl	616(%esp), %ecx
+	movl	400(%esp), %edi
+	decl	%edi
+	movl	%edi, %eax
+	imull	304(%esp), %eax
+	addl	%edi, %eax
+	movl	296(%esp), %ebx
+	vdivsd	(%ebx,%eax,8), %xmm0, %xmm0
+	movl	%edi, %eax
+	movl	396(%esp), %edi
+	vmovsd	%xmm0, (%edi,%esi,8)
+	movl	424(%esp), %esi
+	addl	348(%esp), %esi
+	movl	420(%esp), %edx
+	addl	$-8, %edx
 	incl	%ecx
-	cmpl	184(%esp), %ecx
-	jne	.LBB0_25
+	movl	%ecx, 404(%esp)
+	testl	%eax, %eax
+	movl	%edi, %ebx
+	movl	%edx, %ecx
+	jg	.LBB0_36
+	movl	352(%esp), %eax
+	addl	%eax, 340(%esp)
+	movl	416(%esp), %ecx
+	addl	%eax, %ecx
+	movl	412(%esp), %edx
+	addl	288(%esp), %edx
+	addl	%eax, 336(%esp)
+	movl	332(%esp), %ebx
+	incl	%ebx
+	movl	328(%esp), %eax
+	incl	%eax
+	cmpl	120(%esp), %eax
+	jne	.LBB0_24
 .LBB0_46:
 	leal	-12(%ebp), %esp
 	popl	%esi
 	popl	%edi
 	popl	%ebx
 	popl	%ebp
+	vzeroupper
 	ret
 .Ltmp9:
 	.size	build_polinome_double, .Ltmp9-build_polinome_double
@@ -4075,7 +3498,7 @@ build_polinome:
 	movl	%eax, %edi
 	leal	1176(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	1040(%esp), %eax
@@ -4086,7 +3509,7 @@ build_polinome:
 	movl	%edi, 8(%esp)
 	leal	1188(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	1120(%esp), %eax
@@ -4099,7 +3522,7 @@ build_polinome:
 	movl	%edi, 8(%esp)
 	leal	1200(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	1008(%esp), %eax
@@ -4110,7 +3533,7 @@ build_polinome:
 	movl	%edi, 8(%esp)
 	leal	1212(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	movl	1104(%esp), %eax
 	movl	%eax, 1224(%esp)
@@ -4122,7 +3545,7 @@ build_polinome:
 	movl	%edi, 8(%esp)
 	leal	1224(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	1088(%esp), %eax
@@ -4133,7 +3556,7 @@ build_polinome:
 	movl	%edi, 8(%esp)
 	leal	1236(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	1072(%esp), %eax
@@ -4146,7 +3569,7 @@ build_polinome:
 	movl	%edi, 8(%esp)
 	leal	1248(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	1056(%esp), %eax
@@ -4157,7 +3580,7 @@ build_polinome:
 	movl	%edi, 8(%esp)
 	leal	1260(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	movl	768(%esp), %eax
 	vmovss	(%esi,%eax,4), %xmm0
@@ -4358,7 +3781,7 @@ build_polinome:
 	movl	%edi, 8(%esp)
 	leal	1272(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	720(%esp), %eax
@@ -4369,7 +3792,7 @@ build_polinome:
 	movl	%edi, 8(%esp)
 	leal	1284(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	736(%esp), %eax
@@ -4382,7 +3805,7 @@ build_polinome:
 	movl	%edi, 8(%esp)
 	leal	1296(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	764(%esp), %eax
@@ -4393,7 +3816,7 @@ build_polinome:
 	movl	%edi, 8(%esp)
 	leal	1308(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	movl	768(%esp), %eax
 	movl	%eax, 1320(%esp)
@@ -4405,7 +3828,7 @@ build_polinome:
 	movl	%edi, 8(%esp)
 	leal	1320(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	680(%esp), %eax
@@ -4416,7 +3839,7 @@ build_polinome:
 	movl	%edi, 8(%esp)
 	leal	1332(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	684(%esp), %eax
@@ -4429,7 +3852,7 @@ build_polinome:
 	movl	%edi, 8(%esp)
 	leal	1344(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	688(%esp), %eax
@@ -4441,7 +3864,7 @@ build_polinome:
 	movl	%eax, 8(%esp)
 	leal	1356(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	movl	1104(%esp), %eax
 	vmovss	8(%esi,%eax,4), %xmm0
@@ -4589,7 +4012,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1368(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	284(%esp), %eax
@@ -4600,7 +4023,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1380(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	288(%esp), %eax
@@ -4613,7 +4036,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1392(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	292(%esp), %eax
@@ -4624,7 +4047,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1404(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	movl	296(%esp), %eax
 	movl	%eax, 1416(%esp)
@@ -4636,7 +4059,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1416(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	300(%esp), %eax
@@ -4647,7 +4070,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1428(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	304(%esp), %eax
@@ -4660,7 +4083,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1440(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	308(%esp), %eax
@@ -4671,7 +4094,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1452(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	movl	1104(%esp), %eax
 	vmovss	12(%esi,%eax,4), %xmm0
@@ -4793,7 +4216,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1464(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	316(%esp), %eax
@@ -4804,7 +4227,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1476(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	320(%esp), %eax
@@ -4817,7 +4240,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1488(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	324(%esp), %eax
@@ -4828,7 +4251,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1500(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	movl	328(%esp), %eax
 	movl	%eax, 1512(%esp)
@@ -4840,7 +4263,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1512(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	332(%esp), %eax
@@ -4851,7 +4274,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1524(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	336(%esp), %eax
@@ -4864,7 +4287,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1536(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	344(%esp), %eax
@@ -4877,7 +4300,7 @@ build_polinome:
 	movl	%eax, 8(%esp)
 	leal	1548(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	movl	1104(%esp), %eax
 	vmovss	16(%esi,%eax,4), %xmm0
@@ -4968,7 +4391,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1560(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	348(%esp), %eax
@@ -4979,7 +4402,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1572(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	352(%esp), %eax
@@ -4992,7 +4415,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1584(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	356(%esp), %eax
@@ -5003,7 +4426,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1596(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	movl	360(%esp), %eax
 	movl	%eax, 1608(%esp)
@@ -5015,7 +4438,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1608(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	368(%esp), %eax
@@ -5026,7 +4449,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1620(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	376(%esp), %eax
@@ -5039,7 +4462,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1632(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	384(%esp), %eax
@@ -5050,7 +4473,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1644(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	movl	1104(%esp), %eax
 	vmovss	20(%esi,%eax,4), %xmm0
@@ -5113,7 +4536,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1656(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	372(%esp), %eax
@@ -5124,7 +4547,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1668(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	380(%esp), %eax
@@ -5137,7 +4560,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1680(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	388(%esp), %eax
@@ -5148,7 +4571,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1692(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	movl	392(%esp), %eax
 	movl	%eax, 1704(%esp)
@@ -5160,7 +4583,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1704(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	396(%esp), %eax
@@ -5171,7 +4594,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1716(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	400(%esp), %eax
@@ -5184,7 +4607,7 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1728(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	404(%esp), %eax
@@ -5195,55 +4618,55 @@ build_polinome:
 	movl	%ebx, 8(%esp)
 	leal	1740(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	movl	%edi, 12(%esp)
 	movl	%ebx, 8(%esp)
 	leal	1752(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	calll	opencl_printf
 	movl	%edi, 12(%esp)
 	movl	%ebx, 8(%esp)
 	leal	1753(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	calll	opencl_printf
 	movl	%edi, 12(%esp)
 	movl	%ebx, 8(%esp)
 	leal	1754(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	calll	opencl_printf
 	movl	%edi, 12(%esp)
 	movl	%ebx, 8(%esp)
 	leal	1755(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	calll	opencl_printf
 	movl	%edi, 12(%esp)
 	movl	%ebx, 8(%esp)
 	leal	1756(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	calll	opencl_printf
 	movl	%edi, 12(%esp)
 	movl	%ebx, 8(%esp)
 	leal	1757(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	calll	opencl_printf
 	movl	%edi, 12(%esp)
 	movl	%ebx, 8(%esp)
 	leal	1758(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	calll	opencl_printf
 	movl	%edi, 12(%esp)
 	movl	%ebx, 8(%esp)
 	leal	1759(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	vmovdqa	608(%esp), %ymm0
 	vpaddd	224(%esp), %ymm0, %ymm0
 	vmovdqa	%ymm0, 608(%esp)
@@ -7078,7 +6501,7 @@ build_polinome:
 	movl	%eax, 8(%esp)
 	leal	1760(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	movl	960(%esp), %eax
 	vmovss	(%edi,%eax,4), %xmm1
@@ -7112,7 +6535,7 @@ build_polinome:
 	movl	%eax, 8(%esp)
 	leal	1772(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	vmovss	8(%edi,%esi,4), %xmm1
 	vmovss	56(%ebx), %xmm0
@@ -7142,7 +6565,7 @@ build_polinome:
 	movl	%eax, 8(%esp)
 	leal	1784(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	vmovss	12(%edi,%esi,4), %xmm1
 	vmovss	84(%ebx), %xmm0
@@ -7168,7 +6591,7 @@ build_polinome:
 	movl	%eax, 8(%esp)
 	leal	1796(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	vmovss	16(%edi,%esi,4), %xmm1
 	vmovss	112(%ebx), %xmm0
@@ -7190,7 +6613,7 @@ build_polinome:
 	movl	%eax, 8(%esp)
 	leal	1808(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	vmovss	20(%edi,%esi,4), %xmm1
 	vmovss	140(%ebx), %xmm0
@@ -7208,13 +6631,13 @@ build_polinome:
 	movl	%esi, 8(%esp)
 	leal	1820(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	movl	%edi, 12(%esp)
 	movl	%esi, 8(%esp)
 	leal	1835(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	movl	1056(%esp), %edi
 	movl	512(%esp), %eax
 	addl	%eax, %edi
@@ -7714,7 +7137,7 @@ build_polinome_square_root:
 	movl	%edi, 8(%esp)
 	leal	928(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	800(%esp), %ymm0
@@ -7725,7 +7148,7 @@ build_polinome_square_root:
 	movl	%edi, 8(%esp)
 	leal	940(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	800(%esp), %ymm0
@@ -7738,7 +7161,7 @@ build_polinome_square_root:
 	movl	%edi, 8(%esp)
 	leal	952(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	800(%esp), %ymm0
@@ -7749,7 +7172,7 @@ build_polinome_square_root:
 	movl	%edi, 8(%esp)
 	leal	964(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	vextracti128	$1, %ymm0, 800(%esp)
 	vzeroupper
 	calll	opencl_printf
@@ -7767,7 +7190,7 @@ build_polinome_square_root:
 	movl	%edi, 8(%esp)
 	leal	976(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	800(%esp), %xmm0
@@ -7778,7 +7201,7 @@ build_polinome_square_root:
 	movl	%edi, 8(%esp)
 	leal	988(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	800(%esp), %xmm0
@@ -7791,7 +7214,7 @@ build_polinome_square_root:
 	movl	%edi, 8(%esp)
 	leal	1000(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	800(%esp), %xmm0
@@ -7803,7 +7226,7 @@ build_polinome_square_root:
 	movl	%edi, 8(%esp)
 	leal	1012(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	calll	opencl_printf
 	movl	784(%esp), %edi
 	cmpl	%ebx, %edi
@@ -7880,7 +7303,7 @@ build_polinome_square_root:
 	movl	%ebx, 8(%esp)
 	leal	832(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	736(%esp), %ymm0
@@ -7891,7 +7314,7 @@ build_polinome_square_root:
 	movl	%ebx, 8(%esp)
 	leal	844(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	736(%esp), %ymm0
@@ -7904,7 +7327,7 @@ build_polinome_square_root:
 	movl	%ebx, 8(%esp)
 	leal	856(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	736(%esp), %ymm0
@@ -7915,7 +7338,7 @@ build_polinome_square_root:
 	movl	%ebx, 8(%esp)
 	leal	868(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	vextracti128	$1, %ymm0, 736(%esp)
 	vzeroupper
 	calll	opencl_printf
@@ -7933,7 +7356,7 @@ build_polinome_square_root:
 	movl	%ebx, 8(%esp)
 	leal	880(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	736(%esp), %xmm0
@@ -7944,7 +7367,7 @@ build_polinome_square_root:
 	movl	%ebx, 8(%esp)
 	leal	892(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	736(%esp), %xmm0
@@ -7957,7 +7380,7 @@ build_polinome_square_root:
 	movl	%ebx, 8(%esp)
 	leal	904(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	736(%esp), %xmm0
@@ -7968,7 +7391,7 @@ build_polinome_square_root:
 	movl	%ebx, 8(%esp)
 	leal	916(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	calll	opencl_printf
 	movl	%edi, %edx
 	movl	800(%esp), %eax
@@ -8049,7 +7472,7 @@ build_polinome_square_root:
 	movl	%eax, 8(%esp)
 	leal	1024(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str5, (%esp)
+	movl	$.L.str3, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	%esi, 1032(%esp)
@@ -8059,7 +7482,7 @@ build_polinome_square_root:
 	movl	%eax, 8(%esp)
 	leal	1032(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str5, (%esp)
+	movl	$.L.str3, (%esp)
 	calll	opencl_printf
 	movl	%esi, 1040(%esp)
 	movl	%edi, 1044(%esp)
@@ -8068,7 +7491,7 @@ build_polinome_square_root:
 	movl	%edi, 8(%esp)
 	leal	1040(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str5, (%esp)
+	movl	$.L.str3, (%esp)
 	calll	opencl_printf
 	movl	%esi, 1048(%esp)
 	movl	796(%esp), %eax
@@ -8077,7 +7500,7 @@ build_polinome_square_root:
 	movl	%edi, 8(%esp)
 	leal	1048(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str5, (%esp)
+	movl	$.L.str3, (%esp)
 	calll	opencl_printf
 	movl	%esi, 1056(%esp)
 	movl	796(%esp), %edi
@@ -8087,7 +7510,7 @@ build_polinome_square_root:
 	movl	%eax, 8(%esp)
 	leal	1056(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str5, (%esp)
+	movl	$.L.str3, (%esp)
 	calll	opencl_printf
 	movl	%esi, 1064(%esp)
 	movl	%edi, 1068(%esp)
@@ -8096,7 +7519,7 @@ build_polinome_square_root:
 	movl	%eax, 8(%esp)
 	leal	1064(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str5, (%esp)
+	movl	$.L.str3, (%esp)
 	calll	opencl_printf
 	movl	%esi, 1072(%esp)
 	movl	%edi, 1076(%esp)
@@ -8105,7 +7528,7 @@ build_polinome_square_root:
 	movl	%edi, 8(%esp)
 	leal	1072(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str5, (%esp)
+	movl	$.L.str3, (%esp)
 	calll	opencl_printf
 	movl	%esi, 1080(%esp)
 	movl	796(%esp), %eax
@@ -8114,7 +7537,7 @@ build_polinome_square_root:
 	movl	%edi, 8(%esp)
 	leal	1080(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str5, (%esp)
+	movl	$.L.str3, (%esp)
 	calll	opencl_printf
 	incl	%esi
 	movl	800(%esp), %eax
@@ -8270,7 +7693,7 @@ build_polinome_square_root:
 	movl	%ebx, 8(%esp)
 	leal	1088(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str6, (%esp)
+	movl	$.L.str4, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	544(%esp), %ymm0
@@ -8281,7 +7704,7 @@ build_polinome_square_root:
 	movl	%ebx, 8(%esp)
 	leal	1100(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str6, (%esp)
+	movl	$.L.str4, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	544(%esp), %ymm0
@@ -8294,7 +7717,7 @@ build_polinome_square_root:
 	movl	%ebx, 8(%esp)
 	leal	1112(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str6, (%esp)
+	movl	$.L.str4, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	544(%esp), %ymm0
@@ -8305,7 +7728,7 @@ build_polinome_square_root:
 	movl	%ebx, 8(%esp)
 	leal	1124(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str6, (%esp)
+	movl	$.L.str4, (%esp)
 	vextracti128	$1, %ymm0, 544(%esp)
 	vzeroupper
 	calll	opencl_printf
@@ -8319,7 +7742,7 @@ build_polinome_square_root:
 	movl	%ebx, 8(%esp)
 	leal	1136(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str6, (%esp)
+	movl	$.L.str4, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	544(%esp), %xmm0
@@ -8330,7 +7753,7 @@ build_polinome_square_root:
 	movl	%ebx, 8(%esp)
 	leal	1148(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str6, (%esp)
+	movl	$.L.str4, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	544(%esp), %xmm0
@@ -8343,7 +7766,7 @@ build_polinome_square_root:
 	movl	%ebx, 8(%esp)
 	leal	1160(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str6, (%esp)
+	movl	$.L.str4, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	vmovdqa	544(%esp), %xmm0
@@ -8355,7 +7778,7 @@ build_polinome_square_root:
 	movl	784(%esp), %ebx
 	leal	1172(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str6, (%esp)
+	movl	$.L.str4, (%esp)
 	movl	800(%esp), %edi
 	addl	292(%esp), %edi
 	calll	opencl_printf
@@ -8665,7 +8088,7 @@ build_polinome_square_root:
 	movl	%eax, 8(%esp)
 	leal	1196(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	cmpl	492(%esp), %esi
@@ -8717,7 +8140,7 @@ build_polinome_square_root:
 	movl	%eax, 8(%esp)
 	leal	1184(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str4, (%esp)
+	movl	$.L.str2, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	800(%esp), %eax
@@ -8794,7 +8217,7 @@ build_polinome_square_root:
 	movl	%eax, 8(%esp)
 	leal	1208(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str5, (%esp)
+	movl	$.L.str3, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	incl	%esi
@@ -8861,7 +8284,7 @@ build_polinome_square_root:
 	movl	%eax, 8(%esp)
 	leal	1216(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str6, (%esp)
+	movl	$.L.str4, (%esp)
 	addl	464(%esp), %edi
 	vzeroupper
 	calll	opencl_printf
@@ -9443,7 +8866,7 @@ build_polinome_unoptimized:
 	movl	%edi, 8(%esp)
 	leal	500(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	276(%esp), %eax
@@ -9454,7 +8877,7 @@ build_polinome_unoptimized:
 	movl	%edi, 8(%esp)
 	leal	512(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	280(%esp), %eax
@@ -9467,7 +8890,7 @@ build_polinome_unoptimized:
 	movl	%edi, 8(%esp)
 	leal	524(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	284(%esp), %eax
@@ -9478,7 +8901,7 @@ build_polinome_unoptimized:
 	movl	%edi, 8(%esp)
 	leal	536(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	calll	opencl_printf
 	movl	288(%esp), %eax
 	movl	%eax, 548(%esp)
@@ -9490,7 +8913,7 @@ build_polinome_unoptimized:
 	movl	%edi, 8(%esp)
 	leal	548(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	292(%esp), %eax
@@ -9501,7 +8924,7 @@ build_polinome_unoptimized:
 	movl	%edi, 8(%esp)
 	leal	560(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	296(%esp), %eax
@@ -9514,7 +8937,7 @@ build_polinome_unoptimized:
 	movl	%edi, 8(%esp)
 	leal	572(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	300(%esp), %eax
@@ -9525,7 +8948,7 @@ build_polinome_unoptimized:
 	movl	%edi, 8(%esp)
 	leal	584(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	movl	416(%esp), %ebx
 	addl	216(%esp), %ebx
 	calll	opencl_printf
@@ -9544,50 +8967,50 @@ build_polinome_unoptimized:
 	movl	%esi, 8(%esp)
 	leal	596(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	vzeroupper
 	calll	opencl_printf
 	movl	%ebx, 12(%esp)
 	movl	%esi, 8(%esp)
 	leal	597(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	calll	opencl_printf
 	movl	%ebx, 12(%esp)
 	movl	%esi, 8(%esp)
 	leal	598(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	calll	opencl_printf
 	movl	%ebx, 12(%esp)
 	movl	%esi, 8(%esp)
 	leal	599(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	calll	opencl_printf
 	movl	%ebx, 12(%esp)
 	movl	%esi, 8(%esp)
 	leal	600(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	calll	opencl_printf
 	movl	%ebx, 12(%esp)
 	movl	%esi, 8(%esp)
 	leal	601(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	calll	opencl_printf
 	movl	%ebx, 12(%esp)
 	movl	%esi, 8(%esp)
 	leal	602(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	calll	opencl_printf
 	movl	%ebx, 12(%esp)
 	movl	%esi, 8(%esp)
 	leal	603(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	vmovdqa	128(%esp), %ymm0
 	vpaddd	64(%esp), %ymm0, %ymm0
 	vmovdqa	%ymm0, 128(%esp)
@@ -9793,7 +9216,7 @@ build_polinome_unoptimized:
 	movl	%eax, 8(%esp)
 	leal	604(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str2, (%esp)
+	movl	$.L.str, (%esp)
 	addl	416(%esp), %edi
 	calll	opencl_printf
 	movl	%esi, %ecx
@@ -9812,7 +9235,7 @@ build_polinome_unoptimized:
 	movl	%eax, 8(%esp)
 	leal	619(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str3, (%esp)
+	movl	$.L.str1, (%esp)
 	movl	468(%esp), %eax
 	addl	%eax, 404(%esp)
 	addl	%eax, 488(%esp)
@@ -11260,38 +10683,28 @@ features:
 	.type	.L.str,@object
 	.section	.rodata.str1.1,"aMS",@progbits,1
 .L.str:
-	.asciz	 "B[%d][%d] = %f\t"
-	.size	.L.str, 16
+	.asciz	 "C[%d] = %f\t"
+	.size	.L.str, 12
 
 	.type	.L.str1,@object
 .L.str1:
-	.asciz	 "\n\n"
-	.size	.L.str1, 3
+	.asciz	 "\n"
+	.size	.L.str1, 2
 
 	.type	.L.str2,@object
 .L.str2:
-	.asciz	 "C[%d] = %f\t"
-	.size	.L.str2, 12
+	.asciz	 "S[%d] = %f \t"
+	.size	.L.str2, 13
 
 	.type	.L.str3,@object
 .L.str3:
-	.asciz	 "\n"
-	.size	.L.str3, 2
+	.asciz	 "K[%d] = %f \t"
+	.size	.L.str3, 13
 
 	.type	.L.str4,@object
 .L.str4:
-	.asciz	 "S[%d] = %f \t"
-	.size	.L.str4, 13
-
-	.type	.L.str5,@object
-.L.str5:
-	.asciz	 "K[%d] = %f \t"
-	.size	.L.str5, 13
-
-	.type	.L.str6,@object
-.L.str6:
 	.asciz	 "C[%d] = %f \t"
-	.size	.L.str6, 13
+	.size	.L.str4, 13
 
 	.type	float_const_signMask,@object
 	.section	.rodata,"a",@progbits

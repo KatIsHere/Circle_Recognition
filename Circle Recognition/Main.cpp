@@ -329,14 +329,6 @@ void RenderApproximation(void) {
 	// Reset transformations
 	glLoadIdentity();
 
-	cout << "\nApproximation polinome: \n\n";
-	for (int i = 0; i < SIZE_LARGE; ++i) {
-		for (int j = 0; j < POLINOME_POWER_LARGE; ++j) {
-			printf("C[%d][%d] = %f \t", i, j, polinomes_LARGE[i][j]);
-		}
-		cout << "\n";
-	}
-
 	drawFunctionSet(polinomes_LARGE, SIZE_LARGE, POLINOME_POWER_LARGE, 0, SIZE_LARGE);
 	//drawFunctionSet(polinomes_LARGE_2, SIZE_LARGE, POLINOME_POWER_LARGE, 0, SIZE_LARGE);
 	glutSwapBuffers();
@@ -417,17 +409,13 @@ void RenderFast(void) {
 	cl_double* polinomes = new cl_double[POLINOME_POWER_LARGE*SIZE_LARGE];
 	openclCalculating(x_LARGE, MatrixLARGE, polinomes, SIZE_LARGE, SIZE_LARGE, POLINOME_POWER_LARGE);
 
-
 	double** polinomes_LARGE = new double*[SIZE_LARGE];
-	//cout << "\n\nPolinomes final:\n";
 	float ser = 0;
 	for (int i = 0; i < SIZE_LARGE; ++i) {
 		polinomes_LARGE[i] = new double[POLINOME_POWER_LARGE];
 		for (int j = 0; j < POLINOME_POWER_LARGE; ++j) {
-			polinomes_LARGE[i][j] = polinomes[i*SIZE_LARGE + j];
-			//cout << polinomes_LARGE[i][j] << "\t";
+			polinomes_LARGE[i][j] = polinomes[i*POLINOME_POWER_LARGE + j];
 		}
-		//cout << "\n";
 	}
 
 	glClearColor(0.98f, 0.98f, 0.98f, 1.0f);

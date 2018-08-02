@@ -477,6 +477,7 @@ double Approx_Polinomes_Run_Kernel_DOUBLES(cl_command_queue &queue, cl_context c
 	cl_double* A_input, cl_double *B_input, cl_double *C_input, cl_int *P_input,
 	cl_int polinome_power) {
 
+	const clock_t perf_start = clock();
 	initializeA(x_input, A_input, polinome_power, input_width, P_input);
 	cl_int err = CL_SUCCESS;
 	// CREATING BUFFERS FOR x, f, A, b, P, T and C
@@ -582,7 +583,6 @@ double Approx_Polinomes_Run_Kernel_DOUBLES(cl_command_queue &queue, cl_context c
 	err = clSetKernelArg(kernel, 7, sizeof(cl_uint),  &polinome_power);
 	checkErr(err, "clSetKernelArg : power(3)");
 
-	const clock_t perf_start = clock();
 	int dim = 1;
 	size_t global[] = { input_hight, 1, 0 };
 	size_t local[] = { 1, 1, 0 };
@@ -601,6 +601,7 @@ double Approx_Polinomes_Run_Kernel_DOUBLES(cl_command_queue &queue, cl_context c
 	// READING FROM BUFFER
 	err = clEnqueueReadBuffer(queue, C_buffer, CL_TRUE, 0, sizeof(cl_double) * polinome_power* input_hight, C_input, NULL, NULL, NULL);
 	checkErr(err, "clEnqueueReadBuffer : couldn't read from buffer");
+
 
 	// RELEASING BUFFERS
 	err = clReleaseMemObject(x_input_buffer);

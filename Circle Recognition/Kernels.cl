@@ -9,12 +9,12 @@
 #error "Double precision floating point not supported by OpenCL implementation."
 #endif
 
-__kernel void build_polinome_double(__global const double* xSet, __global const double* fSet, __global double* C,
+
+__kernel void build_polinome_double(__global const float* xSet, __global const float* fSet, __global double* C,
 			__global double* A, __global double* B, __global int* Y,
 			const int setSize, const int power) {
 	int i, j, k;
 	float normalizing = (float)1 / (setSize + 1);					// 1/(b-a)
-
 	float suma;
 
 	const int id = get_global_id(0);
@@ -25,10 +25,7 @@ __kernel void build_polinome_double(__global const double* xSet, __global const 
 			suma += pown(xSet[j], i) * fSet[id * setSize + j];
 		}
 		B[id*power + i] = suma * normalizing;
-		printf("B[%d][%d] = %f\t", id, i, B[id*power + i]);
 	}
-
-	printf("\n\n");
 	// LINEAR EQUATIONS SOLVE
 	// LUP solve
 	for (i = 0; i < power; i++) {
@@ -42,11 +39,8 @@ __kernel void build_polinome_double(__global const double* xSet, __global const 
 	for (i = power - 1; i >= 0; i--) {
 		for (k = i + 1; k < power; k++)
 			C[id * power + i] -= A[i * power + k] * C[id * power + k];
-
 		C[id * power + i] /= A[i * power + i];
-		printf("C[%d] = %f\t", id * power + i, C[id*power + i]);
 	}
-	printf("\n");
 }
 
 
