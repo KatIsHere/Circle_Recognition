@@ -66,6 +66,20 @@ double** PolinomeSetValues(double*x, double** PolinomeCoefs, const int& height,
 }
 
 
+double** PolinomeSetValues_array(double*x, double* PolinomeCoefs, const int& height, const int& N, const int& dots) {
+	// PLOTS A SET OF POLINOMES OF POWER N ON ONE GRAPH
+	int i, j;
+	double** fx = new double*[height];
+	for (i = 0; i < height; ++i) {
+		fx[i] = new double[dots];
+		for (j = 0; j < dots; ++j) {
+			fx[i][j] = Polinome_Power_array(x[j], PolinomeCoefs, N, i);
+		}
+	}
+	return fx;
+}
+
+
 double* xCreateSet(double start, double finish, const int& N) {
 	if (finish < start)
 		throw "invalid argument";

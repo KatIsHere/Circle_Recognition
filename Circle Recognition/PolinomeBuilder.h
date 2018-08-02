@@ -4,25 +4,7 @@ double** create_approx_polinomes(double* xSet, double **matrix, const int& hight
 double* xCreateSet(double start, double finish, const int& N);
 cl_float* xCreateCLSet(double start, double finish, const int& N);
 double** PolinomeSetValues(double*x, double** PolinomeCoefs, const int& height, const int& N, const int& dots);
+double** PolinomeSetValues_array(double*x, double* PolinomeCoefs, const int& height, const int& N, const int& dots);
 double** ReverseMatrix(double** matr, const int& hight, const int& wigth);
 double** buidPolinome(double* x, double** Matrix, const int& MatrSize, const int& power, bool printTime);
-double Approx_Polinomes_Run_Kernel(cl_command_queue &queue, cl_context context, cl_device_id &device, cl_kernel &kernel,
-	cl_float* x_input, cl_float *f_input,
-	cl_int input_width, cl_int input_hight,
-	cl_float* A_input, cl_float *B_input, cl_float *C_input, cl_float *P_input,
-	cl_int polinome_power,
-	cl_float* T);
-double Approx_Polinomes_Run_Kernel(cl::Context context, cl::Device &device, cl::Kernel &kernel,
-	cl_float* x_input, cl_float *f_input,
-	cl_int input_width, cl_int input_hight,
-	cl_float* A_input, cl_float *B_input, cl_float *C_input, cl_float *P_input,
-	cl_int polinome_power,
-	cl_float* T);
-inline void
-checkErr(cl_int err, const char * name);
-double Approx_Polinomes_Kernel_squareRoot(cl_command_queue &queue, cl_context context, cl_device_id &device, cl_kernel &kernel,
-	cl_float* x_input, cl_float *f_input,
-	cl_int input_width, cl_int input_hight,
-	cl_float* A, cl_float *B, cl_float *C_output, cl_float *K,
-	cl_int polinome_power,
-	cl_float* S);
+

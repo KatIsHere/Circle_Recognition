@@ -1,6 +1,7 @@
 #include <cmath>
 #include <string>
 #include <unordered_set>
+#include "Features.h"
 
 // -------------------------------------------------------------------------------------------------------------
 // SOME POLINOME FUNCTIONS
@@ -78,6 +79,14 @@ double Polinome_Power(double x, double* coefSet, const int& power) {
 	return suma;
 }
 
+double Polinome_Power_array(double x, double* coefSet, const int& power, const int& j) {
+	double suma = 0.;
+	for (int i = 0; i < power; ++i) {
+		suma += coefSet[power*j + i] * pow(x, i);						// 1 KERNEL
+	}
+	return suma;
+}
+
 double function_from_coefs(double x, double* coefs, const int& N_power, std::string func = "polinome") {
 	double sum = 0.;
 	if (func == "polinome") {
@@ -89,7 +98,6 @@ double function_from_coefs(double x, double* coefs, const int& N_power, std::str
 	}
 	return sum;
 }
-
 
 
 // -------------------------------------------------------------------------------------------------------------
@@ -215,3 +223,22 @@ double* findExtrems(double* coefs, const int& N, const double& a, const double& 
 	return solv;
 }
 
+
+
+// Find all extremums and create fatures
+void findExtremums_and_features(double** polinomes, double* centerX, double* centerY, double** extrems, double** extremsValues, 
+									const int& height, const int& N, const double& xFrom, const double& xTo) {
+	// Finding all exteme values of the polinomes
+	// On extreme values feathures can be build
+	for (int i = 0; i < height; ++i) {
+		extrems[i] = findExtrems(polinomes[i], N, xFrom, xTo);
+		extremsValues[i] = new double[N - 1];
+		for (int j = 0; j < N - 1; ++j) {
+			extremsValues[i][j] = Polinome_Power(extrems[i][j], polinomes[i], N);
+		}
+
+		Features feature = Features(extrems[i], extremsValues[i], N - 1);					// creating a feture for one func														
+		centerY[i] = feature.getCenter().y;
+		centerX[i] = feature.getCenter().x;
+	}
+}

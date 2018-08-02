@@ -25,3 +25,11 @@ double Approx_Polinomes_Run_Kernel_DOUBLES(cl_command_queue &queue, cl_context c
 	cl_int input_width, cl_int input_hight,
 	cl_double* A_input, cl_double *B_input, cl_double *C_input, cl_int *P_input,
 	cl_int polinome_power);
+double MAiN_HOST(cl_command_queue &queue, cl_context context, cl_device_id &device,
+				cl_kernel &kernel_polinomes, cl_kernel &kernel_extrems,
+				cl_float* x_input, cl_float *f_input,
+				cl_int input_width, cl_int input_hight,
+				cl_double* A_input, cl_double *B_input, cl_double *C_input, cl_int *P_input,
+				cl_int polinome_power, cl_float Eps, cl_float start, cl_float finish,
+				cl_float* firstDer, cl_float* SecondDer,
+				cl_float* extrems_x, cl_float* values_y);

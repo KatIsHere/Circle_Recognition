@@ -202,6 +202,7 @@
     <ClInclude Include="InterpolationAndApproximation.h" />
     <ClInclude Include="LinearEquations.h" />
     <ClInclude Include="LoaderAndPrinter.h" />
+    <ClInclude Include="OpenCLCalculations.h" />
     <ClInclude Include="Plotter.h" />
     <ClInclude Include="PolinomeBuilder.h" />
     <ClInclude Include="Polinoms.h" />
