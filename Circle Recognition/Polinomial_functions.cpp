@@ -7,71 +7,6 @@
 
 // -------------------------------------------------------------------------------------------------------------
 // SOME POLINOME FUNCTIONS
-
-// Faster polinome functions 
-double Polinome_4(double x, double c0, double c1, double c2, double c3, double c4) {
-	return c0 + c1 * x + c2 * x*x + c3 * x*x*x + c4 * x*x*x*x;
-}
-
-double Polinome_3(double x, double c0, double c1, double c2, double c3) {
-	return c0 + c1 * x + c2 * x*x + c3 * x*x*x;
-}
-
-double Polinome_2(double x, double c0, double c1, double c2) {
-	return c0 + c1 * x + c2 * x*x;
-}
-
-// Chebishow polinomes 
-double discrete_Chebishow_1(double x, const int& setSize) {
-	return 1 - 2 * x / setSize;
-}
-
-double discrete_Chebishow_2(double x, const int& setSize) {
-	return 1 - 6 * x / setSize - 6 * x*x / (setSize*(setSize - 1));
-}
-
-double discrete_Chebishow_3(double x, const int& setSize) {
-	return 10 / (3 * (setSize - 2)) * ((setSize / 2 - x)*(1 - 6 * x / setSize - 
-				6 * x*x / (setSize*(setSize - 1))) - (setSize + 3) / 5 * (1 - 2 * x / setSize));
-}
-
-double discrete_Chebishow_4(double x, const int& setSize) {
-	return 7 / (2 * (setSize - 3)) * ((setSize / 2 - x)*discrete_Chebishow_3(x, setSize) - 
-			3 * (setSize + 4) / 14 * (1 - 6 * x / setSize - 6 * x*x / (setSize*(setSize - 1))));
-}
-
-double discrete_Chebishow_5(double x, const int& setSize) {
-	return 18 / (5 * (setSize - 4))*((setSize / 2 - x)* discrete_Chebishow_4(x, setSize) - 
-										2 * (setSize + 5) / 9 * discrete_Chebishow_3(x, setSize));
-}
-
-double Polinome_Chebishow(double x, const int& SetSize, const int& power) {
-	switch (power)
-	{
-	case 0:
-		return 1;
-		break;
-	case 1:
-		return discrete_Chebishow_1(x, SetSize);
-		break;
-	case 2:
-		return discrete_Chebishow_2(x, SetSize);
-		break;
-	case 3:
-		return discrete_Chebishow_3(x, SetSize);
-		break;
-	case 4:
-		return discrete_Chebishow_4(x, SetSize);
-		break;
-	case 5:
-		return discrete_Chebishow_5(x, SetSize);
-		break;
-	default:
-		return 0;
-		break;
-	}
-}
-
 // Returns polinome of a given power
 double Polinome_Power(double x, double* coefSet, const int& power) {
 	double suma = 0.;
@@ -103,18 +38,6 @@ double function_from_coefs(double x, double* coefs, const int& N_power, std::str
 
 
 // -------------------------------------------------------------------------------------------------------------
-// SCALAR FUNCTION MULTIPLICATION
-double scalarMult(double &f1(double &), double &f2(double&), double * xSet, const int& setSize) {
-	double suma = 0.;
-	int i;
-	for (i = 0; i < setSize; ++i) {
-		suma += f1(xSet[i])*f2(xSet[i]);
-	}
-	return suma;
-}
-
-
-// -------------------------------------------------------------------------------------------------------------
 // POLINOME DERIVATIVE
 double* polinome_derivative(double* coefs, const int& N) {
 	/*
@@ -129,29 +52,6 @@ double* polinome_derivative(double* coefs, const int& N) {
 
 // -------------------------------------------------------------------------------------------------------------
 // ROOT FINDING ALGORYTHMS
-
-// Finding an exact root in cubic polinomial equation 
-double Kardano_Solve(double p, double q) {
-	double Q = (p*p*p) / 27 + (q*q) / 4;
-	if (Q < 0)
-		throw "Complex solutions";
-	double sqrtQ = sqrt(Q);
-	double alfa = cbrt(-q / 2 + sqrtQ);
-	double beta = cbrt(-q / 2 - sqrtQ);
-	return alfa + beta;
-}
-
-double Cubic_Solve(double a, double b, double c, double d) {
-	/*
-	* Finds all real solutions for a cubic polinome equation
-	*/
-	double p = (3 * a*c - b * b) / (3 * a*a);
-	double q = (2 * b*b*b - 9 * a*b*c + 27 * a*a*d) / (27 * a*a*a);
-	double y = Kardano_Solve(p, q) - b / (3 * a);
-	return y;
-}
-
-
 double HalleyMethodPolinome(double* coefs, const int& N, const double&start, const double& Eps = 0.00001) {
 	/*
 	* A root-finding algorithm used for functions of one real variable 

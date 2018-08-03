@@ -24,9 +24,6 @@
     <ClCompile Include="Approximation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Interpolation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Linear_equations_solve.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

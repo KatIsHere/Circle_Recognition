@@ -7,4 +7,3 @@ double** PolinomeSetValues(double*x, double** PolinomeCoefs, const int& height, 
 double** PolinomeSetValues_array(double*x, double* PolinomeCoefs, const int& height, const int& N, const int& dots);
 double** ReverseMatrix(double** matr, const int& hight, const int& wigth);
 double** buidPolinome(double* x, double** Matrix, const int& height, const int& width, const int& power, bool printTime);
-

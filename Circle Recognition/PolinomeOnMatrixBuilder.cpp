@@ -6,29 +6,6 @@
 #include <ctime>
 #include "Features.h"
 
-double* normalizePolinoms(double** vectorSet, const int& vectorCount, const int& vectorSize, std::string norm = "avarage") {
-	int i, j;
-	double* normalizedPol = new double[vectorSize];
-	if (norm == "avarage") {
-		double suma;
-		for (j = 0; j < vectorSize; ++j) {
-			suma = 0.;
-			for (i = 0; i < vectorCount; ++i) {
-				suma += vectorSet[i][j];
-			}
-			normalizedPol[j] = suma / vectorCount;
-		}
-	}
-	return normalizedPol;
-}
-
-double* X_Set(const int& vectorSize, const int& start = 0) {
-	double* xset = new double[vectorSize];
-	for (int i = 0; i < vectorSize; ++i)
-		xset[i] = i + start;
-	return xset;
-}
-
 
 double* choseSubvector(double* vector, const int& vectorSize, const int& start, const int& finish) {
 	if (start > vectorSize || finish > vectorSize || start > finish)
