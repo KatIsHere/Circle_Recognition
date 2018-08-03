@@ -63,18 +63,18 @@ inline void plotFunctionWithOrtho3D(T* xSet, T* ySet, T*zSet, const int& setSize
 }
 
 
-inline void RenderString(float x, float y, char* str, const int& len) {
+inline void RenderString(float x, float y, char* str, const int& len, void *font = GLUT_BITMAP_TIMES_ROMAN_10) {
 	glRasterPos2f(x, y);
 	for (int i = 0; i < len; ++i) {
-		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, str[i]);
+		glutBitmapCharacter(font, str[i]);
 	}
 }
 
-inline void RenderString(float x, float y, std::string str) {
+inline void RenderString(float x, float y, std::string str, void *font = GLUT_BITMAP_TIMES_ROMAN_10) {
 	glRasterPos2f(x, y);
 	int len = str.size();
 	for (int i = 0; i < len; ++i) {
-		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, str[i]);
+		glutBitmapCharacter(font, str[i]);
 	}
 }
 
@@ -154,5 +154,17 @@ void Plot_XY_Axis(double xFrom, double xTo, double yFrom, double yTo,
 		glVertex3f(xZero + 0.005, posY, 0.0f);
 		glVertex3f(xZero - 0.005, posY, 0.0f);
 		glEnd();
+	}
+}
+
+
+void keyboard(unsigned char key, int x, int y)
+{
+	switch (key) {
+		case 13:	// 'Enter'
+			glutPostRedisplay();
+			break;
+		default:
+			break;
 	}
 }

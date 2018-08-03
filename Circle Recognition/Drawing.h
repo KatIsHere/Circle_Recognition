@@ -11,7 +11,7 @@
 // DRAWING ON A GRAPH
 
 inline void drawFunctionSet(double* polinomes, const int& height, const int& N, const double& xFrom, const double& xTo, 
-	float* x_extr, float* y_extr,
+	/*float* x_extr, float* y_extr,*/
 	const int& dots = 100, float colorRed = 0.05f, float colorGreen = 0.05f,
 	float colorBlue = 0.05f, float thikness = 1.45) {
 	double* x = xCreateSet(xFrom, xTo, dots);
@@ -80,6 +80,13 @@ inline void drawFunctionSet(double* polinomes, const int& height, const int& N, 
 	}
 	delete[]extrems; delete[]extremsValues;
 	delete[]values;
+
+	std::string obj_name = "Input height = " + std::to_string(height);
+	RenderString(0.63, 0.9, obj_name, GLUT_BITMAP_9_BY_15);
+	obj_name = "Width = " + std::to_string((int)xTo);
+	RenderString(0.63, 0.84, obj_name, GLUT_BITMAP_9_BY_15);
+	obj_name = "Polinome power is " + std::to_string(N - 1);
+	RenderString(0.63, 0.78, obj_name, GLUT_BITMAP_9_BY_15);
 }
 
 
@@ -123,6 +130,7 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 		if (minF < min_Y)
 			min_Y = minF;
 	}
+
 	// Drawing approximated polinomes, extreme values
 	for (int i = 0; i < height; ++i) {
 		redCh = float(rand() % 90) / 100 - 0.05;
@@ -148,6 +156,13 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 	}
 	delete[]extrems; delete[]extremsValues;
 	delete[]values;
+
+	std::string obj_name = "Input height = " + std::to_string(height); 
+	RenderString(0.63, 0.9, obj_name, GLUT_BITMAP_9_BY_15);
+	obj_name = "Width = " + std::to_string((int)xTo);
+	RenderString(0.63, 0.84, obj_name, GLUT_BITMAP_9_BY_15);
+	obj_name = "Polinome power is " + std::to_string(N - 1);
+	RenderString(0.63, 0.78, obj_name, GLUT_BITMAP_9_BY_15);
 }
 
 

@@ -1,5 +1,6 @@
 # Circle_Recognition
-A project for recognizing different types of circles on a photo
+A project for recognizing different types of circles on a photo.
+Photos are presented as matrixes, that can be read from .txt file.
 
 The programm uses OpenCL for optimizing performance.
 -----------------------------------------------------------------

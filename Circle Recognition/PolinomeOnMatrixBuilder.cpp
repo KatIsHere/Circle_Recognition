@@ -111,9 +111,9 @@ double** ReverseMatrix(double** matr, const int& hight, const int& wigth) {
 * Counts computational time, and prints it, if (printTime == true)
 * Returns a matrix of polinome coeficients
 */
-double** buidPolinome(double* x, double** Matrix, const int& MatrSize, const int& power, bool printTime) {
+double** buidPolinome(double* x, double** Matrix, const int& height, const int& width, const int& power, bool printTime) {
 	clock_t begin = clock();
-	double** polinomes = create_approx_polinomes(x, Matrix, MatrSize, MatrSize, power);
+	double** polinomes = create_approx_polinomes(x, Matrix, height, width, power);
 	clock_t end = clock();
 	double time = 0;
 	if (printTime) {

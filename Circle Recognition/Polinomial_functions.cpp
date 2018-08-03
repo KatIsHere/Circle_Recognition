@@ -251,6 +251,4 @@ void findExtremums_and_features(double** polinomes, /*double* centerX, double* c
 			}
 		}
 	}
-
-
 }

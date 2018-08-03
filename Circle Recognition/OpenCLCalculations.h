@@ -189,6 +189,8 @@ void openclCalculating_with_extremums(cl_float* x, cl_float*f_x, cl_double* Poli
 	clReleaseContext(context);
 	delete[]A; delete[]B; delete[]P; 
 }
+
+
 void openclCalculating(cl_float* x, cl_float*f_x, cl_double* Polinomes, const int& hight, const int& width, const int power) {
 	// Choosing the platform --->
 	//  0 - GPU
@@ -354,3 +356,134 @@ char* read_source(const char *file_name, size_t* file_size)
 	*file_size = size;
 	return src;
 };
+
+
+void setUpKernel(cl_command_queue &queue, cl_context& context, cl_device_id &default_device, cl_kernel &kernel){
+	//, string CLFileName, char* kernel_func) {
+	// Choosing the platform --->
+	//  0 - GPU
+	//  1 - CPU
+	const int GCPU = 1;
+	const cl_int available_platforms = 2;
+	cl_int err;
+
+	// get default platform
+	cl_platform_id platformList[available_platforms];
+	err = clGetPlatformIDs(available_platforms, platformList, NULL);
+	checkErr(err, "clGetPlatformID");
+	cl_platform_id default_platform = platformList[GCPU];
+	char *patformName = new char[2024];
+	err = clGetPlatformInfo(default_platform, CL_PLATFORM_NAME, 1024, patformName, NULL);
+	checkErr(err, "clGetDeviceInfo");
+	std::cout << "Using platform: " << patformName << "\n";
+	delete[]patformName;
+
+	// get default device of the default platform
+	cl_device_id deviceList[3];
+	err = clGetDeviceIDs(default_platform, CL_DEVICE_TYPE_ALL, available_platforms, deviceList, NULL);
+	checkErr(err, "clGetDeviceIDs");
+	if (deviceList == nullptr) {
+		std::cout << " No devices found. Check OpenCL installation!\n";
+		std::cin.get();
+		exit(1);
+	}
+	default_device = deviceList[GCPU];
+	char *deviceName = new char[1024];
+	err = clGetDeviceInfo(default_device, CL_DEVICE_NAME, 1024, deviceName, NULL);
+	checkErr(err, "clGetDeviceInfo");
+	std::cout << "Using device: " << deviceName << "\n";
+	delete[]deviceName;
+
+	// platform vendor info
+	char * platformVendor = new char[1024];
+	err = clGetPlatformInfo(default_platform, (cl_platform_info)CL_PLATFORM_VENDOR, 1024, platformVendor, NULL);
+	checkErr(err, "clGetPlatformInfo");
+	std::cerr << "Platform is by: " << platformVendor << "\n";
+	delete[]platformVendor;
+
+	// create context
+	printf("\nCreating a compute context for the required device\n");
+	context = clCreateContext(NULL, 1, &default_device, NULL, NULL, &err);
+	checkErr(err, "clCreateContext");
+	printf("\nCreating the compute program from source\n");
+
+	// create kernel
+	string CLFileName = "Kernels.cl";
+	size_t file_size;
+
+	char * kernel_source = read_source(CLFileName.c_str(), &file_size);
+
+	if (NULL == kernel_source)
+	{
+		printf("Error: Failed to read kernel source code from file name: %s!\n", CLFileName.c_str());
+		clReleaseContext(context);
+		std::cin.get();
+		exit(1);
+	}
+
+	cl_program program = clCreateProgramWithSource(context, 1, (const char **)&kernel_source, NULL, &err);
+
+	queue = clCreateCommandQueue(context, default_device, 0, &err);
+
+	free(kernel_source);
+	checkErr(err, "clCreateProgramWithSource");
+	printf("\nCompiling the program executable\n");
+
+	err = clBuildProgram(program, 0, NULL, "-g -s Kernels.cl", NULL, NULL);
+	//err = clBuildProgram(program, 0, NULL, "Kernels.cl", NULL, NULL);
+	if (err != CL_SUCCESS) {
+		char *buildFailre = new char[1024];
+		clGetProgramBuildInfo(program, default_device, CL_PROGRAM_BUILD_LOG, 1024, buildFailre, NULL);
+		std::cerr << "Build Failure: " << buildFailre
+			<< "\n Press Enter to exit the program...";
+		cin.get();
+		delete[]buildFailre;
+		exit(1);
+	}
+
+	kernel = clCreateKernel(program, "build_polinome_double", &err); //"build_polinome_double"
+	checkErr(err, "clCreateKernel - build_polinome_double");
+	int ret = EXIT_SUCCESS;
+
+	/*
+	clReleaseKernel(kernel);
+	clReleaseCommandQueue(queue);
+
+	clReleaseProgram(program);
+	clReleaseContext(context);*/
+}
+
+void calculatingKernel(cl_command_queue &queue, cl_context context, cl_device_id &default_device, cl_kernel &kernel, 
+				cl_float* x, cl_float*f_x, cl_double* Polinomes, const int& hight, const int& width, const int power) {
+	// Build kernel
+	int ret = EXIT_SUCCESS;
+	cl_double* A = new cl_double[power*power];
+	cl_double* B = new cl_double[power*hight];
+	cl_int* P = new cl_int[power];
+	try
+	{
+		printf("Executing OpenCL kernel...\n");
+		float ocl_time = Approx_Polinomes_Run_Kernel_DOUBLES(queue, context, default_device, kernel,
+			x, f_x, width, hight, A, B, Polinomes, P, power);
+		printf("\nNDRange perf. counter time %f s.\n", ocl_time);
+
+	}
+	catch (const std::exception& error)
+	{
+		cerr << "[ ERROR ] " << error.what() << "\n";
+		ret = EXIT_FAILURE;
+	}
+	catch (...)
+	{
+		cerr << "[ ERROR ] Unknown/internal error happened.\n";
+		ret = EXIT_FAILURE;
+	}
+	//clReleaseKernel(kernel);
+	//clReleaseCommandQueue(queue);
+
+	//clReleaseProgram(program);
+	//clReleaseContext(context);
+	delete[]A; delete[]B; delete[]P;
+}
+
+
