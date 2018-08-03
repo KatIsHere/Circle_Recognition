@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <unordered_set>
+#include "Features.h"
+#include <vector>
 double Polinome_4(double x, double c0, double c1, double c2, double c3, double c4);					// c0 + c1*x + c2*x**2 + c3*x**3 + c4*x**4
 double Polinome_3(double x, double c0, double c1, double c2, double c3);							// c0 + c1*x + c2*x**2 + c3*x**3
 double Polinome_2(double x, double c0, double c1, double c2);										// c0 + c1*x + c2*x**2
@@ -20,7 +22,8 @@ double Polinome_Power(double x, double* coefSet, const int& n);
 double Polinome_Power_array(double x, double* coefSet, const int& power, const int& j);
 std::unordered_set<double> SolvePolinome(double* coefs, const int& N, const double& a, const double& b);
 double HalleyMethodPolinome(double* coefs, const int& N, const double&start, const double& Eps = 0.0001);
-double NewtonMethod(double* coefs, const int& N, const double&start, const double& Eps = 0.0001);
+double NewtonMethod(double* coefs, const int& N, const double&start, const double&finish, const double& Eps = 0.0001);
 double* findExtrems(double* coefs, const int& N, const double& a, const double& b);
-void findExtremums_and_features(double** polinomes, double* centerX, double* centerY, double** extrems, double** extremsValues,
-	const int& height, const int& N, const double& xFrom, const double& xTo);
+void findExtremums_and_features(double** polinomes, /*double* centerX, double* centerY,*/ double** extrems, double** extremsValues,
+			const int& height, const int& N, const double& xFrom, const double& xTo,
+			double& extrem_max, double& extrem_min, int& k_min, int& k_max);

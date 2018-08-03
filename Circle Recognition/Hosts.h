@@ -33,3 +33,9 @@ double MAiN_HOST(cl_command_queue &queue, cl_context context, cl_device_id &devi
 				cl_int polinome_power, cl_float Eps, cl_float start, cl_float finish,
 				cl_float* firstDer, cl_float* SecondDer,
 				cl_float* extrems_x, cl_float* values_y);
+double Extremums_Run_Kernel(cl_command_queue &queue, cl_context context, cl_device_id &device, cl_kernel &kernel,
+			cl_double* coefs_input, cl_int input_width, cl_int input_hight,
+			cl_float start, cl_float finish,
+			cl_float* firstDer, cl_float* SecondDer,
+			cl_float* extrems_x, cl_float* values_y,
+			cl_float Eps);

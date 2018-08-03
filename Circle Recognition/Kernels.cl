@@ -56,27 +56,27 @@ __kernel void Extremums_Newton_v2(__global double* polinome_coefs, const int wid
 					__global float* firstDeivative, __global float* secondDerivative,
 					__global float* extrems, __global float* values,
 					const float Eps, const float h){ 
-	const int id_dimi = get_global_id(0);
+	const int id = get_global_id(0);
 	const int id_dimj = get_global_id(1);
-	float polinome = 0, firstDer = 0, x0 = start[id_dimi];
+	float polinome = 0, firstDer = 0, x0 = start[id];
 	int i, j, k;
 	// filling out first derivative coefs
 	for (i = 0; i < width - 2; ++i) {
-		firstDeivative[id_dimi*(width - 1) + i] = (i + 1)*polinome_coefs[id_dimi*width + i + 1];
-		secondDerivative[id_dimi*(width - 2) + i] = (i + 1) * firstDeivative[i + 1];
-		polinome += firstDeivative[id_dimi*(width - 1) + i] * pown(x0, i);
+		firstDeivative[id*(width - 1) + i] = (i + 1)*polinome_coefs[id*width + i + 1];
+		secondDerivative[id*(width - 2) + i] = (i + 1) * firstDeivative[i + 1];
+		polinome += firstDeivative[id*(width - 1) + i] * pown(x0, i);
 	}
-	firstDeivative[id_dimi*(width - 1) + width - 2] = (width - 1)*polinome_coefs[id_dimi*width + width - 1];
+	firstDeivative[id*(width - 1) + width - 2] = (width - 1)*polinome_coefs[id*width + width - 1];
 	polinome += firstDeivative[width - 2] * pown(x0, width - 2);
 
 	// calculating  first meaning of the polinome
 	float value, div;
 
 	for (j = 0; j < width - 1; ++j) {
-		polinome += firstDeivative[id_dimi*(width - 1) + j] * pown(x0, j);
-		firstDer += secondDerivative[id_dimi*(width - 2) + j] * pown(x0, j);
+		polinome += firstDeivative[id*(width - 1) + j] * pown(x0, j);
+		firstDer += secondDerivative[id*(width - 2) + j] * pown(x0, j);
 	}
-	polinome += polinome_coefs[id_dimi*width + width - 1] * pown(x0, width - 1);
+	polinome += polinome_coefs[id*width + width - 1] * pown(x0, width - 1);
 
 	value = fabs(polinome);
 
@@ -84,21 +84,22 @@ __kernel void Extremums_Newton_v2(__global double* polinome_coefs, const int wid
 		div = polinome / firstDer;
 		x0 = x0 - div;
 		for (j = 0; j < width - 1; ++j) {
-			polinome += firstDeivative[id_dimi*(width - 1) + j] * pown(x0, j);
-			firstDer += secondDerivative[id_dimi*(width - 2) + j] * pown(x0, j);
+			polinome += firstDeivative[id*(width - 1) + j] * pown(x0, j);
+			firstDer += secondDerivative[id*(width - 2) + j] * pown(x0, j);
 		}
-		polinome += polinome_coefs[id_dimi*width + width - 1] * pown(x0, width - 1);
+		polinome += polinome_coefs[id*width + width - 1] * pown(x0, width - 1);
 		value = fabs(polinome);
 	}
 
 	polinome = 0;
 	for (j = 0; j < width; ++j)
-		polinome += polinome_coefs[id_dimi*width + j] * pown(x0, j);
+		polinome += polinome_coefs[id*width + j] * pown(x0, j);
 		
-	extrems[id_dimi*(width - 1) + id_dimj] = x0;
-	values[id_dimi*(width - 1) + id_dimj] = polinome;
-	start[id_dimi] = x0 + h;
+	extrems[id*(width - 1) + id_dimj] = x0;
+	values[id*(width - 1) + id_dimj] = polinome;
+	start[id] = x0 + h;
 }
+
 
 // Newton method
 // sizes:
@@ -112,55 +113,71 @@ __kernel void Extremums_Newton(__global double* polinome_coefs, const int width,
 	__global float* firstDeivative, __global float* secondDerivative,
 	__global float* extrems, __global float* values,
 	const float Eps, const float h) {
-	const int id_dimi = get_global_id(0);
-	float polinome = 0, firstDer = 0, x0 = start;
+
+	const int id = get_global_id(0);
+	double polinome = 0, firstDer = 0;
+	double meaning_x0;
+	double x0 = start + 0.1;
 	int i, j, k; 
 
-	printf("i = %d -------> ", id_dimi);
-	// filling out first derivative coefs
+	// filling out first and second derivative coefs
 	for (i = 0; i < width - 2; ++i) {
-		firstDeivative[id_dimi*(width - 1) + i] = (i + 1)*polinome_coefs[id_dimi*width + i + 1];
-		secondDerivative[id_dimi*(width - 2) + i] = (i + 1) * firstDeivative[id_dimi*(width - 1) + i + 1];
-		polinome += firstDeivative[id_dimi*(width - 1) + i] * pown(x0, i);
+		firstDeivative[id*(width - 1) + i] = (i + 1)*polinome_coefs[id*width + i + 1];
+		secondDerivative[id*(width - 2) + i] = (i + 1) * firstDeivative[id*(width - 1) + i + 1];
+		polinome += firstDeivative[id*(width - 1) + i] * pown(x0, i);
+		firstDer += secondDerivative[id*(width - 2) + i] * pown(x0, i);
 	}
-	firstDeivative[id_dimi*(width - 1) + width - 2] = (width - 1)*polinome_coefs[id_dimi*width + width - 1];
-	polinome += firstDeivative[id_dimi*(width - 1) + width - 2] * pown(x0, width - 2);
+	firstDeivative[id*(width - 1) + width - 2] = (width - 1)*polinome_coefs[id*width + width - 1];
+	polinome += firstDeivative[id*(width - 1) + width - 2] * pown(x0, width - 2);
 	i = 0;
+	double value, div;
+	bool flag;
 	while (i < width - 1) {
-				// calculating  first meaning of the polinome
-		float value, div;
-		for (j = 0; j < width - 2; ++j) {
-			polinome += firstDeivative[id_dimi*(width - 1) + j] * pown(x0, j);
-			firstDer += secondDerivative[id_dimi*(width - 2) + j] * pown(x0, j);
-		}
-		polinome += firstDeivative[id_dimi*(width - 1) + width - 2] * pown(x0, width - 2);
-		//polinome += polinome_coefs[id_dimi*width + width - 1] * pown(x0, width - 1);
+		//// calculating  first meaning of the polinome
+		//polinome = 0.;
+		//for (j = 0; j < width - 2; ++j) {
+		//	polinome += firstDeivative[id*(width - 1) + j] * pown(x0, j);
+		//	firstDer += secondDerivative[id*(width - 2) + j] * pown(x0, j);
+		//}
+		//polinome += firstDeivative[id*(width - 1) + width - 2] * pown(x0, width - 2);
+		////polinome += polinome_coefs[id*width + width - 1] * pown(x0, width - 1);
 
 		value = fabs(polinome);
 
-		while (value >= 0.0001) {
-			div = polinome / firstDer;
+		while (value >= 0.1) {
+			div = (polinome) / firstDer;
 			x0 = x0 - div;
+			//printf("x0: %f ---> ", x0);
+			//printf("first der: %f\t", firstDer);
+			polinome = 0.; firstDer = 0;
 			for (j = 0; j < width - 2; ++j) {
-				polinome += firstDeivative[id_dimi*(width - 1) + j] * pown(x0, j);
-				firstDer += secondDerivative[id_dimi*(width - 2) + j] * pown(x0, j);
+				polinome += firstDeivative[id*(width - 1) + j] * pown(x0, j);
+				firstDer += secondDerivative[id*(width - 2) + j] * pown(x0, j);
 			}
-			polinome += firstDeivative[id_dimi*(width - 1) + width - 2] * pown(x0, width - 2);
-			//polinome += polinome_coefs[id_dimi*width + width - 1] * pown(x0, width - 1);
+			polinome += firstDeivative[id*(width - 1) + width - 2] * pown(x0, width - 2);
+
+			//printf("value:%f\t", polinome);
 			value = fabs(polinome);
 		}
 
-		polinome = 0;
-		for (j = 0; j < width; ++j)
-			polinome += polinome_coefs[id_dimi*width + j] * pown(x0, j);
+		for(j = 0; j < i; ++j){ 
+			flag = ((extrems[id*(width - 1) + j] - x0 < 0.1) && (x0 - extrems[id*(width - 1) + j] < 0.1));
+		}
 
-		extrems[id_dimi*(width - 1) + i] = x0;
-		values[id_dimi*(width - 1) + i] = polinome;
-		x0 = x0 + h;
-		polinome = 0.;
-		++i;
+		if(!flag){ 
+			extrems[id*(width - 1) + i] = x0;
+			//printf("x0 = %f\t", x0);
+			meaning_x0 = 0;
+			
+			for (j = 0; j < width; ++j)
+				meaning_x0 += polinome_coefs[id*width + j] * pown(x0, j);
+			
+			values[id*(width - 1) + i] = meaning_x0;
+			i++;
+		}
+		x0 = x0 + 2*h;
 	}
-	printf("i = %d\t", id_dimi);
+	//printf("i = %d\t", id);
 }
 
 

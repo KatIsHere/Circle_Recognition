@@ -112,7 +112,6 @@ void RenderApproximation(void) {
 	delete[]x_LARGE;
 	delete[]MatrixLARGE;
 	// delete[]MatrixLARGE_2;
-
 	//for (int i = 0; i < SIZE_SMALL; ++i)
 	//	delete[]polinomes_SMALL[i];
 	//delete[]polinomes_SMALL;
@@ -176,37 +175,36 @@ void RenderFast(void) {
 	cl_float* MatrixLARGE = cl_loadFunc(SIZE_LARGE, SIZE_LARGE, filepath_LARGE);
 	cl_float* x_LARGE = xCreateCLSet(0, SIZE_LARGE, SIZE_LARGE);
 	cl_double* polinomes = new cl_double[POLINOME_POWER_LARGE*SIZE_LARGE];
-	//cl_float* extremums_x = new cl_float[SIZE_LARGE*(POLINOME_POWER_LARGE - 1)];
-	//cl_float* extremums_y = new cl_float[SIZE_LARGE*(POLINOME_POWER_LARGE - 1)];
-	openclCalculating(x_LARGE, MatrixLARGE, polinomes, SIZE_LARGE, SIZE_LARGE, POLINOME_POWER_LARGE);
+	cl_float* extremums_x = new cl_float[SIZE_LARGE*(POLINOME_POWER_LARGE - 1)];
+	cl_float* extremums_y = new cl_float[SIZE_LARGE*(POLINOME_POWER_LARGE - 1)];
+	//openclCalculating(x_LARGE, MatrixLARGE, polinomes, SIZE_LARGE, SIZE_LARGE, POLINOME_POWER_LARGE);	
+	//double** polinomes_LARGE = new double*[SIZE_LARGE];
+	//float ser = 0;
+	//for (int i = 0; i < SIZE_LARGE; ++i) {
+	//	polinomes_LARGE[i] = new double[POLINOME_POWER_LARGE];
+	//	for (int j = 0; j < POLINOME_POWER_LARGE; ++j) {
+	//		polinomes_LARGE[i][j] = polinomes[i*POLINOME_POWER_LARGE + j];
+	//	}
+	//}
+	//drawFunctionSet(polinomes_LARGE, SIZE_LARGE, POLINOME_POWER_LARGE, 0, SIZE_LARGE);
+	//drawFunctionSet(polinomes_LARGE_2, SIZE_LARGE, POLINOME_POWER_LARGE, 0, SIZE_LARGE);
+	//for (int i = 0; i < SIZE_LARGE; ++i) {
+	//delete[]polinomes_LARGE[i];
+	//delete[]polinomes_LARGE_2[i];
+	//}
+	//delete[]polinomes_LARGE;
 
-	double** polinomes_LARGE = new double*[SIZE_LARGE];
-	float ser = 0;
-	for (int i = 0; i < SIZE_LARGE; ++i) {
-		polinomes_LARGE[i] = new double[POLINOME_POWER_LARGE];
-		for (int j = 0; j < POLINOME_POWER_LARGE; ++j) {
-			polinomes_LARGE[i][j] = polinomes[i*POLINOME_POWER_LARGE + j];
-		}
-	}
+	openclCalculating_with_extremums(x_LARGE, MatrixLARGE, polinomes, SIZE_LARGE, SIZE_LARGE, POLINOME_POWER_LARGE, SIZE_LARGE, 0, extremums_x, extremums_y);
 
 	glClearColor(0.98f, 0.98f, 0.98f, 1.0f);
 	glClearColor(0.98f, 0.98f, 0.98f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	// Reset transformations
 	glLoadIdentity();
-
-	drawFunctionSet(polinomes_LARGE, SIZE_LARGE, POLINOME_POWER_LARGE, 0, SIZE_LARGE);
 	
-	//drawFunctionSet(polinomes_LARGE_2, SIZE_LARGE, POLINOME_POWER_LARGE, 0, SIZE_LARGE);
-	//drawFunctionSet(polinomes, SIZE_LARGE, POLINOME_POWER_LARGE, 0, SIZE_LARGE, extremums_x, extremums_y);
+	drawFunctionSet(polinomes, SIZE_LARGE, POLINOME_POWER_LARGE, 0, SIZE_LARGE, extremums_x, extremums_y);
 	glutSwapBuffers();
 
 	// DELETE ALL DATA
-	for (int i = 0; i < SIZE_LARGE; ++i) {
-		delete[]polinomes_LARGE[i];
-		//delete[]polinomes_LARGE_2[i];
-	}
-	delete[]polinomes_LARGE;
 	delete[]polinomes;
 	delete[]MatrixLARGE;
 }

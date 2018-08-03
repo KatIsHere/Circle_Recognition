@@ -4,6 +4,7 @@
 #include "InterpolationAndApproximation.h"
 #include "Polinoms.h"
 #include <ctime>
+#include "Features.h"
 
 double* normalizePolinoms(double** vectorSet, const int& vectorCount, const int& vectorSize, std::string norm = "avarage") {
 	int i, j;

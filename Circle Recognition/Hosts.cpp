@@ -113,7 +113,7 @@ double MAiN_HOST(cl_command_queue &queue, cl_context context, cl_device_id &devi
 	cl_mem firstDer_buffer = clCreateBuffer(
 		context,
 		CL_MEM_USE_HOST_PTR,
-		sizeof(cl_float) * (input_width - 1) * input_hight,
+		sizeof(cl_float) * (polinome_power - 1) * input_hight,
 		firstDer,
 		&err);
 	checkErr(err, "firstDer_buffer_buffer");
@@ -125,7 +125,7 @@ double MAiN_HOST(cl_command_queue &queue, cl_context context, cl_device_id &devi
 	cl_mem secondDer_buffer = clCreateBuffer(
 		context,
 		CL_MEM_USE_HOST_PTR,
-		sizeof(cl_float) * (input_width - 2) * input_hight,
+		sizeof(cl_float) * (polinome_power - 2) * input_hight,
 		SecondDer,
 		&err);
 	checkErr(err, "secondDer_buffer_buffer");
@@ -137,7 +137,7 @@ double MAiN_HOST(cl_command_queue &queue, cl_context context, cl_device_id &devi
 	cl_mem x_extrems_buffer = clCreateBuffer(
 		context,
 		CL_MEM_USE_HOST_PTR,
-		sizeof(cl_float) * input_hight * (input_width - 1),
+		sizeof(cl_float) * input_hight * (polinome_power - 1),
 		extrems_x,
 		&err);
 	checkErr(err, "x_extrems_buffer");
@@ -149,7 +149,7 @@ double MAiN_HOST(cl_command_queue &queue, cl_context context, cl_device_id &devi
 	cl_mem y_extrems_buffer = clCreateBuffer(
 		context,
 		CL_MEM_USE_HOST_PTR,
-		sizeof(cl_float) * input_hight * (input_width - 1),
+		sizeof(cl_float) * input_hight * (polinome_power - 1),
 		values_y,
 		&err);
 	checkErr(err, "y_extrems_buffer");
@@ -197,16 +197,16 @@ double MAiN_HOST(cl_command_queue &queue, cl_context context, cl_device_id &devi
 	checkErr(err, "clEnqueueNDRangeKernel - main kernel");
 	const clock_t perf_stop = clock();
 
-	// READING FROM BUFFER
-	err = clEnqueueReadBuffer(queue, C_buffer, CL_TRUE, 0, sizeof(cl_double) * polinome_power* input_hight, C_input, NULL, NULL, NULL);
-	checkErr(err, "clEnqueueReadBuffer : couldn't read from buffer");
+	err = clFinish(queue);
 
+	
+	
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	// SETTING UP KERNEL ARGUMENTS FOR EXTREME VALUES CALCULATION
 	err = clSetKernelArg(kernel_extrems, 0, sizeof(C_buffer), (void *)& C_buffer);
 	checkErr(err, "clSetKernelArg : coefs_input_buffer(0)");
 
-	err = clSetKernelArg(kernel_extrems, 1, sizeof(cl_int), &input_width);
+	err = clSetKernelArg(kernel_extrems, 1, sizeof(cl_int), &polinome_power);
 	checkErr(err, "clSetKernelArg : input_width(1)");
 
 	err = clSetKernelArg(kernel_extrems, 2, sizeof(cl_float), & start);
@@ -250,10 +250,14 @@ double MAiN_HOST(cl_command_queue &queue, cl_context context, cl_device_id &devi
 	checkErr(err, "clFinish");
 
 	// READING FROM BUFFER
-	err = clEnqueueReadBuffer(queue, x_extrems_buffer, CL_TRUE, 0, sizeof(cl_float) *  input_hight * (input_width - 1), extrems_x, NULL, NULL, NULL);
+	err = clEnqueueReadBuffer(queue, C_buffer, CL_TRUE, 0, sizeof(cl_double) * polinome_power* input_hight, C_input, NULL, NULL, NULL);
+	checkErr(err, "clEnqueueReadBuffer : couldn't read from buffer");
+
+
+	err = clEnqueueReadBuffer(queue, x_extrems_buffer, CL_TRUE, 0, sizeof(cl_float) *  input_hight * (polinome_power - 1), extrems_x, NULL, NULL, NULL);
 	checkErr(err, "clEnqueueReadBuffer : couldn't read from buffer(x)");
 
-	err = clEnqueueReadBuffer(queue, y_extrems_buffer, CL_TRUE, 0, sizeof(cl_float) *  input_hight * (input_width - 1), values_y, NULL, NULL, NULL);
+	err = clEnqueueReadBuffer(queue, y_extrems_buffer, CL_TRUE, 0, sizeof(cl_float) *  input_hight * (polinome_power - 1), values_y, NULL, NULL, NULL);
 	checkErr(err, "clEnqueueReadBuffer : couldn't read from buffer(y)");
 
 	// RELEASING BUFFERS
@@ -282,8 +286,6 @@ double MAiN_HOST(cl_command_queue &queue, cl_context context, cl_device_id &devi
 
 	return (float)(perf_stop - perf_start + perf_stop_2 - perf_start_2) / CLOCKS_PER_SEC;
 }
-
-
 
 
 // Working host
@@ -436,19 +438,19 @@ double Approx_Polinomes_Run_Kernel_DOUBLES(cl_command_queue &queue, cl_context c
 }
 
 double Extremums_Run_Kernel(cl_command_queue &queue, cl_context context, cl_device_id &device, cl_kernel &kernel,
-	cl_float* coefs_input, cl_int input_width, cl_int input_hight,
-	cl_float* start, cl_float finish,
+	cl_double* coefs_input, cl_int input_width, cl_int input_hight,
+	cl_float start, cl_float finish,
 	cl_float* firstDer, cl_float* SecondDer,
 	cl_float* extrems_x, cl_float* values_y,
 	cl_float Eps) {
 
-	cl_float h = h = (finish - start[0]) / (input_width - 1);
+	cl_float h = h = (finish - start) / (input_width - 1);
 	cl_int err = CL_SUCCESS;
 
 	cl_mem coefs_input_buffer = clCreateBuffer(
 		context,
 		CL_MEM_COPY_HOST_PTR,
-		sizeof(cl_float) * input_width * input_hight,
+		sizeof(cl_double) * input_width * input_hight,
 		coefs_input,
 		&err);
 	checkErr(err, "coefs_input_buffer");
@@ -457,18 +459,7 @@ double Extremums_Run_Kernel(cl_command_queue &queue, cl_context context, cl_devi
 	{
 		throw  "Failed to create input data Buffer\n";
 	}
-	cl_mem start_buffer = clCreateBuffer(
-		context,
-		CL_MEM_COPY_HOST_PTR,
-		sizeof(cl_float) * input_hight,
-		start,
-		&err);
-	checkErr(err, "start_buffer_input_buffer");
 
-	if (start_buffer == (cl_mem)0)
-	{
-		throw  "Failed to create input data Buffer\n";
-	}
 	cl_mem firstDer_buffer = clCreateBuffer(
 		context,
 		CL_MEM_USE_HOST_PTR,
@@ -525,7 +516,7 @@ double Extremums_Run_Kernel(cl_command_queue &queue, cl_context context, cl_devi
 	err = clSetKernelArg(kernel, 1, sizeof(cl_int), &input_width);
 	checkErr(err, "clSetKernelArg : input_width(1)");
 
-	err = clSetKernelArg(kernel, 2, sizeof(start_buffer), (void *)& start_buffer);
+	err = clSetKernelArg(kernel, 2, sizeof(cl_float), &start);
 	checkErr(err, "clSetKernelArg : start_buffer(2)");
 
 	err = clSetKernelArg(kernel, 3, sizeof(cl_float), &finish);
@@ -576,8 +567,6 @@ double Extremums_Run_Kernel(cl_command_queue &queue, cl_context context, cl_devi
 	// RELEASING BUFFERS
 	err = clReleaseMemObject(coefs_input_buffer);
 	checkErr(err, "clReleaseMemObject : coefs");
-	err = clReleaseMemObject(start_buffer);
-	checkErr(err, "clReleaseMemObject : start");
 	err = clReleaseMemObject(firstDer_buffer);
 	checkErr(err, "clReleaseMemObject : firstDer");
 	err = clReleaseMemObject(secondDer_buffer);

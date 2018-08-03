@@ -5,6 +5,8 @@
 #include <algorithm>
 #include "PolinomeBuilder.h"
 #include <iostream>
+#include <ctime>
+#include <vector>
 //-------------------------------------------------------------------------------------------------------
 // DRAWING ON A GRAPH
 
@@ -15,24 +17,33 @@ inline void drawFunctionSet(double* polinomes, const int& height, const int& N, 
 	double* x = xCreateSet(xFrom, xTo, dots);
 	double** values = PolinomeSetValues_array(x, polinomes, height, N, dots);
 
+	//double* centerX = new double[height];
+	//double* centerY = new double[height];
+	double** extrems = new double*[height];
+	double** extremsValues = new double*[height];
 
 	double maxF, minF;
 	float redCh, greenCh, blueCh;
 	// MAX and MIN values of the set
-	double max_Y = -std::numeric_limits<double>::infinity(), min_Y = std::numeric_limits<double>::infinity();
-	double max_X = x[dots - 1], min_X = x[0];
-
-
-	double** extrems = new double*[height];
-	double** extremsValues = new double*[height];
-
+	double** polinomes_new = new double*[height];
 	for (int i = 0; i < height; ++i) {
-		for (int j = 0; j < N - 1; ++j) {
-			extrems[i][j] = x_extr[i*(N - 1) + j];
-			extremsValues[i][j] = y_extr[i*(N - 1) + j];
+		polinomes_new[i] = new double[N];
+		for (int j = 0; j < N; ++j) {
+			polinomes_new[i][j] = polinomes[i*N + j];
 		}
 	}
+	
+	//std::vector<Features> features;
+	double extrem_max = 0, extrem_min = 0;
+	int pos_max = 0, pos_min = 0;
+	const clock_t start = clock();
+	findExtremums_and_features(polinomes_new, extrems, extremsValues, height, N, xFrom, xTo, extrem_max, extrem_min, pos_min, pos_max);
+	const clock_t finish = clock();
 
+	printf("EXTREMUMS TIME COUNT: %f\n", (finish - start) / CLOCKS_PER_SEC);
+
+	double max_Y = -std::numeric_limits<double>::infinity(), min_Y = std::numeric_limits<double>::infinity();
+	double max_X = x[dots - 1], min_X = x[0];
 	// Counting local max and min values of the set
 	// Then counting overall MAX and MIN of the set
 	// This helps to scale the graph
@@ -67,7 +78,7 @@ inline void drawFunctionSet(double* polinomes, const int& height, const int& N, 
 	for (int i = 0; i < height; ++i) {
 		delete[]values[i]; delete[]extrems[i]; delete[]extremsValues[i];
 	}
-	//delete[]extrems; delete[]extremsValues;
+	delete[]extrems; delete[]extremsValues;
 	delete[]values;
 }
 
@@ -79,17 +90,21 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 	/*
 	* Drawing the matrix as a set of functions(approximation polinomes, power N) 
 	*/
-	//double* x = xCreateSet(0, height, dots);
-
 	double* x = xCreateSet(xFrom, xTo, dots);
 	double** values = PolinomeSetValues(x, polinomes, height, N, dots);
 	
 	//double* centerX = new double[height];
 	//double* centerY = new double[height];
-	//double** extrems = new double*[height];
-	//double** extremsValues = new double*[height];
+	double** extrems = new double*[height];
+	double** extremsValues = new double*[height];
 
-	//findExtremums_and_features(polinomes, centerX, centerY, extrems, extremsValues, height, N, xFrom, xTo);
+	double extrem_max = 0, extrem_min = 0;
+	int pos_max = 0, pos_min = 0;
+	const clock_t start = clock();
+	findExtremums_and_features(polinomes, extrems, extremsValues, height, N, xFrom, xTo, extrem_max, extrem_min, pos_min, pos_max);
+	const clock_t finish = clock();
+
+	printf("EXTREMUMS TIME COUNT: %f\n", (finish - start) / CLOCKS_PER_SEC);
 
 	double maxF, minF;
 	float redCh, greenCh, blueCh;
@@ -115,7 +130,7 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 		blueCh = float(rand() % 90) / 100 - 0.05;
 		plotFunctionWithOrtho2D(x, values[i], dots, xTo, xFrom, max_Y, min_Y,
 			colorRed + redCh, colorGreen + greenCh, colorBlue + blueCh, thikness);
-		//plotPointsWithOrtho2D(extrems[i], extremsValues[i], dots, xTo, xFrom, max_Y, min_Y, 0.5f, 0.0f, 1.0f, 3.0);
+		plotPointsWithOrtho2D(extrems[i], extremsValues[i], N - 1, xTo, xFrom, max_Y, min_Y, 0.5f, 0.0f, 1.0f, 3.0);
 	}
 
 	// Drawing center points
@@ -129,9 +144,9 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 	delete[]x;
 	for (int i = 0; i < height; ++i) {
 		delete[]values[i]; 
-		//delete[]extrems[i]; delete[]extremsValues[i];
+		delete[]extrems[i]; delete[]extremsValues[i];
 	}
-	//delete[]extrems; delete[]extremsValues;
+	delete[]extrems; delete[]extremsValues;
 	delete[]values;
 }
 

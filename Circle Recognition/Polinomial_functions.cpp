@@ -2,6 +2,8 @@
 #include <string>
 #include <unordered_set>
 #include "Features.h"
+#include <vector>
+#include <algorithm>
 
 // -------------------------------------------------------------------------------------------------------------
 // SOME POLINOME FUNCTIONS
@@ -174,7 +176,8 @@ double HalleyMethodPolinome(double* coefs, const int& N, const double&start, con
 }
 
 
-double NewtonMethod(double* coefs, const int& N, const double& start, const double& Eps = 0.00001) {
+double NewtonMethod(double* coefs, const int& N, const double& start, 
+		const double& finish, const double& Eps = 0.000001) {
 	/*
 	* A method for finding approximations to the roots of a real-valued function
 	* one of the fastests methods for root finding
@@ -185,6 +188,7 @@ double NewtonMethod(double* coefs, const int& N, const double& start, const doub
 	while (abs(polinome) >= Eps) {								// 3 KERNEL
 		res = polinome / firstDer;
 		x0 = x0 - res;
+		//x0 = (finish - x0 > 0) ? x0 : finish - 0.1;//(start + finish) / 2;
 		polinome = Polinome_Power(x0, coefs, N);
 		firstDer = Polinome_Power(x0, FirstDerivative, N - 1);
 	}
@@ -200,10 +204,10 @@ std::unordered_set<double> SolvePolinome(double* coefs, const int& N, const doub
 	double res, start = a;//+ (b - a) / (N - 1);
 	int i = 0;
 	while (i < N) {
-		res = NewtonMethod(coefs, N, start);
+		res = NewtonMethod(coefs, N, start, b);
 		i = i + (roots.find(res) == roots.end());				// 4 KERNEL
 		roots.insert(res);
-		start = start + h;										// 5 KERNEL
+		start = start + h;								// 5 KERNEL
 	}
 	return roots;
 }
@@ -224,21 +228,29 @@ double* findExtrems(double* coefs, const int& N, const double& a, const double& 
 }
 
 
-
 // Find all extremums and create fatures
-void findExtremums_and_features(double** polinomes, double* centerX, double* centerY, double** extrems, double** extremsValues, 
-									const int& height, const int& N, const double& xFrom, const double& xTo) {
+void findExtremums_and_features(double** polinomes, /*double* centerX, double* centerY,*/ double** extrems, double** extremsValues,
+	const int& height, const int& N, const double& xFrom, const double& xTo, 
+	double& extrem_max, double& extrem_min, int& k_min, int& k_max) {
 	// Finding all exteme values of the polinomes
 	// On extreme values feathures can be build
+	double max_Y = -std::numeric_limits<double>::infinity(), min_Y = std::numeric_limits<double>::infinity();
+	double maxF, minF;
 	for (int i = 0; i < height; ++i) {
-		extrems[i] = findExtrems(polinomes[i], N, xFrom, xTo);
+		extrems[i] = findExtrems(polinomes[i], N, xFrom + 0.01, xTo);
 		extremsValues[i] = new double[N - 1];
 		for (int j = 0; j < N - 1; ++j) {
 			extremsValues[i][j] = Polinome_Power(extrems[i][j], polinomes[i], N);
+			if (extremsValues[i][j] > max_Y) {
+				k_max = i;
+				extrem_max = extremsValues[i][j];
+			}
+			if (extremsValues[i][j] < min_Y){
+				k_min = i;
+				extrem_min = extremsValues[i][j];
+			}
 		}
-
-		Features feature = Features(extrems[i], extremsValues[i], N - 1);					// creating a feture for one func														
-		centerY[i] = feature.getCenter().y;
-		centerX[i] = feature.getCenter().x;
 	}
+
+
 }

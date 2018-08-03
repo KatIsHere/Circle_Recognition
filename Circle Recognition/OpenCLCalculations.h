@@ -126,7 +126,8 @@ void openclCalculating_with_extremums(cl_float* x, cl_float*f_x, cl_double* Poli
 
 	cl_program program = clCreateProgramWithSource(context, 1, (const char **)&kernel_source, NULL, &err);
 
-	cl_command_queue queue = clCreateCommandQueue(context, default_device, 0, &err);
+	cl_command_queue queue_polinomes = clCreateCommandQueue(context, default_device, 0, &err);
+	//cl_command_queue queue_extrems = clCreateCommandQueue(context, default_device, 0, &err);
 
 	free(kernel_source);
 	checkErr(err, "clCreateProgramWithSource");
@@ -146,8 +147,8 @@ void openclCalculating_with_extremums(cl_float* x, cl_float*f_x, cl_double* Poli
 
 	cl_kernel kernel = clCreateKernel(program, "build_polinome_double", &err);
 	checkErr(err, "clCreateKernel - build_polinome_double");
-	cl_kernel kernel_extremums = clCreateKernel(program, "Extremums_Newton", &err);
-	checkErr(err, "clCreateKernel - Extremums_Newton");
+	//cl_kernel kernel_extremums = clCreateKernel(program, "Extremums_Newton", &err);
+	//checkErr(err, "clCreateKernel - Extremums_Newton");
 	int ret = EXIT_SUCCESS;
 
 	// Build kernel
@@ -162,10 +163,10 @@ void openclCalculating_with_extremums(cl_float* x, cl_float*f_x, cl_double* Poli
 	try
 	{
 		printf("Executing OpenCL kernel...\n");
-		//float ocl_time = Approx_Polinomes_Run_Kernel_DOUBLES(queue, context, default_device, kernel, 
-		//			x, f_x, width, hight, A, B, Polinomes, P, power);
-		float ocl_time = MAiN_HOST(queue, context, default_device, kernel, kernel_extremums, 
-			x, f_x, width, hight, A, B, Polinomes, P, power, 0.0001, xFrom, xTo, firstDer, secDer, x_extrems, y_extrems);
+		float ocl_time = Approx_Polinomes_Run_Kernel_DOUBLES(queue_polinomes, context, default_device, kernel, 
+					x, f_x, width, hight, A, B, Polinomes, P, power);
+		//ocl_time += Extremums_Run_Kernel(queue_extrems, context, default_device, kernel_extremums, 
+		//			Polinomes, power, hight, xFrom, xTo, firstDer, secDer, x_extrems, y_extrems, 0.0001);
 		printf("\nNDRange perf. counter time %f s.\n", ocl_time);
 
 	}
@@ -180,7 +181,9 @@ void openclCalculating_with_extremums(cl_float* x, cl_float*f_x, cl_double* Poli
 		ret = EXIT_FAILURE;
 	}
 	clReleaseKernel(kernel);
-	clReleaseCommandQueue(queue);
+	clReleaseCommandQueue(queue_polinomes);
+	//clReleaseCommandQueue(queue_extrems);
+	//clReleaseKernel(kernel_extremums);
 
 	clReleaseProgram(program);
 	clReleaseContext(context);
