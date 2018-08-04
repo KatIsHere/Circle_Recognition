@@ -42,6 +42,9 @@
     <ClCompile Include="Hosts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PolinomialRoots.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utils.h">
@@ -78,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OpenCLCalculations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PolinomialRoots.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

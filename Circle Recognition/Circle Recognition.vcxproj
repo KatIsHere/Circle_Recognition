@@ -190,6 +190,7 @@
     <ClCompile Include="LoadersAndPrints.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PolinomeOnMatrixBuilder.cpp" />
+    <ClCompile Include="PolinomialRoots.cpp" />
     <ClCompile Include="Polinomial_functions.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
@@ -204,6 +205,7 @@
     <ClInclude Include="OpenCLCalculations.h" />
     <ClInclude Include="Plotter.h" />
     <ClInclude Include="PolinomeBuilder.h" />
+    <ClInclude Include="PolinomialRoots.h" />
     <ClInclude Include="Polinoms.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>

@@ -58,9 +58,9 @@ double* approximation_coefs(double* xSet, double* fSet, const int& setSize, cons
 		LUPDecomposition(A, polinomialPower, SystemTolerance, P);
 		LUPSystemSolve(A, P, B, polinomialPower, C);
 	}
-	else if (functions == "exp") {
-		C = GaussMethod(A, B, polinomialPower);
-	}
+	//else if (functions == "exp") {
+		//C = GaussMethod(A, B, polinomialPower);
+	//}
 	for (i = 0; i < polinomialPower; i++)
 		delete[]A[i];
 	delete[]B;	delete[]A;

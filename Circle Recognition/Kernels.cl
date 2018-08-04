@@ -350,3 +350,136 @@ __kernel void build_polinome(__global const float* xSet, __global const float* f
 
 	printf("\n");
 }
+
+
+// sizes:
+// coefs: [h*power]
+// roots: [h*(power - 1)]
+// A: [h*(n)*i], for i in range(n, 0)
+// B: [h*(n)*i], for i in range(n, 0)
+// first_der: [h*(power - 1)]
+// xec_der: [h*(power - 2)]
+// roots_coune: [h*power]
+__kernel void PolinomeRealRoots(__global float* coefs, __global float* rootsArray, const int power,
+	__global float* A, __global float* B, __global int* rootsCount){ 
+	//__global float* first_der, __global float* sec_der){ 
+
+	const int id = get_global_id(0);
+	const int AB_size = power * (power + 1) / 2;
+
+	// Normalize the polinome
+	for (int i = 0; i < power; i++)
+		A[id*power*AB_size + power*i + i] = coefs[id*power + i] / coefs[id*power + power - 1];
+
+
+	// derivative:
+	for (int i1 = power - 1, i = power - 2; i > 0; i1 = i, i--)
+	{
+		for (int j1 = i, j = i - 1; j >= 0; j1 = j, j--)
+		{
+			A[id*power*AB_size + i*power + j] = A[id*power*AB_size + i1*power + j1] * j1 / i1;
+		}
+	}
+
+	rootsCount[id*power + 1] = 1;
+	B[id*power*AB_size + 1] = -A[id*power*AB_size + 1];
+
+	int signLeft = 0, signRight = 0;
+	float edgeLeft = 0., edgeRight = 0.;
+	float edgeNegativ = 0., edgePositiv = 0.;
+	float major = 0;
+	float s = 0.;
+	double rb;
+	float suma;
+	float x;
+
+	for(int iteration = 2; iteration < power; ++iteration){ 
+		for(int i = 0; i <iteration; ++i){ 
+			s = fabs(A[id*power*AB_size + iteration * power + i]);
+			if (s > major)
+				major = s;
+		}
+		major += 1.;
+		rootsCount[id*power + iteration] = 0;
+
+		for (int i = 0; i <= rootsCount[id*power + iteration - 1]; i++){
+			if (i == 0) 
+				edgeLeft = -major;
+			
+			rb = 1.;
+			for (int j = power - 1; j >= 0; --j) {
+				rb = mad((float)rb, (float)edgeLeft, (float)coefs[id*power + j]);
+			}
+
+			if (rb <= 0.0001){ 
+				B[id*power*AB_size + iteration * power + rootsCount[id*power + iteration]] = edgeLeft;
+				rootsCount[id*power + iteration]++;
+				continue;
+			}
+
+			if (rb > 0.)
+				signLeft = 1;
+			else
+				signLeft = -1;
+
+			if (i == rootsCount[id*power + iteration - 1])
+				edgeRight = major;
+			else 
+				edgeRight = B[id*power*AB_size + (iteration - 1)*power + i];
+
+			rb = 1.;
+			for (int j = power - 1; j >= 0; --j) {
+				rb = mad((float)rb, (float)edgeLeft, (float)coefs[id*power + j]);
+			}
+
+			if (rb <= 0.0001) {
+				B[id*power*AB_size + iteration * power + rootsCount[id*power + iteration]] = edgeRight;
+				rootsCount[id*power + iteration]++;
+				continue;
+			}
+
+			if (rb > 0.)
+				signRight = 1;
+			else
+				signRight = -1;
+
+			if (signLeft == signRight)		// monotone function, no root here
+				continue;
+
+			// edges of the search
+			if (signLeft<0) {
+				edgeNegativ = edgeLeft; edgePositiv = edgeRight;
+			}
+			else {
+				edgeNegativ = edgeRight; edgePositiv = edgeLeft;
+			}
+
+			x = 0.5*(edgeNegativ + edgePositiv);
+			while(x != edgeNegativ && x != edgePositiv){ 
+				rb = 1.;
+				for (int j = power - 1; j >= 0; --j) {
+					rb = mad((float)rb, (float)edgeLeft, (float)coefs[id*power + j]);
+				}
+				if (rb < 0)
+					edgeNegativ = x;
+				else
+					edgePositiv = x;
+				x = 0.5*(edgeNegativ + edgePositiv);
+			}
+
+			B[id*power*AB_size + iteration * power + rootsCount[id*power + iteration]] = x;
+			rootsCount[id*power + iteration]++;
+		}
+
+		signLeft = 0, signRight = 0;
+		edgeLeft = 0., edgeRight = 0.;
+		edgeNegativ = 0., edgePositiv = 0.;
+		major = 0;
+		s = 0.;
+	}
+
+	// resoults
+	for(int i = 0; i < rootsCount[id*power + power - 1]; ++i){ 
+		rootsArray[id * (power - 1) + i] = B[id*power*AB_size + (power - 1) * power + i];
+	}
+}

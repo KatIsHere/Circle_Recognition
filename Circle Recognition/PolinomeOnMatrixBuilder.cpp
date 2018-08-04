@@ -51,7 +51,7 @@ double** PolinomeSetValues_array(double*x, double* PolinomeCoefs, const int& hei
 	for (i = 0; i < height; ++i) {
 		fx[i] = new double[dots];
 		for (j = 0; j < dots; ++j) {
-			fx[i][j] = Polinome_Power_array(x[j], PolinomeCoefs, N, i);
+			fx[i][j] = Polinomes_Array(x[j], PolinomeCoefs, N, i);
 		}
 	}
 	return fx;

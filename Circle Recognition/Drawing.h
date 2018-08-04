@@ -170,7 +170,7 @@ Point centerDetection(double** coefs, const int& height, const int& power, const
 	int i;
 	double** extrems = new double*[height];
 	for (i = 0; i < height; ++i) {
-		extrems[i] = findExtrems(coefs[i], power, a, b);
+		extrems[i] = findExtrems_v2(coefs[i], power, a, b);
 	}
 	Point t;
 	return t;
