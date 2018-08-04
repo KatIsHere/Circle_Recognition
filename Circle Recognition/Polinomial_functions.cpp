@@ -82,7 +82,8 @@ void findExtrems_v2(double* coefs, double* solv, const int& N, const double& a, 
 
 
 // Find all extremums and create fatures
-void findExtremums_and_features(double** polinomes, /*double* centerX, double* centerY,*/ double** extrems, double** extremsValues,
+void findExtremums_and_features(double** polinomes, /*double* centerX, double* centerY,*/ double** extrems, double** extremsValues, 
+	int* sizes,
 	const int& height, const int& N, const double& xFrom, const double& xTo, 
 	double& extrem_max, double& extrem_min, int& k_min, int& k_max) {
 	// Finding all exteme values of the polinomes
@@ -94,6 +95,7 @@ void findExtremums_and_features(double** polinomes, /*double* centerX, double* c
 	for (int i = 0; i < height; ++i) {
 		extrems[i] = new double[N - 1];
 		findExtrems_v2(polinomes[i], extrems[i], N, xFrom, xTo, extremCounter);
+		sizes[i] = extremCounter;
 		extremsValues[i] = new double[extremCounter];
 		for (int j = 0; j < extremCounter; ++j) {
 			extremsValues[i][j] = Polinome(extrems[i][j], polinomes[i], N);

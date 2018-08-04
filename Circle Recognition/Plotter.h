@@ -131,7 +131,7 @@ void Plot_XY_Axis(double xFrom, double xTo, double yFrom, double yTo,
 	std::string strX, strY;
 	float posX, posY;
 	float hxPos = (maxXaxis - minXaxis) / (divisions - 1), hyPos = (maxYaxis - minYaxis) / (divisions - 1);
-	float xH = (xTo - xFrom) / divisions, yH = (yTo - yFrom) / divisions;
+	float xH = (xTo - xFrom) / (divisions - 1), yH = (yTo - yFrom) / (divisions - 1);
 	int valueX, valueY;
 	for (int i = 0; i < divisions; ++i) {
 		posX = minXaxis + i * hxPos;

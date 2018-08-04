@@ -18,6 +18,7 @@ std::unordered_set<double> SolvePolinome(double* coefs, const int& N, const doub
 //double* findExtrems(double* coefs, const int& N, const double& a, const double& b);
 void findExtrems_v2(double* coefs, double* solv, const int& N, const double& a, const double& b, int& rootCounter);
 void findExtremums_and_features(double** polinomes, /*double* centerX, double* centerY,*/ double** extrems, double** extremsValues,
-			const int& height, const int& N, const double& xFrom, const double& xTo,
-			double& extrem_max, double& extrem_min, int& k_min, int& k_max);
+		int* sizes,
+		const int& height, const int& N, const double& xFrom, const double& xTo,
+		double& extrem_max, double& extrem_min, int& k_min, int& k_max);
 double* findExtrems(double* coefs, const int& N, const double& a, const double& b);

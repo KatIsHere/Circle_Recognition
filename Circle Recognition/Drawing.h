@@ -36,25 +36,15 @@ inline void drawFunctionSet(double* polinomes, const int& height, const int& N, 
 	//std::vector<Features> features;
 	double extrem_max = 0, extrem_min = 0;
 	int pos_max = 0, pos_min = 0;
+	int* extrNumb = new int[height];
+	double max_X = x[dots - 1], min_X = x[0];
+	double max_Y, min_Y;
+
 	const clock_t start = clock();
-	findExtremums_and_features(polinomes_new, extrems, extremsValues, height, N, xFrom, xTo, extrem_max, extrem_min, pos_min, pos_max);
+	findExtremums_and_features(polinomes_new, extrems, extremsValues, extrNumb, height, N, xFrom, xTo, max_Y, min_Y, pos_min, pos_max);
 	const clock_t finish = clock();
 
 	printf("EXTREMUMS TIME COUNT: %f\n", (finish - start) / CLOCKS_PER_SEC);
-
-	double max_Y = -std::numeric_limits<double>::infinity(), min_Y = std::numeric_limits<double>::infinity();
-	double max_X = x[dots - 1], min_X = x[0];
-	// Counting local max and min values of the set
-	// Then counting overall MAX and MIN of the set
-	// This helps to scale the graph
-	for (int j = 0; j < height; ++j) {
-		maxF = *(std::max_element(values[j], values[j] + dots));
-		minF = *(std::min_element(values[j], values[j] + dots));
-		if (maxF > max_Y)
-			max_Y = maxF;
-		if (minF < min_Y)
-			min_Y = minF;
-	}
 
 	// Drawing approximated polinomes, extreme values
 	for (int i = 0; i < height; ++i) {
@@ -63,7 +53,7 @@ inline void drawFunctionSet(double* polinomes, const int& height, const int& N, 
 		blueCh = float(rand() % 90) / 100 - 0.05;
 		plotFunctionWithOrtho2D(x, values[i], dots, xTo, xFrom, max_Y, min_Y,
 			colorRed + redCh, colorGreen + greenCh, colorBlue + blueCh, thikness);
-		plotPointsWithOrtho2D(extrems[i], extremsValues[i], dots, xTo, xFrom, max_Y, min_Y, 1.f, 0.0f, 0.2f, 3.5);
+		plotPointsWithOrtho2D(extrems[i], extremsValues[i], extrNumb[i], xTo, xFrom, max_Y, min_Y, 1.f, 0.0f, 0.2f, 3.5);
 	}
 
 	// Drawing center points
@@ -107,31 +97,21 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 	double** extrems = new double*[height];
 	double** extremsValues = new double*[height];
 
+	double max_X = x[dots - 1], min_X = x[0];
+	double max_Y, min_Y;
+
 	double extrem_max = 0, extrem_min = 0;
-	int pos_max = 0, pos_min = 0;
+	int pos_max = 0, pos_min = 0;	
+	int* extrNumb = new int[height];
+
 	const clock_t start = clock();
-	findExtremums_and_features(polinomes, extrems, extremsValues, height, N, xFrom, xTo, extrem_max, extrem_min, pos_min, pos_max);
+	findExtremums_and_features(polinomes, extrems, extremsValues, extrNumb, height, N, xFrom, xTo, max_Y, min_Y, pos_min, pos_max);
 	const clock_t finish = clock();
 
 	printf("EXTREMUMS TIME COUNT: %f\n", (finish - start) / CLOCKS_PER_SEC);
 
 	double maxF, minF;
 	float redCh, greenCh, blueCh;
-	// MAX and MIN values of the set
-	double max_Y = -std::numeric_limits<double>::infinity(), min_Y = std::numeric_limits<double>::infinity();
-	double max_X = x[dots - 1], min_X = x[0];
-	
-	// Counting local max and min values of the set
-	// Then counting overall MAX and MIN of the set
-	// This helps to scale the graph
-	for (int j = 0; j < height; ++j) {
-		maxF = *(std::max_element(values[j], values[j] + dots));
-		minF = *(std::min_element(values[j], values[j] + dots));
-		if (maxF > max_Y)
-			max_Y = maxF;
-		if (minF < min_Y)
-			min_Y = minF;
-	}
 
 	// Drawing approximated polinomes, extreme values
 	for (int i = 0; i < height; ++i) {
@@ -140,7 +120,7 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 		blueCh = float(rand() % 90) / 100 - 0.05;
 		plotFunctionWithOrtho2D(x, values[i], dots, xTo, xFrom, max_Y, min_Y,
 			colorRed + redCh, colorGreen + greenCh, colorBlue + blueCh, thikness);
-		plotPointsWithOrtho2D(extrems[i], extremsValues[i], N - 1, xTo, xFrom, max_Y, min_Y, 0.5f, 0.0f, 1.0f, 3.0);
+		plotPointsWithOrtho2D(extrems[i], extremsValues[i], extrNumb[i], xTo, xFrom, max_Y, min_Y, 1.f, 0.0f, 0.2f, 3.5);
 	}
 
 	// Drawing center points
