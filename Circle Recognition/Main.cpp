@@ -19,6 +19,7 @@ std::string FILEPATH = "train_data/";
 
 const int POLINOME_POWER_LARGE = 6;
 const int DOTS = 100;
+const int CLASS = 1;
 cl_command_queue queue_; cl_context context_; cl_device_id device_; cl_kernel kernel_;
 
 void RenderApproximation(void);
@@ -30,7 +31,7 @@ void RenderOnePoints(string filepath, const int& height, const int& width);
 void RenderOneFast(string filepath, const int& height, const int& width);
 void RenderOneApproximation(string filepath, const int& height, const int& width);
 void RenderOneReversed(string filepath, const int& height, const int& width);
-bool parse_path(const string& filepath, int& height, int& width, int clas = 4);
+bool parse_path(const string& filepath, int& height, int& width, int clas);
 void Keyboard(unsigned char key, int x, int y);
 
 int main(int argc, char ** argv) {
@@ -117,7 +118,7 @@ void RenderApproximation(void) {
 
 	string filepath = files[Pos];
 	int height, width;
-	while (!parse_path(filepath, height, width))
+	while (!parse_path(filepath, height, width, CLASS))
 	{
 		Pos++;
 	}
@@ -134,7 +135,7 @@ void RenderFast(void) {
 
 	string filepath = files[Pos];
 	int height, width;
-	while (!parse_path(filepath, height, width))
+	while (!parse_path(filepath, height, width, CLASS))
 	{
 		Pos++;
 		filepath = files[Pos];
@@ -146,7 +147,7 @@ void RenderFast(void) {
 void RenderReversed(void) {
 	string filepath = "idle_test_data_set\\idle_4\\2_x=52_y=125_sz=32.txt";
 	int height, width;
-	while (!parse_path(filepath, height, width))
+	while (!parse_path(filepath, height, width, CLASS))
 	{
 		Pos++;
 	}
@@ -159,7 +160,7 @@ void RenderPoints(void) {
 	//string filepath_SMALL = "idle_test_data_set\\idle_1\\10_x=45_y=22_sz=17.txt";
 
 	int height = 32, width = 32;
-	while (!parse_path(filepath, height, width))
+	while (!parse_path(filepath, height, width, CLASS))
 	{
 		Pos++;
 	}
@@ -206,7 +207,7 @@ void RenderOneFast(string filepath, const int& height, const int& width) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-	drawFunctionSet(polinomes, height, POLINOME_POWER_LARGE, 0, width); //, extremums_x, extremums_y);
+	drawFunctionSet(polinomes, height, POLINOME_POWER_LARGE, 0, width, CLASS); //, extremums_x, extremums_y);
 	glutSwapBuffers();
 
 	// DELETE ALL DATA

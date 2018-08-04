@@ -73,7 +73,7 @@ double* findExtrems(double* coefs, const int& N, const double& a, const double& 
 void findExtrems_v2(double* coefs, double* solv, const int& N, const double& a, const double& b, int& rootCounter) {
 	double* newCoefs = polinome_derivative(coefs, N);
 	rootCounter = 0;
-	polynomRealRoots(N - 2, newCoefs, solv, rootCounter);
+	polynomRealRoots(N - 2, newCoefs, solv, rootCounter, a, b);
 	//FindAllRootsOnSegment(N - 1, newCoefs, solv, rootsC, a, b);
 	//printVectorScreen(solv, rootsC);
 	//printf("\n");
@@ -93,23 +93,27 @@ void findExtremums_and_features(double** polinomes, /*double* centerX, double* c
 	int powerMax, powerMin;
 	for (int i = 0; i < height; ++i) {
 		extrems[i] = new double[N - 1];
-		findExtrems_v2(polinomes[i],extrems[i], N, xFrom, xTo, extremCounter);
-		extremsValues[i] = new double[N - 1];
+		findExtrems_v2(polinomes[i], extrems[i], N, xFrom, xTo, extremCounter);
+		extremsValues[i] = new double[extremCounter];
 		for (int j = 0; j < extremCounter; ++j) {
 			extremsValues[i][j] = Polinome(extrems[i][j], polinomes[i], N);
 			if (extremsValues[i][j] > max_Y) {
 				k_max = i;
 				extrem_max = extremsValues[i][j];
+				max_Y = extrem_max;
 				powerMax = extremCounter;
 			}
 			if (extremsValues[i][j] < min_Y){
 				k_min = i;
 				extrem_min = extremsValues[i][j];
+				min_Y = extrem_min;
 				powerMin = extremCounter;
 			}
 		}
 	}
+
 	Object_Features features(extrems[k_max], extremsValues[k_max], extrems[k_min], extremsValues[k_min], powerMax, powerMin, extrem_max, extrem_min);
+	printf("\nLocal max: %f, local min: %f", extrem_max, extrem_min);
 	printf("\nAngles for max polinome: ");
 	printVectorScreen(features.getAnglesMax(), features.getAnglNumMax());
 	printf("\nAngles for min polinome: ");

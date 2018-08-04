@@ -205,9 +205,85 @@ void findRootIteration(int iteration, double **A, double **B, int *RootsCount)
 	return;
 }
 
+void findRootIterationOnSegment(int iteration, double **A, double **B, int *RootsCount, const double& start, const double& finish)
+{
+	// current signs of polinome on left and right edges
+	int signLeft, signRight;
+
+	// left and right edges
+	double edgeLeft, edgeRight;
+
+	//	edges of the segment
+	double edgeNegativ, edgePositiv;
+	double root;
+
+	RootsCount[iteration] = 0;
+	for (int i = 0; i <= RootsCount[iteration - 1]; i++)
+	{
+		// creating left and right edges
+		if (i == 0)
+			edgeLeft = start;
+		else
+			edgeLeft = B[iteration - 1][i - 1];
+
+		root = polinome_fast(edgeLeft, A[iteration], iteration);
+
+		// check if root found
+		if (abs(root) < 0.000001) {
+			B[iteration][RootsCount[iteration]] = edgeLeft;
+			RootsCount[iteration]++;
+			continue;
+		}
+
+		if (root > 0)
+			signLeft = 1;
+		else
+			signLeft = -1;
+
+		if (i == RootsCount[iteration - 1])
+			edgeRight = finish;
+		else
+			edgeRight = B[iteration - 1][i];
+
+		root = polinome_fast(edgeRight, A[iteration], iteration);
+
+		// check if root found
+		if (abs(root) < 0.000001) {
+			B[iteration][RootsCount[iteration]] = edgeRight;
+			RootsCount[iteration]++;
+			continue;
+		}
+
+		if (root > 0)
+			signRight = 1;
+		else
+			signRight = -1;
+
+		// if signs on edges are the same, no root present
+		if (signLeft == signRight)
+			continue;
+
+		// can create edges
+		if (signLeft < 0) {
+			edgeNegativ = edgeLeft; edgePositiv = edgeRight;
+		}
+		else {
+			edgeNegativ = edgeRight; edgePositiv = edgeLeft;
+		}
+
+		// find root with root-finding methods
+		// B[iteration][RootsCount[iteration]] = NewtonMethod(A[iteration], iteration, edgeNegativ, edgePositiv, 0.00001);
+		root = BisectionMethod_Fast(iteration, edgeNegativ, edgePositiv, A[iteration], 0.0000001);
+		if (root >= start && root <= finish) {
+			B[iteration][RootsCount[iteration]] = root;
+			RootsCount[iteration]++;
+		}
+	}
+	return;
+}
 
 // Function finds all roots of a polinome, if they are real
-void polynomRealRoots(int n, double *coefs, double *rootsArray, int &rootsCount)
+void polynomRealRoots(int n, double *coefs, double *rootsArray, int &rootsCount, const double& start, const double& finish)
 {
 	//используются вспомогательные массивы A и B, имеющие следующее содержание
 	//A это коэффициенты а B корни производных полиномов
@@ -252,7 +328,7 @@ void polynomRealRoots(int n, double *coefs, double *rootsArray, int &rootsCount)
 	B[1][0] = -A[1][0];
 	
 	for (int i = 2; i <= n; i++)
-		findRootIteration(i, A, B, RootsCount);
+		findRootIterationOnSegment(i, A, B, RootsCount, start, finish);
 
 	// Resoult reading
 	rootsCount = RootsCount[n];

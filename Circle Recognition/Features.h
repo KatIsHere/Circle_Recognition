@@ -6,7 +6,7 @@ struct Point {
 	double x = 0;
 	double y = 0;
 	double distance(Point b) {
-		//eiler norm
+		// eiler norm
 		return sqrt((x - b.x)*(x - b.x) + (y - b.y)*(y - b.y));
 	}
 	Point& operator=(Point b) {
@@ -29,16 +29,18 @@ public:
 		distances = nullptr;
 	}
 
+
 	Features(double* xExtr, double* yExtr, const int& len) {
 		N = len;
-		std::vector<Point> extr(len);
+		extremums.clear();
 		for (int i = 0; i < len; i++) {
-			extr[i].x = xExtr[i];
-			extr[i].y = yExtr[i];
+			Point X;
+			X.x = xExtr[i];
+			X.y = yExtr[i];
+			extremums.push_back(X);
 		}
-		extremums = extr;
 		distancesNumb = len - 1;
-		anglesNumb = int(len + 1) / 2;
+		anglesNumb = len - 2;
 
 		distances = Distances();
 		angles = Angles();
@@ -50,26 +52,18 @@ public:
 		setValues(extr, len);
 	}
 
-	Features(double* distance, float* angle, const int&len, double x_center, double y_center) {
-		N = len;
-		extremums = std::vector<Point>(len);
-		distancesNumb = len - 1;
-		anglesNumb = int(len + 1) / 2;
-		distances = distance;
-		angles = angle;
-		center.x = x_center; center.y = y_center;
-	}
 
 	void setValues(std::vector<Point> extr, const int& len) {
 		N = len;
 		extremums = extr;
 		distancesNumb = len - 1;
-		anglesNumb = int(len + 1) / 2;
+		anglesNumb = len - 2;
 
 		distances = Distances();
 		angles = Angles();
 		center = Center();
 	}
+
 
 	const int& getLen() {
 		return N;
@@ -94,10 +88,10 @@ public:
 	const float* getAngles() {
 		return angles;
 	}
-
 	const int anglNumb() {
 		return anglesNumb;
 	}
+
 
 	Features& operator=(Features other_feature) {
 		setValues(other_feature.getExtrems(), other_feature.getLen());
@@ -157,7 +151,6 @@ private:
 };
 
 
-// TODO: add center comparation
 /*
 * Some of the features that define the object
 */
@@ -260,11 +253,11 @@ public:
 	}
 
 	const float* getAnglesMin() {
-		return max_polinome.getAngles();
+		return min_polinome.getAngles();
 	}
 
 	const double* getDistMin() {
-		return max_polinome.getDistances();
+		return min_polinome.getDistances();
 	}
 
 	int getDistNumMax(){

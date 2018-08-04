@@ -10,7 +10,7 @@
 //-------------------------------------------------------------------------------------------------------
 // DRAWING ON A GRAPH
 
-inline void drawFunctionSet(double* polinomes, const int& height, const int& N, const double& xFrom, const double& xTo, 
+inline void drawFunctionSet(double* polinomes, const int& height, const int& N, const double& xFrom, const double& xTo, const int& classNumb,
 	/*float* x_extr, float* y_extr,*/
 	const int& dots = 100, float colorRed = 0.05f, float colorGreen = 0.05f,
 	float colorBlue = 0.05f, float thikness = 1.45) {
@@ -87,6 +87,8 @@ inline void drawFunctionSet(double* polinomes, const int& height, const int& N, 
 	RenderString(0.63, 0.84, obj_name, GLUT_BITMAP_9_BY_15);
 	obj_name = "Polinome power is " + std::to_string(N - 1);
 	RenderString(0.63, 0.78, obj_name, GLUT_BITMAP_9_BY_15);
+	obj_name = "Of class: " + std::to_string(classNumb);
+	RenderString(0.63, 0.72, obj_name, GLUT_BITMAP_9_BY_15);
 }
 
 
