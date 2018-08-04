@@ -9249,7 +9249,7 @@ PolinomeRealRoots:
 	vpxor	%ymm2, %ymm0, %ymm0
 	vmovdqa	%ymm0, 1376(%esp)
 	vptest	%ymm2, %ymm1
-	jb	.LBB5_349
+	jb	.LBB5_351
 	vmovaps	%ymm3, 1152(%esp)
 	vmovaps	%ymm6, 1248(%esp)
 	vpxor	%xmm0, %xmm0, %xmm0
@@ -9389,7 +9389,7 @@ PolinomeRealRoots:
 	vblendvps	%ymm0, %ymm3, %ymm6, %ymm6
 	jmp	.LBB5_219
 	.align	16, 0x90
-.LBB5_349:
+.LBB5_351:
 	vmovaps	%ymm7, %ymm4
 	vmovaps	%ymm3, %ymm7
 	vbroadcastsd	.LCPI5_6, %ymm1
@@ -9402,7 +9402,7 @@ PolinomeRealRoots:
 	movl	1328(%esp), %ebx
 	jle	.LBB5_352
 	.align	16, 0x90
-.LBB5_350:
+.LBB5_349:
 	movl	%edx, %esi
 	leal	(%ecx,%esi), %edx
 	movl	1600(%esp), %edi
@@ -9432,7 +9432,7 @@ PolinomeRealRoots:
 	addl	$-4, %ecx
 	decl	%eax
 	testl	%eax, %eax
-	jg	.LBB5_350
+	jg	.LBB5_349
 	vcmpltps	%ymm4, %ymm2, %ymm0
 	vpshufb	.LCPI5_5, %ymm0, %ymm0
 	vpermq	$8, %ymm0, %ymm2

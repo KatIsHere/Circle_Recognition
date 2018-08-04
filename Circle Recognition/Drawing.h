@@ -10,8 +10,9 @@
 //-------------------------------------------------------------------------------------------------------
 // DRAWING ON A GRAPH
 
-inline void drawFunctionSet(double* polinomes, const int& height, const int& N, const double& xFrom, const double& xTo, const int& classNumb,
-	/*float* x_extr, float* y_extr,*/
+inline void drawFunctionSet(double* polinomes, const int& height, const int& N, const double& xFrom, const double& xTo, 
+	const int& classNumb,
+	AvarageMeaninig Avar,
 	const int& dots = 100, float colorRed = 0.05f, float colorGreen = 0.05f,
 	float colorBlue = 0.05f, float thikness = 1.45) {
 	double* x = xCreateSet(xFrom, xTo, dots);
@@ -39,9 +40,8 @@ inline void drawFunctionSet(double* polinomes, const int& height, const int& N, 
 	int* extrNumb = new int[height];
 	double max_X = x[dots - 1], min_X = x[0];
 	double max_Y, min_Y;
-
 	const clock_t start = clock();
-	findExtremums_and_features(polinomes_new, extrems, extremsValues, extrNumb, height, N, xFrom, xTo, max_Y, min_Y, pos_min, pos_max);
+	findExtremums_and_features(polinomes_new, extrems, extremsValues, extrNumb, height, N, xFrom, xTo, max_Y, min_Y, pos_min, pos_max, Avar);
 	const clock_t finish = clock();
 
 	printf("EXTREMUMS TIME COUNT: %f\n", (finish - start) / CLOCKS_PER_SEC);
@@ -62,15 +62,7 @@ inline void drawFunctionSet(double* polinomes, const int& height, const int& N, 
 	// Drawing axis
 	Plot_XY_Axis(min_X, max_X, min_Y, max_Y, 0, 0);
 
-	// DELETING DATA
-	//delete[]centerX; delete[]centerY;
-	delete[]x;
-	for (int i = 0; i < height; ++i) {
-		delete[]values[i]; delete[]extrems[i]; delete[]extremsValues[i];
-	}
-	delete[]extrems; delete[]extremsValues;
-	delete[]values;
-
+	// Drawing info
 	std::string obj_name = "Input height = " + std::to_string(height);
 	RenderString(0.63, 0.9, obj_name, GLUT_BITMAP_9_BY_15);
 	obj_name = "Width = " + std::to_string((int)xTo);
@@ -79,11 +71,24 @@ inline void drawFunctionSet(double* polinomes, const int& height, const int& N, 
 	RenderString(0.63, 0.78, obj_name, GLUT_BITMAP_9_BY_15);
 	obj_name = "Of class: " + std::to_string(classNumb);
 	RenderString(0.63, 0.72, obj_name, GLUT_BITMAP_9_BY_15);
+
+	// DELETING DATA
+	//delete[]centerX; delete[]centerY;
+	delete[]x;
+	for (int i = 0; i < height; ++i) {
+		delete[]values[i]; delete[]extrems[i]; delete[]extremsValues[i];
+		delete[]polinomes_new[i];
+	}
+	delete[]polinomes_new;
+	delete[]extrems; delete[]extremsValues;
+	delete[]values;
+	delete[]extrNumb;
 }
 
 
 
 inline void drawFunctionSet(double** polinomes, const int& height, const int& N, const double& xFrom, const double& xTo,
+			AvarageMeaninig Avar,
 			const int& dots = 100, float colorRed = 0.05f, float colorGreen = 0.05f,
 			float colorBlue = 0.05f, float thikness = 1.45) {
 	/*
@@ -105,7 +110,7 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 	int* extrNumb = new int[height];
 
 	const clock_t start = clock();
-	findExtremums_and_features(polinomes, extrems, extremsValues, extrNumb, height, N, xFrom, xTo, max_Y, min_Y, pos_min, pos_max);
+	findExtremums_and_features(polinomes, extrems, extremsValues, extrNumb, height, N, xFrom, xTo, max_Y, min_Y, pos_min, pos_max, Avar);
 	const clock_t finish = clock();
 
 	printf("EXTREMUMS TIME COUNT: %f\n", (finish - start) / CLOCKS_PER_SEC);

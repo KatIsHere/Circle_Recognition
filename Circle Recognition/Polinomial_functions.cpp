@@ -85,7 +85,7 @@ void findExtrems_v2(double* coefs, double* solv, const int& N, const double& a, 
 void findExtremums_and_features(double** polinomes, /*double* centerX, double* centerY,*/ double** extrems, double** extremsValues, 
 	int* sizes,
 	const int& height, const int& N, const double& xFrom, const double& xTo, 
-	double& extrem_max, double& extrem_min, int& k_min, int& k_max) {
+	double& extrem_max, double& extrem_min, int& k_min, int& k_max, AvarageMeaninig& avar) {
 	// Finding all exteme values of the polinomes
 	// On extreme values feathures can be build
 	double max_Y = -std::numeric_limits<double>::infinity(), min_Y = std::numeric_limits<double>::infinity();
@@ -115,14 +115,15 @@ void findExtremums_and_features(double** polinomes, /*double* centerX, double* c
 	}
 
 	Object_Features features(extrems[k_max], extremsValues[k_max], extrems[k_min], extremsValues[k_min], powerMax, powerMin, extrem_max, extrem_min);
-	printf("\nLocal max: %f, local min: %f", extrem_max, extrem_min);
-	printf("\nAngles for max polinome: ");
-	printVectorScreen(features.getAnglesMax(), features.getAnglNumMax());
-	printf("\nAngles for min polinome: ");
-	printVectorScreen(features.getAnglesMin(), features.getAnglNumMin());
-	printf("\nDistances for max polinome: ");
-	printVectorScreen(features.getDistMax(), features.getDistNumMax());
-	printf("\nDistances for min polinome: ");
-	printVectorScreen(features.getDistMin(), features.getDistNumMin());
-	printf("\n");
+	avar.add_features(features);
+	//printf("\nLocal max: %f, local min: %f", extrem_max, extrem_min);
+	//printf("\nAngles for max polinome: ");
+	//printVectorScreen(features.getAnglesMax(), features.getAnglNumMax());
+	//printf("\nAngles for min polinome: ");
+	//printVectorScreen(features.getAnglesMin(), features.getAnglNumMin());
+	//printf("\nDistances for max polinome: ");
+	//printVectorScreen(features.getDistMax(), features.getDistNumMax());
+	//printf("\nDistances for min polinome: ");
+	//printVectorScreen(features.getDistMin(), features.getDistNumMin());
+	//printf("\n");
 }

@@ -112,10 +112,10 @@ void calculatingKernel(cl_command_queue &queue, cl_context context, cl_device_id
 	cl_int* P = new cl_int[power];
 	try
 	{
-		printf("Executing OpenCL kernel...\n");
+		//printf("Executing OpenCL kernel...\n");
 		float ocl_time = Approx_Polinomes_Run_Kernel_DOUBLES(queue, context, default_device, kernel,
 			x, f_x, width, hight, A, B, Polinomes, P, power);
-		printf("\nNDRange perf. counter time %f s.\n", ocl_time);
+		//printf("\nNDRange perf. counter time %f s.\n", ocl_time);
 
 	}
 	catch (const std::exception& error)

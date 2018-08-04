@@ -21,13 +21,13 @@ void printVectorScreen(double* arr, const int& size, string type) {
 
 void printVectorScreen(const double * arr, const int & size)
 {
-	for (int i = 0; i < size - 1; ++i)
+	for (int i = 0; i < size; ++i)
 		cout << arr[i] << ", ";
 }
 
 void printVectorScreen(const float * arr, const int & size)
 {
-	for (int i = 0; i < size - 1; ++i)
+	for (int i = 0; i < size; ++i)
 		cout << arr[i] << ", ";
 }
 

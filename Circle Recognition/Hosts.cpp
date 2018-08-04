@@ -843,7 +843,6 @@ void initializeA(cl_float* xSet, cl_double* A, const cl_int& power, const cl_int
 	cl_double* T = new cl_double[power];
 	for (i = 0; i < power; i++)
 		Y[i] = i;					//Unit permutation matrix
-	printf("\n\n");
 	for (i = 0; i < power; i++) {
 		maxA = 0.;
 		i_max = i;

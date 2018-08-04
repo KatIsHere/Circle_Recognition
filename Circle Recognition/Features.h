@@ -42,8 +42,10 @@ public:
 		distancesNumb = len - 1;
 		anglesNumb = len - 2;
 
-		distances = Distances();
-		angles = Angles();
+		distances = new double[distancesNumb];
+		angles = new float[anglesNumb];
+		Distances(distances);
+		Angles(angles);
 		center = Center();
 	}
 
@@ -59,8 +61,10 @@ public:
 		distancesNumb = len - 1;
 		anglesNumb = len - 2;
 
-		distances = Distances();
-		angles = Angles();
+		distances = new double[distancesNumb];
+		angles = new float[anglesNumb];
+		Distances(distances);
+		Angles(angles);
 		center = Center();
 	}
 
@@ -113,28 +117,24 @@ private:
 	std::vector<Point> extremums;
 
 
-	double* Distances() {
-		double* Distance = new double[distancesNumb];
+	void Distances(double* Distance) {
 		for (int i = 0; i < distancesNumb; i++)	{
 			Distance[i] = extremums[i].distance(extremums[i + 1]);
 		}
-		return Distance;
 	}
 
 
-	float* Angles() {
+	void Angles(float* Angles) {
 		/* returns cos of all ancgles
 		* based on law of cosines: cos C = (a**2 + b**2 - c**2)/(2ab)
 		* the BIGGER the meaning ----> the SMALLER the angle
 		* angle from 0 to pi
 		*/
-		float* Angles = new float[anglesNumb];
 		float rb;
 		for (int i = 0; i < anglesNumb; ++i) {
 			rb = extremums[i].distance(extremums[i + 2]);
 			Angles[i] = (distances[i] * distances[i] + distances[i + 1] * distances[i + 1] - rb*rb)/(2* distances[i]* distances[i+1]);
 		}
-		return Angles;
 	}
 
 
@@ -276,6 +276,14 @@ public:
 		return angles_n_max;
 	}
 
+	double getMax() {
+		return _local_max;
+	}
+
+	double getMin() {
+		return _local_min;
+	}
+
 private:
 	Features max_polinome;
 	Features min_polinome;
@@ -283,4 +291,112 @@ private:
 	int angles_n_max, angles_n_min;
 	int dist_n_max, dist_n_min;
 	double _AnglesTrust = 0.6, _DistTrust = 0.4;
+};
+
+
+class AvarageMeaninig {
+public:
+	AvarageMeaninig() {
+		_AngleMax = 0.;
+		_distanceMax = 0.;
+		_AngleMin = 0.;
+		_distanceMin = 0.;
+		_LocalMax = 0.;
+		_LocalMin = 0.;
+
+
+		AngleMaxN = 0;
+		distanceMaxN = 0;
+		AngleMinN = 0;
+		distanceMinN = 0;
+		LocalMaxN = 0;
+		LocalMinN = 0;
+	}
+
+	void avarage() {
+		_AngleMax = (float)_AngleMax/AngleMaxN;
+		_distanceMax = (float)_distanceMax/distanceMaxN;
+		_AngleMin = (float) _AngleMin/AngleMinN;
+		_distanceMin = (float)_distanceMin/distanceMinN;
+		_LocalMax = (float)_LocalMax/LocalMaxN;
+		_LocalMin = (float)_LocalMin/LocalMinN;
+	}
+
+
+	void add_one(float AngleMax, double distanceMax, float AngleMin,
+		double distanceMin, double LocalMax, double LocalMin) {
+		_AngleMax += AngleMax;
+		_distanceMax += distanceMax;
+		_AngleMin += AngleMin;
+		_distanceMin += distanceMin;
+		_LocalMax += LocalMax;
+		_LocalMin += LocalMin;
+
+		AngleMaxN += 1;
+		distanceMaxN += 1;
+		AngleMinN += 1;
+		distanceMinN += 1;
+		LocalMaxN++;
+		LocalMinN++;
+	}
+
+
+	void add_mult(const float* AngleMax, const double* distanceMax, int AnglNumMax, int DistNumMax,
+		const float* AngleMin, const double* distanceMin, int AnglNumMin, int DistNumMin,
+		double LocalMax, double LocalMin) {
+		for (int i = 0; i < AnglNumMax; i++)
+		{
+			_AngleMax += AngleMax[i];
+		}
+		for (int i = 0; i < DistNumMax; i++)
+		{
+			_distanceMax += distanceMax[i];
+		}
+		for (int i = 0; i < AnglNumMin; i++)
+		{
+			_AngleMin += AngleMin[i];
+		}
+		for (int i = 0; i < DistNumMin; i++)
+		{
+			_distanceMin += distanceMin[i];
+		}
+		_LocalMax += LocalMax;
+		_LocalMin += LocalMin;
+
+		AngleMaxN += AnglNumMax;
+		distanceMaxN += DistNumMax;
+		AngleMinN += AnglNumMin;
+		distanceMinN += DistNumMin;
+		LocalMaxN++;
+		LocalMinN++;
+	}
+
+
+	void add_features(Object_Features features) {
+		add_mult(features.getAnglesMax(), features.getDistMax(), features.getAnglNumMax(), features.getDistNumMax(),
+			features.getAnglesMin(), features.getDistMin(), features.getAnglNumMin(), features.getDistNumMin(),
+			features.getMax(), features.getMin());
+	}
+
+
+	void print() {
+		avarage();
+		printf("Avarage values:\n\tLocal Max = %f; Local Min = %f;\n\tAngle """
+			"""Max = %f; Angle Min = %f;\n\tDistance Max = %f; Distance Min = %f;", 
+			_LocalMax, _LocalMin, _AngleMax, _AngleMin, _distanceMax, _distanceMin);
+	}
+private:
+	int AngleMaxN;
+	int distanceMaxN;
+	int AngleMinN;
+	int distanceMinN;
+	int LocalMaxN;
+	int LocalMinN;
+
+	float _AngleMax;
+	double _distanceMax;
+	float _AngleMin;
+	double _distanceMin;
+	double _LocalMax;
+	double _LocalMin;
 };

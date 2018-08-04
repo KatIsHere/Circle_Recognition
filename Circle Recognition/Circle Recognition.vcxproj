@@ -195,6 +195,7 @@
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Avaragers.h" />
     <ClInclude Include="Drawing.h" />
     <ClInclude Include="Features.h" />
     <ClInclude Include="GPUOpenCLProjectforWindows.h" />
