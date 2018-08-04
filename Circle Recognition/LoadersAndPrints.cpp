@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include "CL/cl.hpp"
+#include "LoaderAndPrinter.h"
 using namespace std;
 
 
@@ -16,6 +17,18 @@ void printVectorScreen(double* arr, const int& size, string type) {
 		cout << arr[size - 1];
 	else if (type == "polinome")
 		cout << "x**" << size - 1 << "*(" << arr[size - 1] << ")";
+}
+
+void printVectorScreen(const double * arr, const int & size)
+{
+	for (int i = 0; i < size - 1; ++i)
+		cout << arr[i] << ", ";
+}
+
+void printVectorScreen(const float * arr, const int & size)
+{
+	for (int i = 0; i < size - 1; ++i)
+		cout << arr[i] << ", ";
 }
 
 

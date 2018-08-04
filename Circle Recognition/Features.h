@@ -1,6 +1,6 @@
 #pragma once
 #include <cmath>
-
+#include <vector>
 
 struct Point {
 	double x = 0;
@@ -25,18 +25,18 @@ public:
 		distancesNumb = 0;
 		anglesNumb = 0;
 		N = 0;
-		extremums = nullptr; 
 		angles = nullptr;
 		distances = nullptr;
 	}
 
 	Features(double* xExtr, double* yExtr, const int& len) {
 		N = len;
-		extremums = new Point[len];
+		std::vector<Point> extr(len);
 		for (int i = 0; i < len; i++) {
-			extremums[i].x = xExtr[i];
-			extremums[i].y = yExtr[i];
+			extr[i].x = xExtr[i];
+			extr[i].y = yExtr[i];
 		}
+		extremums = extr;
 		distancesNumb = len - 1;
 		anglesNumb = int(len + 1) / 2;
 
@@ -46,13 +46,13 @@ public:
 	}
 
 
-	Features(Point* extr, const int& len) {
+	Features(std::vector<Point> extr, const int& len) {
 		setValues(extr, len);
 	}
 
 	Features(double* distance, float* angle, const int&len, double x_center, double y_center) {
 		N = len;
-		extremums = new Point[len];
+		extremums = std::vector<Point>(len);
 		distancesNumb = len - 1;
 		anglesNumb = int(len + 1) / 2;
 		distances = distance;
@@ -60,11 +60,9 @@ public:
 		center.x = x_center; center.y = y_center;
 	}
 
-	void setValues(Point* extr, const int& len) {
+	void setValues(std::vector<Point> extr, const int& len) {
 		N = len;
-		extremums = new Point[len];
-		for (int i = 0; i < len; i++)
-			extremums[i] = extr[i];
+		extremums = extr;
 		distancesNumb = len - 1;
 		anglesNumb = int(len + 1) / 2;
 
@@ -77,7 +75,7 @@ public:
 		return N;
 	}
 
-	Point* getExtrems() {
+	std::vector<Point> getExtrems() {
 		return extremums;
 	}
 
@@ -106,11 +104,10 @@ public:
 		return *this;
 	}
 
-	~Features(){
-		delete[]extremums;
-		delete[]angles;
-		delete[]distances;
-	}
+	//~Features(){
+	//	delete[]angles;
+	//	delete[]distances;
+	//}
 
 private:
 	int N;
@@ -119,7 +116,7 @@ private:
 	int distancesNumb;
 	double* distances;
 	Point center;
-	Point* extremums;
+	std::vector<Point> extremums;
 
 
 	double* Distances() {
@@ -138,9 +135,10 @@ private:
 		* angle from 0 to pi
 		*/
 		float* Angles = new float[anglesNumb];
+		float rb;
 		for (int i = 0; i < anglesNumb; ++i) {
-			Angles[i] = (distances[i] * distances[i] + distances[i + 1] * distances[i + 1] - 
-				extremums[i].distance(extremums[i + 2]))/(2* distances[i]* distances[i+1]);
+			rb = extremums[i].distance(extremums[i + 2]);
+			Angles[i] = (distances[i] * distances[i] + distances[i + 1] * distances[i + 1] - rb*rb)/(2* distances[i]* distances[i+1]);
 		}
 		return Angles;
 	}
@@ -170,20 +168,25 @@ public:
 		// when we have these two: compare angles, and distances (probably with some deviation)
 		// can use probability: 60% for angles and 40% for distances
 		// Extrems consists of two polinomes: with local min and local max
-	Object_Features(double* x_max_pol, double* y_max_poli, double* x_min_pol, double* y_min_poli, const int& power, 
+	Object_Features(double* x_max_pol, double* y_max_poli, double* x_min_pol, double* y_min_poli, 
+		const int& power_max, const int& power_min,
 		double local_max, double local_min) {
-		max_polinome = Features(x_max_pol, y_max_poli, power);
-		min_polinome = Features(x_min_pol, y_min_poli, power);
-		angles_n = max_polinome.anglNumb();
-		dist_n = max_polinome.distNumb();
+		max_polinome = Features(x_max_pol, y_max_poli, power_max);
+		min_polinome = Features(x_min_pol, y_min_poli, power_min);
+		angles_n_max = max_polinome.anglNumb();
+		dist_n_max = max_polinome.distNumb();
+		angles_n_min = min_polinome.anglNumb();
+		dist_n_min = min_polinome.distNumb();
 		_local_max = local_max; _local_min = local_min;
 	}
 
 	Object_Features(const Features& max_poli, const Features& min_poli) {
 		max_polinome = max_poli;
 		min_polinome = min_poli;
-		angles_n = max_polinome.anglNumb();
-		dist_n = max_polinome.distNumb();
+		angles_n_max = max_polinome.anglNumb();
+		dist_n_max = max_polinome.distNumb();
+		angles_n_min = min_polinome.anglNumb();
+		dist_n_min = min_polinome.distNumb();
 	}
 
 	// returns probability of angles similarity
@@ -193,16 +196,18 @@ public:
 		const float* angles_min_2 = obj_2.min_polinome.getAngles();
 		const float* angles_max = max_polinome.getAngles();
 		const float* angles_min = min_polinome.getAngles();
-		for (int i = 0; i < angles_n; ++i) {
+		for (int i = 0; i < angles_n_max; ++i) {
 			if (abs(angles_max_2[i] - angles_max[i]) < Eps)
 				h++;
+		}
+		for (int i = 0; i < angles_n_min; ++i) {
 			if (abs(angles_min[i] - angles_min_2[i]) < Eps)
 				h++;
 		}
 
 		delete[]angles_max_2; delete[]angles_min_2;
 		delete[] angles_max; delete[]angles_min;
-		return (float)h / (2 * angles_n);
+		return (float)h / (angles_n_min + angles_n_max);
 	}
 
 	// returns probability of distanses similarity
@@ -212,16 +217,18 @@ public:
 		const double* dist_min_2 = obj_2.min_polinome.getDistances();
 		const double* dist_max = max_polinome.getDistances();
 		const double* dist_min = min_polinome.getDistances();
-		for (int i = 0; i < dist_n; ++i) {
+		for (int i = 0; i < dist_n_max; ++i) {
 			if (abs(dist_max_2[i] - dist_max[i]) < Eps)
 				h++;
+		}
+		for (int i = 0; i < dist_n_min; ++i) {
 			if (abs(dist_min_2[i] - dist_min[i]) < Eps)
 				h++;
 		}
 
 		delete[]dist_max_2; delete[]dist_min_2;
 		delete[] dist_max; delete[]dist_min;
-		return (float)h / (2 * dist_n);
+		return (float)h / (dist_n_max + dist_n_min);
 	}
 
 
@@ -244,11 +251,43 @@ public:
 		return min_polinome;
 	}
 
+	const float* getAnglesMax() {
+		return max_polinome.getAngles();
+	}
+
+	const double* getDistMax() {
+		return max_polinome.getDistances();
+	}
+
+	const float* getAnglesMin() {
+		return max_polinome.getAngles();
+	}
+
+	const double* getDistMin() {
+		return max_polinome.getDistances();
+	}
+
+	int getDistNumMax(){
+		return dist_n_max;
+	}
+
+	int getAnglNumMin() {
+		return angles_n_min;
+	}
+
+	int getDistNumMin() {
+		return dist_n_min;
+	}
+
+	int getAnglNumMax() {
+		return angles_n_max;
+	}
+
 private:
 	Features max_polinome;
 	Features min_polinome;
 	double _local_max, _local_min;
-	int angles_n;
-	int dist_n;
+	int angles_n_max, angles_n_min;
+	int dist_n_max, dist_n_min;
 	double _AnglesTrust = 0.6, _DistTrust = 0.4;
 };

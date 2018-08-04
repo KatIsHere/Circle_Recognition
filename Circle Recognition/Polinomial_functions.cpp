@@ -5,14 +5,16 @@
 #include <vector>
 #include <algorithm>
 #include "PolinomialRoots.h"
+#include "LoaderAndPrinter.h"
 
 // -------------------------------------------------------------------------------------------------------------
 // SOME POLINOME FUNCTIONS
 // Returns polinome of a given power
 double Polinome(double x, double* coefSet, const int& power) {
-	double s = 1;
-	for (int i = power - 1; i >= 0; i--)
-		s = s * x + coefSet[i];
+	double s = 0;
+	for (int i = 0; i < power; ++i) {
+		s += coefSet[i] * pow(x, i);
+	}
 	return s;
 }
 
@@ -54,31 +56,28 @@ double* polinome_derivative(double* coefs, const int& N) {
 
 // -------------------------------------------------------------------------------------------------------------
 // FIND EXTREME VALUES IN A POLINOMES
-//double* findExtrems(double* coefs, const int& N, const double& a, const double& b) {
-//	double* newCoefs = polinome_derivative(coefs, N);
-//	double* solv = new double[N - 1];
-//
-//	std::unordered_set<double> roots = SolvePolinome(newCoefs, N - 1, a, b);
-//	int j = 0;
-//	for (auto i = roots.begin(); i != roots.end(); ++i, ++j)
-//		solv[j] = *(i);
-//	delete[]newCoefs;
-//	return solv;
-//}
+double* findExtrems(double* coefs, const int& N, const double& a, const double& b) {
+	double* newCoefs = polinome_derivative(coefs, N);
+	double* solv = new double[N - 1];
+
+	std::unordered_set<double> roots = SolvePolinome(newCoefs, N - 1, a, b);
+	int j = 0;
+	for (auto i = roots.begin(); i != roots.end(); ++i, ++j)
+		solv[j] = *(i);
+	delete[]newCoefs;
+	return solv;
+}
 
 
 // FIND EXTREME VALUES IN A POLINOMES
-double* findExtrems_v2(double* coefs, const int& N, const double& a, const double& b) {
+void findExtrems_v2(double* coefs, double* solv, const int& N, const double& a, const double& b, int& rootCounter) {
 	double* newCoefs = polinome_derivative(coefs, N);
-	double* solv = new double[N - 1];
-	int rootsC = 0;
-	polynomRealRoots(N - 2, newCoefs, solv, rootsC);
-	//std::unordered_set<double> roots = SolvePolinome(newCoefs, N - 2, a, b);
-	//int j = 0;
-	//for (auto i = roots.begin(); i != roots.end(); ++i, ++j)
-		//solv[j] = *(i);
+	rootCounter = 0;
+	polynomRealRoots(N - 2, newCoefs, solv, rootCounter);
+	//FindAllRootsOnSegment(N - 1, newCoefs, solv, rootsC, a, b);
+	//printVectorScreen(solv, rootsC);
+	//printf("\n");
 	delete[]newCoefs;
-	return solv;
 }
 
 
@@ -90,19 +89,34 @@ void findExtremums_and_features(double** polinomes, /*double* centerX, double* c
 	// On extreme values feathures can be build
 	double max_Y = -std::numeric_limits<double>::infinity(), min_Y = std::numeric_limits<double>::infinity();
 	double maxF, minF;
+	int  extremCounter;
+	int powerMax, powerMin;
 	for (int i = 0; i < height; ++i) {
-		extrems[i] = findExtrems_v2(polinomes[i], N, xFrom + 0.01, xTo);
+		extrems[i] = new double[N - 1];
+		findExtrems_v2(polinomes[i],extrems[i], N, xFrom, xTo, extremCounter);
 		extremsValues[i] = new double[N - 1];
-		for (int j = 0; j < N - 1; ++j) {
+		for (int j = 0; j < extremCounter; ++j) {
 			extremsValues[i][j] = Polinome(extrems[i][j], polinomes[i], N);
 			if (extremsValues[i][j] > max_Y) {
 				k_max = i;
 				extrem_max = extremsValues[i][j];
+				powerMax = extremCounter;
 			}
 			if (extremsValues[i][j] < min_Y){
 				k_min = i;
 				extrem_min = extremsValues[i][j];
+				powerMin = extremCounter;
 			}
 		}
 	}
+	Object_Features features(extrems[k_max], extremsValues[k_max], extrems[k_min], extremsValues[k_min], powerMax, powerMin, extrem_max, extrem_min);
+	printf("\nAngles for max polinome: ");
+	printVectorScreen(features.getAnglesMax(), features.getAnglNumMax());
+	printf("\nAngles for min polinome: ");
+	printVectorScreen(features.getAnglesMin(), features.getAnglNumMin());
+	printf("\nDistances for max polinome: ");
+	printVectorScreen(features.getDistMax(), features.getDistNumMax());
+	printf("\nDistances for min polinome: ");
+	printVectorScreen(features.getDistMin(), features.getDistNumMin());
+	printf("\n");
 }

@@ -5,3 +5,4 @@ double NewtonMethod(double* coefs, const int& N, const double& start, const doub
 double BisectionMethod(int power, double edgeNegativ, double edgePositiv, double *coefs, const double& Eps = 0.0000001);
 std::unordered_set<double> SolvePolinome(double* coefs, const int& N, const double& a, const double& b);
 void polynomRealRoots(int n, double *coefs, double *roots, int &rootsCount);
+void FindAllRootsOnSegment(int power, double *coefs, double *rootsArray, int &rootsCount, const double& edgeLeft, const double& edgeRight, const int& segments_numb_mult = 15);

@@ -63,7 +63,7 @@ inline void drawFunctionSet(double* polinomes, const int& height, const int& N, 
 		blueCh = float(rand() % 90) / 100 - 0.05;
 		plotFunctionWithOrtho2D(x, values[i], dots, xTo, xFrom, max_Y, min_Y,
 			colorRed + redCh, colorGreen + greenCh, colorBlue + blueCh, thikness);
-		plotPointsWithOrtho2D(extrems[i], extremsValues[i], dots, xTo, xFrom, max_Y, min_Y, 0.5f, 0.0f, 1.0f, 3.0);
+		plotPointsWithOrtho2D(extrems[i], extremsValues[i], dots, xTo, xFrom, max_Y, min_Y, 1.f, 0.0f, 0.2f, 3.5);
 	}
 
 	// Drawing center points
@@ -168,9 +168,11 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 
 Point centerDetection(double** coefs, const int& height, const int& power, const double& a, const double&b) {
 	int i;
+	int nimb;
 	double** extrems = new double*[height];
 	for (i = 0; i < height; ++i) {
-		extrems[i] = findExtrems_v2(coefs[i], power, a, b);
+		extrems[i] = new double[power - 1];
+		findExtrems_v2(coefs[i], extrems[i], power, a, b, nimb);
 	}
 	Point t;
 	return t;

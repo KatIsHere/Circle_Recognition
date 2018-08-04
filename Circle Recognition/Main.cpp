@@ -12,7 +12,7 @@
 #include <filesystem>
 using namespace std;
 namespace fs = std::experimental::filesystem::v1;
-std::string FILEPATH = "Image_recognition/";
+std::string FILEPATH = "train_data/";
 
 
 //#define RENDER_CENTER
@@ -30,7 +30,7 @@ void RenderOnePoints(string filepath, const int& height, const int& width);
 void RenderOneFast(string filepath, const int& height, const int& width);
 void RenderOneApproximation(string filepath, const int& height, const int& width);
 void RenderOneReversed(string filepath, const int& height, const int& width);
-void parse_path(const string& filepath, int& height, int& width);
+bool parse_path(const string& filepath, int& height, int& width, int clas = 4);
 void Keyboard(unsigned char key, int x, int y);
 
 int main(int argc, char ** argv) {
@@ -117,7 +117,10 @@ void RenderApproximation(void) {
 
 	string filepath = files[Pos];
 	int height, width;
-	parse_path(filepath, height, width);
+	while (!parse_path(filepath, height, width))
+	{
+		Pos++;
+	}
 	RenderOneApproximation(filepath, height, width);
 }
 
@@ -131,7 +134,11 @@ void RenderFast(void) {
 
 	string filepath = files[Pos];
 	int height, width;
-	parse_path(filepath, height, width);
+	while (!parse_path(filepath, height, width))
+	{
+		Pos++;
+		filepath = files[Pos];
+	}
 	RenderOneFast(filepath, height, width);
 }
 
@@ -139,7 +146,10 @@ void RenderFast(void) {
 void RenderReversed(void) {
 	string filepath = "idle_test_data_set\\idle_4\\2_x=52_y=125_sz=32.txt";
 	int height, width;
-	parse_path(filepath, height, width);
+	while (!parse_path(filepath, height, width))
+	{
+		Pos++;
+	}
 	RenderOneReversed(filepath, height, width);
 }
 
@@ -149,6 +159,10 @@ void RenderPoints(void) {
 	//string filepath_SMALL = "idle_test_data_set\\idle_1\\10_x=45_y=22_sz=17.txt";
 
 	int height = 32, width = 32;
+	while (!parse_path(filepath, height, width))
+	{
+		Pos++;
+	}
 	RenderOnePoints(filepath, height, width);
 }
 
@@ -245,27 +259,23 @@ void RenderOnePoints(string filepath, const int& height, const int& width) {
 
 
 // filename parser
-void parse_path(const string& filepath, int& height, int& width) {
-	bool flag_h, flag_w;
-	int h_d, w_d;
-	for (int i = 0; i < filepath.size() - 4; ++i) {
-		if (filepath[i] == '_' &&  filepath[i + 2] == '=') {
-			if (filepath[i + 1] == 'h') {
-				h_d = (filepath[i + 3] <= '9' && filepath[i + 3] >= '0') * ((int)filepath[i + 3] - int('0'));
-				if (filepath[i + 4] <= '9' && filepath[i + 4] >= '0')
-					height = h_d * 10 + ((int)filepath[i + 4] - int('0'));
-				else
-					height = h_d;
-			}
-			if (filepath[i + 1] == 'w') {
-				w_d = (filepath[i + 3] <= '9' && filepath[i + 3] >= '0') * ((int)filepath[i + 3] - int('0'));
-				if (filepath[i + 4] <= '9' && filepath[i + 4] >= '0')
-					width = w_d * 10 + ((int)filepath[i + 4] - int('0'));
-				else
-					width = w_d;
+bool parse_path(const string& filepath, int& height, int& width, int clas) {
+	//bool flag_h, flag_w;
+	//int h_d, w_d;
+	int _count = 0;
+	if (filepath[FILEPATH.size()] == char(clas) + '0') {
+		for (int i = FILEPATH.size(); i < filepath.size() - 5; ++i) {
+			if (filepath[i] == '_')
+				_count++;
+			if (_count == 3)
+			{
+				height = (int(filepath[i + 1]) - int('0')) * 10 + int(filepath[i + 2]) - int('0');
+				width = (int(filepath[i + 4]) - int('0')) * 10 + int(filepath[i + 5]) - int('0');
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
 

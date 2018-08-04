@@ -3,7 +3,7 @@
 #include "Polinoms.h"
 // -------------------------------------------------------------------------------------------------------------
 // ROOT FINDING ALGORYTHMS
-
+double polinome_fast(double x, double* coefSet, const int& power);
 /*
 * A root-finding algorithm used for functions of one real variable
 * with a continuous second derivative
@@ -50,12 +50,9 @@ double NewtonMethod(double* coefs, const int& N, const double& start,
 
 
 /*
-*  Basic method for root finding
-*  Repeatedly bisects an interval and then selects a subinterval
-*  in which a root must lie for further processing
-*  Compared to Newton it's slow
+*  Bisection method for normalized polinome
 */
-double BisectionMethod(int power, double edgeNegativ, double edgePositiv, double *coefs, const double& Eps)
+double BisectionMethod_Fast(int power, double edgeNegativ, double edgePositiv, double *coefs, const double& Eps)
 {
 	//double x = 0.5 * (edgeNegativ + edgePositiv);
 	//double polinome = Polinome(x, coefs, power);
@@ -70,8 +67,8 @@ double BisectionMethod(int power, double edgeNegativ, double edgePositiv, double
 	//}
 	//return x;
 	double x = 0.5*(edgeNegativ + edgePositiv);
-	while (x != edgeNegativ && x != edgePositiv /*(edgePositiv - edgeNegativ) >= Eps*/) {
-		if (Polinome(x, coefs, power)<0)
+	while (abs(edgePositiv - edgeNegativ) >= Eps) {
+		if (/*Polinome(x, coefs, power) < 0*/ polinome_fast(x, coefs, power) < 0)
 			edgeNegativ = x;
 		else
 			edgePositiv = x;
@@ -80,6 +77,32 @@ double BisectionMethod(int power, double edgeNegativ, double edgePositiv, double
 	return x;
 }
 
+/*
+*  Basic method for root finding
+*  Repeatedly bisects an interval and then selects a subinterval
+*  in which a root must lie for further processing
+*  Compared to Newton it's slow
+*/
+double BisectionMethod(int power, double edgeNegativ, double edgePositiv, double *coefs, const double& Eps)
+{
+	double x = 0.5*(edgeNegativ + edgePositiv);
+	while (abs(edgePositiv - edgeNegativ) >= Eps) {
+		if (Polinome(x, coefs, power) < 0)
+			edgeNegativ = x;
+		else
+			edgePositiv = x;
+		x = 0.5*(edgeNegativ + edgePositiv);
+	}
+	return x;
+}
+
+// Fast polinome calculating
+double polinome_fast(double x, double* coefSet, const int& power) {
+	double s = 1;
+	for (int i = power - 1; i >= 0; i--)
+		s = s * x + coefSet[i];
+	return s;
+}
 
 // FINDING ALL ROOTS IN A POLINOME
 std::unordered_set<double> SolvePolinome(double* coefs, const int& N, const double& a, const double& b) {
@@ -88,7 +111,7 @@ std::unordered_set<double> SolvePolinome(double* coefs, const int& N, const doub
 	double res, start = a;//+ (b - a) / (N - 1);
 	int i = 0;
 	while (i < N) {
-		res = NewtonMethod(coefs, N, start, b);
+		res = NewtonMethod(coefs, N, start, b, 0.000001);
 		i = i + (roots.find(res) == roots.end());				// 4 KERNEL
 		roots.insert(res);
 		start = start + h;								// 5 KERNEL
@@ -97,92 +120,87 @@ std::unordered_set<double> SolvePolinome(double* coefs, const int& N, const doub
 }
 
 
+void findRootIteration(int iteration, double **A, double **B, int *RootsCount)
+{	
+	// current signs of polinome on left and right edges
+	int signLeft, signRight;
 
-void findRootOnSegment(int iteration,  double **A, double **B, int *currentRootsCount)
-{
-	
-	double major = 0;
-	for (int i = 0; i<iteration; i++)
+	// left and right edges
+	double edgeLeft, edgeRight;
+
+	//	edges of the segment
+	double edgeNegativ, edgePositiv;
+
+	double major = 0; double root;
+	for (int i = 0; i < iteration; i++)
 	{
 		double s = abs(A[iteration][i]);
-		if (s>major)major = s;
+		if (s > major)
+			major = s;
 	}
 	major += 1.0;
 
-	currentRootsCount[iteration] = 0; 
-	for (int i = 0; i <= currentRootsCount[iteration - 1]; i++)
+	RootsCount[iteration] = 0; 
+	for (int i = 0; i <= RootsCount[iteration - 1]; i++)
 	{
-	 //signLeft signRight - знаки текущего A-полинома на левой и правой границе интервала монотонности
-		int signLeft, signRight;
+		// creating left and right edges
+		if (i == 0)
+			edgeLeft = -major;
+		else 
+			edgeLeft = B[iteration - 1][i - 1];
 
-		//предварительная левая и правая границы интервала поиска
-		double edgeLeft, edgeRight;
+		root = polinome_fast(edgeLeft, A[iteration], iteration);
 
-		//границы интервала монотонности, несущие информацию о знаке полинома на них
-		double edgeNegativ, edgePositiv;
-
-		//формирование левой границы поиска
-		if (i == 0)edgeLeft = -major;
-		else edgeLeft = B[iteration - 1][i - 1];
-
-		//значение текущего A-полинома на левой границе
-		//double rb = Polinome(edgeLeft, A[iteration], iteration);
-
-		double rb = Polinome(edgeLeft, A[iteration], iteration);
-
-		if (rb < 0.000001)
-		{//маловероятный случай попадания в корень
-			B[iteration][currentRootsCount[iteration]] = edgeLeft;
-			currentRootsCount[iteration]++;
+		// check if root found
+		if (abs(root) < 0.000001){
+			B[iteration][RootsCount[iteration]] = edgeLeft;
+			RootsCount[iteration]++;
 			continue;
-		}//маловероятный случай попадания в корень
+		}
 
-		 //запомнить знак текущего A-полинома на левой границе
-		if (rb>0)
+		if (root > 0)
 			signLeft = 1;
 		else
 			signLeft = -1;
 
-		//формирование правой границы поиска
-		if (i == currentRootsCount[iteration - 1])
+		if (i == RootsCount[iteration - 1])
 			edgeRight = major;
 		else
 			edgeRight = B[iteration - 1][i];
 
-		//значение текущего A-полинома на правой границе
-		//rb = Polinome(edgeRight, A[iteration], iteration);
-		rb = Polinome(edgeRight, A[iteration], iteration);
+		root = polinome_fast(edgeRight, A[iteration], iteration);
 
-		if (rb < 0.000001)
-		{//маловероятный случай попадания в корень
-			B[iteration][currentRootsCount[iteration]] = edgeRight;
-			currentRootsCount[iteration]++;
+		// check if root found
+		if (abs(root) < 0.000001){
+			B[iteration][RootsCount[iteration]] = edgeRight;
+			RootsCount[iteration]++;
 			continue;
-		}//маловероятный случай попадания в корень
+		}
 
-		 //запомнить знак текущего A-полинома на правой границе
-		if (rb>0)
+		if (root > 0)
 			signRight = 1;
 		else
 			signRight = -1;
 
-		//если знаки полинома на границах интервала монотонности совпадают,
-		//то корня нет
+		// if signs on edges are the same, no root present
 		if (signLeft == signRight)
 			continue;
 
-		//теперь можно определить плюс границу и минус границу поиска корня
-		if (signLeft<0) {
+		// can create edges
+		if (signLeft < 0) {
 			edgeNegativ = edgeLeft; edgePositiv = edgeRight;
 		}
 		else {
 			edgeNegativ = edgeRight; edgePositiv = edgeLeft;
 		}
 
-		//всё готово для локализации корня методом деления пополам интервала поиска
-		B[iteration][currentRootsCount[iteration]] = NewtonMethod(A[iteration], iteration, edgeNegativ, edgePositiv);
-			///BisectionMethod(iteration, edgeNegativ, edgePositiv, A[iteration], 0.000001);
-		currentRootsCount[iteration]++;
+		// find root with root-finding methods
+		// B[iteration][RootsCount[iteration]] = NewtonMethod(A[iteration], iteration, edgeNegativ, edgePositiv, 0.00001);
+		root = BisectionMethod_Fast(iteration, edgeNegativ, edgePositiv, A[iteration], 0.0000001);
+		if (abs(root) < 0.0001)
+			B[iteration][RootsCount[iteration]] = root;
+		B[iteration][RootsCount[iteration]] = root;
+		RootsCount[iteration]++;
 	}
 	return;
 }
@@ -209,7 +227,7 @@ void polynomRealRoots(int n, double *coefs, double *rootsArray, int &rootsCount)
 	double **A = new double *[n + 1];
 	double **B = new double *[n + 1];
 
-	int *currentRootsCount = new int[n + 1];
+	int *RootsCount = new int[n + 1];
 
 	for (int i = 1; i <= n; i++)
 	{
@@ -230,14 +248,14 @@ void polynomRealRoots(int n, double *coefs, double *rootsArray, int &rootsCount)
 		}
 	}
 
-	currentRootsCount[1] = 1;
+	RootsCount[1] = 1;
 	B[1][0] = -A[1][0];
 	
 	for (int i = 2; i <= n; i++)
-		findRootOnSegment(i, A, B, currentRootsCount);
+		findRootIteration(i, A, B, RootsCount);
 
 	// Resoult reading
-	rootsCount = currentRootsCount[n];
+	rootsCount = RootsCount[n];
 	for (int i = 0; i<rootsCount; i++)
 		rootsArray[i] = B[n][i];
 
@@ -249,6 +267,72 @@ void polynomRealRoots(int n, double *coefs, double *rootsArray, int &rootsCount)
 	}
 	delete[]A;
 	delete[]B;
-	delete[]currentRootsCount;
+	delete[]RootsCount;
 	return;
+}
+
+
+void FindAllRootsOnSegment(int power, double *coefs, double *rootsArray, int &rootsCount, const double& edgeLeft, const double& edgeRight, const int& segments_numb_mult) {
+
+	int segment = segments_numb_mult * power;
+	double pace = (edgeRight - edgeLeft) / segment;
+	double Left = edgeLeft - pace, Right;
+	double root;
+	double *A = new double [power];
+	double negativeEdge, positiveEdge;
+
+	/*for (int i = 0; i < power; i++) {
+		A[i] = coefs[i] / coefs[power - 1];
+	}*/
+
+	int signLeft, signRight;
+	for (int i = 0, j = 0; i <= segment && j < (power - 1); ++i) {
+		Left += pace; 
+		Right = Left + pace;
+		//root = polinome_fast(Left, A, power);
+		root = Polinome(Left, coefs, power);
+		if (abs(root) < 0.001) {
+			rootsArray[j] = Left;
+			rootsCount = j;
+			j++;
+			continue;
+		}
+
+		if (root > 0)
+			signLeft = 1;
+		else
+			signLeft = -1;
+
+		//root = polinome_fast(Right, A, power);
+		root = Polinome(Right, coefs, power);
+		if (abs(root) < 0.001) {
+			rootsArray[j] = Right;
+			rootsCount = j;
+			j++;
+			continue;
+		}
+
+		if (root > 0)
+			signRight = 1;
+		else
+			signRight = -1;
+
+		// if signs on edges are the same, no root present
+		if (signLeft == signRight)
+			continue;
+
+		// can create edges
+		if (signLeft < 0) {
+			negativeEdge = edgeLeft; positiveEdge = edgeRight;
+		}
+		else {
+			negativeEdge = edgeRight; positiveEdge = edgeLeft;
+		}
+
+		root = BisectionMethod(power, negativeEdge, positiveEdge, coefs, 0.0001);
+		rootsArray[j] = root;
+		rootsCount = j;
+		j++;
+	}
+	delete[]A;
 }
