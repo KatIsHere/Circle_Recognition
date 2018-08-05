@@ -294,6 +294,54 @@ private:
 };
 
 
+struct ObjectClass {
+
+	float AngleMaxMean, AngleMinMean;
+	double Local_Max_ceil, Local_Max_floor;
+	double Local_Min_floor, Local_Min_ceil;
+	double dist_max, dist_min;
+	int av_power;
+
+	ObjectClass() {
+		AngleMaxMean = 0; AngleMinMean = 0;
+		Local_Max_ceil = 0; Local_Max_floor = 0;
+		Local_Min_floor = 0; Local_Min_ceil = 0;
+		dist_max = 0; dist_min = 0;
+		av_power = 0;
+	}
+
+	float belongs(Object_Features obj) {
+		float pos = 0;
+		int count = obj.getAnglNumMax();
+		for (int i = 0; i < count; ++i) {
+			pos += AnglesTrust * (obj.getAnglesMax()[i] <= AngleMaxMean && obj.getAnglesMax()[i] >= AngleMinMean);
+		}
+		count = obj.getAnglNumMin();
+		for (int i = 0; i < count; ++i) {
+			pos += AnglesTrust * (obj.getAnglesMin()[i] <= AngleMaxMean && obj.getAnglesMin()[i] >= AngleMinMean);
+		}
+
+		count = obj.getDistNumMax();
+		for (int i = 0; i < count; ++i) {
+			pos += DistTrust * (obj.getDistMax()[i] <= dist_max && obj.getDistMax()[i] >= dist_min);
+		}
+		count = obj.getDistNumMin();
+		for (int i = 0; i < count; ++i) {
+			pos += DistTrust * (obj.getDistMin()[i] <= dist_max && obj.getDistMin()[i] >= dist_min);
+		}
+
+		pos += LocalsTrust * (obj.getMax() <= Local_Max_ceil && (obj.getMax() >= Local_Max_floor));
+		pos += LocalsTrust * (obj.getMin() <= Local_Min_ceil && (obj.getMin() >= Local_Min_floor));
+
+		return pos;
+	}
+private:
+	const float AnglesTrust = 0.15;
+	const float LocalsTrust = 0.2;
+	const float DistTrust = 0.15;
+};
+
+
 class AvarageMeaninig {
 public:
 	AvarageMeaninig() {

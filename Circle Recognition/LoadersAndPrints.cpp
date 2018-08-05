@@ -31,6 +31,11 @@ void printVectorScreen(const float * arr, const int & size)
 		cout << arr[i] << ", ";
 }
 
+void printVectorPresigion(const float * arr, const int & size) {
+	for (int i = 0; i < size; ++i)
+		printf("%.10g, ",arr[i]);
+}
+
 
 void printMatrixScreen(double** matr, const int& height, const int& width, string typePrint, bool one_function) {
 	cout << "\n";

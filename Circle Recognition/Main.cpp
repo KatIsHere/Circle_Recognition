@@ -8,7 +8,7 @@
 #include "OpenCLCalculations.h"
 #include <vector>
 #include <fstream>
-#include "Avaragers.h"
+#include "Classify.h"
 //#include <experimental/filesystem>
 #include <filesystem>
 using namespace std;
@@ -20,7 +20,7 @@ std::string FILEPATH = "train_data/";
 
 const int POLINOME_POWER_LARGE = 6;
 const int DOTS = 100;
-const int CLASS = 1;
+const int CLASS = 7;
 const bool PRESED = 0;
 AvarageMeaninig AVARAGE;
 cl_command_queue queue_; cl_context context_; cl_device_id device_; cl_kernel kernel_;
@@ -150,15 +150,15 @@ void RenderApproximation(void) {
 	string filepath = files[Pos];
 	int height, width;
 	int s = parse_path(filepath, height, width, CLASS, PRESED);
-	while (!s)
+	while (s == 0)
 	{
 		Pos++;
 		filepath = files[Pos];
-		if (s == -1) {
-			AVARAGE.print();
-			cin.get();
-			exit(0);
-		}
+		s = parse_path(filepath, height, width, CLASS, PRESED);
+	}
+	if (s == -1) {
+		cin.get();
+		exit(0);
 	}
 	RenderOneApproximation(filepath, height, width);
 }
@@ -167,17 +167,18 @@ void RenderApproximation(void) {
 // Fast method
 void RenderFast(void) {
 	string filepath = files[Pos];
+	int sizeS = files.size();
 	int height, width;
 	int s = parse_path(filepath, height, width, CLASS, PRESED);
-	while (!s)
+	while (s == 0)
 	{
 		Pos++;
 		filepath = files[Pos];
-		if (s == -1) {
-			AVARAGE.print();
-			cin.get();
-			exit(0);
-		}
+		s = parse_path(filepath, height, width, CLASS, PRESED);
+	}
+	if (s == -1) {
+		cin.get();
+		exit(0);
 	}
 	RenderOneFast(filepath, height, width);
 }
@@ -333,16 +334,16 @@ void Keyboard(unsigned char key, int x, int y){
 	switch (key) {
 	case 13:	// 'Enter'
 		Pos++;
-		cout << "Enter registered\n";
+		//cout << "Enter registered\n";
 		glutPostRedisplay();
 		break;
 	case ' ':	// 'Space'
-		cout << "Space registered\n";
+		//cout << "Space registered\n";
 		glutPostRedisplay();
 		break;
 	case 8:		//'Backspace'
 		Pos--;
-		cout << "Backspace registered\n";
+		//cout << "Backspace registered\n";
 		glutPostRedisplay();
 		break;
 	//case 27:	// esc

@@ -86,7 +86,7 @@
     <ClInclude Include="PolinomialRoots.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Avaragers.h">
+    <ClInclude Include="Classify.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

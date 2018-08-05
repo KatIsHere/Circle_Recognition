@@ -44,7 +44,7 @@ inline void drawFunctionSet(double* polinomes, const int& height, const int& N, 
 	findExtremums_and_features(polinomes_new, extrems, extremsValues, extrNumb, height, N, xFrom, xTo, max_Y, min_Y, pos_min, pos_max, Avar);
 	const clock_t finish = clock();
 
-	printf("EXTREMUMS TIME COUNT: %f\n", (finish - start) / CLOCKS_PER_SEC);
+	//printf("EXTREMUMS TIME COUNT: %f\n", (float)(finish - start) / CLOCKS_PER_SEC);
 
 	// Drawing approximated polinomes, extreme values
 	for (int i = 0; i < height; ++i) {
