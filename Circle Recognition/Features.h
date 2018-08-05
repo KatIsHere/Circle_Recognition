@@ -294,13 +294,8 @@ private:
 };
 
 
-struct ObjectClass {
-
-	float AngleMaxMean, AngleMinMean;
-	double Local_Max_ceil, Local_Max_floor;
-	double Local_Min_floor, Local_Min_ceil;
-	double dist_max, dist_min;
-	int av_power;
+class ObjectClass {
+public:
 
 	ObjectClass() {
 		AngleMaxMean = 0; AngleMinMean = 0;
@@ -308,6 +303,18 @@ struct ObjectClass {
 		Local_Min_floor = 0; Local_Min_ceil = 0;
 		dist_max = 0; dist_min = 0;
 		av_power = 0;
+	}
+
+	ObjectClass(float _AngleMaxMean, float _AngleMinMean,
+		double _Local_Max_ceil, double _Local_Max_floor,
+		double _Local_Min_floor, double _Local_Min_ceil,
+		double _dist_max, double _dist_min,
+		int _av_power) {
+		AngleMaxMean = _AngleMaxMean; AngleMinMean = _AngleMinMean;
+		Local_Max_ceil = _Local_Max_ceil; Local_Max_floor = _Local_Max_floor;
+		Local_Min_floor = _Local_Min_floor; Local_Min_ceil = _Local_Min_ceil;
+		dist_max = _dist_max; dist_min = _dist_min;
+		av_power = _av_power;
 	}
 
 	float belongs(Object_Features obj) {
@@ -336,9 +343,15 @@ struct ObjectClass {
 		return pos;
 	}
 private:
-	const float AnglesTrust = 0.15;
-	const float LocalsTrust = 0.2;
-	const float DistTrust = 0.15;
+	const float AnglesTrust = 0.25;
+	const float LocalsTrust = 0.5;
+	const float DistTrust = 0.25;
+
+	float AngleMaxMean, AngleMinMean;
+	double Local_Max_ceil, Local_Max_floor;
+	double Local_Min_floor, Local_Min_ceil;
+	double dist_max, dist_min;
+	int av_power;
 };
 
 

@@ -20,7 +20,7 @@ std::string FILEPATH = "train_data/";
 
 const int POLINOME_POWER_LARGE = 6;
 const int DOTS = 100;
-const int CLASS = 7;
+const int CLASS = 3;
 const bool PRESED = 0;
 AvarageMeaninig AVARAGE;
 cl_command_queue queue_; cl_context context_; cl_device_id device_; cl_kernel kernel_;

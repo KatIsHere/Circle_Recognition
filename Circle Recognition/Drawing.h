@@ -7,6 +7,7 @@
 #include <iostream>
 #include <ctime>
 #include <vector>
+#include "Classify.h"
 //-------------------------------------------------------------------------------------------------------
 // DRAWING ON A GRAPH
 
