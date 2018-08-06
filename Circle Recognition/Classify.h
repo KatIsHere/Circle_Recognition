@@ -66,14 +66,15 @@ std::vector<ObjectClass> Read_Classification(std::string filename, const int& po
 }
 
 
-void Classify(vector<ObjectClass> classes, const Object_Features& obj, float* possibilities) {
-	/*float* possibilities = new float[classes.size()];*/
+float* Classify(const Object_Features& obj, vector<ObjectClass> classes) {
+	float* possibilities = new float[classes.size()];
 	int j = 0;
 	for (auto i : classes) {
 		possibilities[j] = i.belongs(obj);
 		++j;
 	}
 	printVectorScreen(possibilities, classes.size());
+	return possibilities;
 }
 
 
@@ -113,27 +114,22 @@ Object_Features findExtremums_and_features(double** polinomes, /*double* centerX
 
 	Object_Features features(extrems[k_max], extremsValues[k_max], extrems[k_min], extremsValues[k_min], powerMax, powerMin, extrem_max, extrem_min);
 	
-	//printf("\nLocal max: %f, local min: %f", extrem_max, extrem_min);
-	//printf("\nAngles for max polinome: ");
-	////printVectorScreen(features.getAnglesMax(), features.getAnglNumMax());
-	//printVectorPresigion(features.getAnglesMax(), features.getAnglNumMax());
-	//printf("\nAngles for min polinome: ");
-	////printVectorScreen(features.getAnglesMin(), features.getAnglNumMin());
-	//printVectorPresigion(features.getAnglesMin(), features.getAnglNumMin());
-	//printf("\nDistances for max polinome: ");
-	//printVectorScreen(features.getDistMax(), features.getDistNumMax());
-	//printf("\nDistances for min polinome: ");
-	//printVectorScreen(features.getDistMin(), features.getDistNumMin());
-	//printf("\n");
+	printf("\nLocal max: %f, local min: %f", extrem_max, extrem_min);
+	printf("\nAngles for max polinome: ");
+	//printVectorScreen(features.getAnglesMax(), features.getAnglNumMax());
+	printVectorPresigion(features.getAnglesMax(), features.getAnglNumMax());
+	printf("\nAngles for min polinome: ");
+	//printVectorScreen(features.getAnglesMin(), features.getAnglNumMin());
+	printVectorPresigion(features.getAnglesMin(), features.getAnglNumMin());
+	printf("\nDistances for max polinome: ");
+	printVectorScreen(features.getDistMax(), features.getDistNumMax());
+	printf("\nDistances for min polinome: ");
+	printVectorScreen(features.getDistMin(), features.getDistNumMin());
+	printf("\n");
 	
 	return features;
 }
 
-
-void printPossibClasses(Object_Features features, vector<ObjectClass> possibleClasses, float* possibilities) {
-	possibilities = new float[possibleClasses.size()];
-	Classify(possibleClasses, features, possibilities);
-}
 
 
 inline void Calculate(double* polinomes, const int& height, const int& N, const double& xFrom, const double& xTo,
@@ -156,9 +152,11 @@ inline void Calculate(double* polinomes, const int& height, const int& N, const 
 	int pos_max = 0, pos_min = 0;
 	int* extrNumb = new int[height];
 	double max_Y, min_Y;
-	float* possibilities = new float[possibleClasses.size()];
 	//const clock_t start = clock();
 	Object_Features features = findExtremums_and_features(polinomes_new, extrems, extremsValues, extrNumb, height, N, xFrom, xTo, max_Y, min_Y, pos_min, pos_max);
+
+	float* possibilities = new float[possibleClasses.size()]; 
+	possibilities = Classify(features, possibleClasses);
 	Avar.add_features(features);
 	//const clock_t finish = clock();
 	for (int i = 0; i < height; ++i) {

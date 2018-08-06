@@ -15,7 +15,7 @@ namespace fs = std::experimental::filesystem::v1;
 std::string FILEPATH = "train_data/";
 const int DOTS = 100;
 const int CLASS_COUNT = 7;
-const int CLASS = 7;
+const int CLASS = 1;
 const bool PRESED = 0;
 AvarageMeaninig AVARAGE(POLINOME_POWER_LARGE - 2);
 cl_command_queue queue_; 
@@ -44,15 +44,14 @@ void CreateClassificatoin();
 
 
 int main(int argc, char ** argv) {
-	//Excecute();
-	//setUpKernel(queue_, context_, device_, kernel_);
+	setUpKernel(queue_, context_, device_, kernel_);
 	string filename = "Classes.txt";
 	OBJS = Read_Classification(filename, POLINOME_POWER_LARGE - 1);
-	//Draw(argc, argv);
+	Draw(argc, argv);
 	//CreateClassificatoin();
 	clReleaseKernel(kernel_);
-	//clReleaseCommandQueue(queue_);
-	//clReleaseContext(context_);
+	clReleaseCommandQueue(queue_);
+	clReleaseContext(context_);
 	printf("\nPress Enter to exit...");
 	cin.get();
 	return 1;
@@ -270,7 +269,7 @@ void RenderOneFast(string filepath, const int& height, const int& width) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-	drawFunctionSet(polinomes, height, POLINOME_POWER_LARGE, 0, width, CLASS, AVARAGE); 
+	drawFunctionSet(polinomes, height, POLINOME_POWER_LARGE, 0, width, CLASS, AVARAGE, OBJS); 
 	glutSwapBuffers();
 
 	// DELETE ALL DATA

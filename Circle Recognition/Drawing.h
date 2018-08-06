@@ -13,7 +13,7 @@
 
 inline void drawFunctionSet(double* polinomes, const int& height, const int& N, const double& xFrom, const double& xTo, 
 	const int& classNumb,
-	AvarageMeaninig Avar,
+	AvarageMeaninig Avar, vector<ObjectClass> possibleClasses,
 	const int& dots = 100, float colorRed = 0.05f, float colorGreen = 0.05f,
 	float colorBlue = 0.05f, float thikness = 1.45) {
 	double* x = xCreateSet(xFrom, xTo, dots);
@@ -36,16 +36,17 @@ inline void drawFunctionSet(double* polinomes, const int& height, const int& N, 
 	}
 	
 	//std::vector<Features> features;
-	vector<ObjectClass> possibleClasses;// = Classes_Read();
 	double extrem_max = 0, extrem_min = 0;
 	int pos_max = 0, pos_min = 0;
 	int* extrNumb = new int[height];
 	double max_X = x[dots - 1], min_X = x[0];
 	double max_Y, min_Y;
-	float* possb = nullptr;
 	const clock_t start = clock();
-	findExtremums_and_features(polinomes_new, extrems, extremsValues, extrNumb, height, N, xFrom, xTo, max_Y, min_Y, pos_min, pos_max);
+	Object_Features features = findExtremums_and_features(polinomes_new, extrems, extremsValues, extrNumb, height, N, xFrom, xTo, max_Y, min_Y, pos_min, pos_max);
 	const clock_t finish = clock();
+	float* possb = new float[possibleClasses.size()];
+	possb = Classify(features, possibleClasses);
+	printVectorScreen(possb, possibleClasses.size());
 
 	//printf("EXTREMUMS TIME COUNT: %f\n", (float)(finish - start) / CLOCKS_PER_SEC);
 
@@ -75,17 +76,21 @@ inline void drawFunctionSet(double* polinomes, const int& height, const int& N, 
 	obj_name = "Of class: " + std::to_string(classNumb);
 	RenderString(0.63, 0.72, obj_name, GLUT_BITMAP_9_BY_15);
 
-	//obj_name = "Class possibilitie: ";
-	//RenderString(0.63, 0.84, obj_name, GLUT_BITMAP_9_BY_15);
-	//for (int i = 0; i < possibleClasses.size() - 1; i++)
-	//{
-	//	obj_name += std::to_string(possb[i]) + ", ";
-	//}
-	//obj_name += std::to_string(possb[possibleClasses.size() - 1]);
-	//RenderString(0.60, 0.66, obj_name, GLUT_BITMAP_9_BY_15);
+	obj_name = "Class possibilities: ";
+	for (int i = 0; i < 8; i++)
+	{
+		obj_name += std::to_string(possb[i]) + ", ";
+	}
+	RenderString(-0.9, -0.84, obj_name, GLUT_BITMAP_9_BY_15);
+	obj_name = "                   ";
+	for (int i = 8; i < possibleClasses.size() - 1; i++)
+	{
+		obj_name += std::to_string(possb[i]) + ", ";
+	}
+	obj_name += std::to_string(possb[possibleClasses.size() - 1]);
+	RenderString(-0.9, -0.90, obj_name, GLUT_BITMAP_9_BY_15);
 
 	// DELETING DATA
-	//delete[]centerX; delete[]centerY;
 	delete[]x;
 	for (int i = 0; i < height; ++i) {
 		delete[]values[i]; delete[]extrems[i]; delete[]extremsValues[i];
