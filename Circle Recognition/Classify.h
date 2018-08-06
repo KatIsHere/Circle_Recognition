@@ -4,25 +4,67 @@
 #include "Features.h"
 #include "PolinomeBuilder.h"
 #include <vector>
+#include "LoaderAndPrinter.h"
 using namespace std;
 
+ObjectClass parse_substring(string str, const int& power) {
+	std::vector<double> extrems; std::vector<double> dists; std::vector<float> angles;
+	int i = 0;
+	while (str[i] != ':') i++;
+	string className = str.substr(0, i);
+	str.erase(0, i + 1);
+	i = 0;
+	double extr_count = stod(str);
+	while (str[i] != ';') ++i;
+	str.erase(0, i + 1);
+	std::stringstream buffer(str);
+	// extremums
+	double extr;
+	for (int k = 0; k < power - 1; ++k) {
+		buffer >> extr;
+		extrems.push_back(extr);
+	}
 
-vector<ObjectClass> Classes_find(){
-	vector<ObjectClass> classes;
-	//// First class
-	//classes.push_back(ObjectClass(0.9999950, 0.9999930, 2850, 2050, -3100, -2400, 5900, 5000, 4));
-	//// Second class
-	//classes.push_back(ObjectClass(0.9999983, 0.9999975, 5100, 4500, -4900, -4300, 10000, 8800, 4));
-	//// Third class
-	//classes.push_back(ObjectClass(0.9999980, 0.9999970, 3900, 3200, -3200, -2700, 6900, 5700, 4));
-	//// Forth class
-	//classes.push_back(ObjectClass(0.9999955, 0.9999935, 2700, 2000, -2500, -2100, 4400, 5000, 2));
-	//// Fifth class
-	//classes.push_back(ObjectClass(0.9999990, 0.9999981, 4900, 3900, -4500, -3500, 8900, 7500, 4));
-	//// Sixth class
-	//classes.push_back(ObjectClass(0.9999980, 0.9999965, 3000, 2400, -3600, -2500, 6000, 4700, 2));
-	return classes;
+	i = 0;
+	while (str[i] != ';') ++i;
+	str.erase(0, i + 1);
+	buffer.clear();
+	buffer.str(str);
+	// distances
+	for (int k = 0; k < power - 2; ++k) {
+		buffer >> extr;
+		dists.push_back(extr);
+	}
+	i = 0;
+	while (str[i] != ';') ++i;
+	str.erase(0, i + 1);
+	buffer.clear();
+	buffer.str(str);
+
+	// angles
+	for (int k = 0; k < power - 3; ++k) {
+		buffer >> extr;
+		angles.push_back(extr);
+	}
+
+	ObjectClass clas(className, extr_count, extrems, dists, angles);
+	return clas;
 }
+
+std::vector<ObjectClass> Read_Classification(std::string filename, const int& power) {
+	ifstream in(filename);
+	vector<ObjectClass> objClasses;
+	std::stringstream buffer;
+	buffer << in.rdbuf();
+	in.close();
+	std::string line;
+	while (std::getline(buffer, line))
+	{
+		objClasses.push_back(parse_substring(line, power));
+	}
+	return objClasses;
+}
+
 
 void Classify(vector<ObjectClass> classes, const Object_Features& obj, float* possibilities) {
 	/*float* possibilities = new float[classes.size()];*/
@@ -31,18 +73,16 @@ void Classify(vector<ObjectClass> classes, const Object_Features& obj, float* po
 		possibilities[j] = i.belongs(obj);
 		++j;
 	}
-	printVectorPresigion(possibilities, classes.size());/*
-	printVectorScreen(possibilities, classes.size());*/
+	printVectorScreen(possibilities, classes.size());
 }
 
 
 
 // Find all extremums and calculate features
-void findExtremums_and_features(double** polinomes, /*double* centerX, double* centerY,*/ double** extrems, double** extremsValues,
+Object_Features findExtremums_and_features(double** polinomes, /*double* centerX, double* centerY,*/ double** extrems, double** extremsValues,
 	int* sizes,
 	const int& height, const int& N, const double& xFrom, const double& xTo,
-	double& extrem_max, double& extrem_min, int& k_min, int& k_max, AvarageMeaninig& avar,
-	float* possibilities, vector<ObjectClass>& possibleClasses) {
+	double& extrem_max, double& extrem_min, int& k_min, int& k_max) {
 	// Finding all exteme values of the polinomes
 	// On extreme values feathures can be build
 	double max_Y = -std::numeric_limits<double>::infinity(), min_Y = std::numeric_limits<double>::infinity();
@@ -72,7 +112,7 @@ void findExtremums_and_features(double** polinomes, /*double* centerX, double* c
 	}
 
 	Object_Features features(extrems[k_max], extremsValues[k_max], extrems[k_min], extremsValues[k_min], powerMax, powerMin, extrem_max, extrem_min);
-	avar.add_features(features);
+	
 	//printf("\nLocal max: %f, local min: %f", extrem_max, extrem_min);
 	//printf("\nAngles for max polinome: ");
 	////printVectorScreen(features.getAnglesMax(), features.getAnglNumMax());
@@ -85,21 +125,23 @@ void findExtremums_and_features(double** polinomes, /*double* centerX, double* c
 	//printf("\nDistances for min polinome: ");
 	//printVectorScreen(features.getDistMin(), features.getDistNumMin());
 	//printf("\n");
-	//vector<ObjectClass> possibleClasses = Classes_find();
-	//possibilities = new float[possibleClasses.size()];
-	//Classify(possibleClasses, features, possibilities);
+	
+	return features;
 }
 
+
+void printPossibClasses(Object_Features features, vector<ObjectClass> possibleClasses, float* possibilities) {
+	possibilities = new float[possibleClasses.size()];
+	Classify(possibleClasses, features, possibilities);
+}
 
 
 inline void Calculate(double* polinomes, const int& height, const int& N, const double& xFrom, const double& xTo,
 	const int& classNumb,
-	AvarageMeaninig& Avar) {
+	AvarageMeaninig& Avar, vector<ObjectClass> possibleClasses) {
 	double** extrems = new double*[height];
 	double** extremsValues = new double*[height];
 
-	double maxF, minF;
-	float redCh, greenCh, blueCh;
 	// MAX and MIN values of the set
 	double** polinomes_new = new double*[height];
 	for (int i = 0; i < height; ++i) {
@@ -114,10 +156,10 @@ inline void Calculate(double* polinomes, const int& height, const int& N, const 
 	int pos_max = 0, pos_min = 0;
 	int* extrNumb = new int[height];
 	double max_Y, min_Y;
-	vector<ObjectClass>& possibleClasses = Classes_find();
 	float* possibilities = new float[possibleClasses.size()];
 	//const clock_t start = clock();
-	findExtremums_and_features(polinomes_new, extrems, extremsValues, extrNumb, height, N, xFrom, xTo, max_Y, min_Y, pos_min, pos_max, Avar, possibilities, possibleClasses);
+	Object_Features features = findExtremums_and_features(polinomes_new, extrems, extremsValues, extrNumb, height, N, xFrom, xTo, max_Y, min_Y, pos_min, pos_max);
+	Avar.add_features(features);
 	//const clock_t finish = clock();
 	for (int i = 0; i < height; ++i) {
 		delete[]extrems[i]; delete[]extremsValues[i];

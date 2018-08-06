@@ -5,6 +5,7 @@
 #include "LoaderAndPrinter.h"
 #include <fstream>
 #include <sstream>
+#include <string>
 
 struct Point {
 	double x = 0;
@@ -298,65 +299,94 @@ class ObjectClass {
 public:
 
 	ObjectClass() {
-		AngleMaxMean = 0; AngleMinMean = 0;
-		Local_Max_ceil = 0; Local_Max_floor = 0;
-		Local_Min_floor = 0; Local_Min_ceil = 0;
-		dist_max = 0; dist_min = 0;
 		av_power = 0;
+		clear();
 	}
 
-	ObjectClass(float _AngleMaxMean, float _AngleMinMean,
-		double _Local_Max_ceil, double _Local_Max_floor,
-		double _Local_Min_floor, double _Local_Min_ceil,
-		double _dist_max, double _dist_min,
-		int _av_power) {
-		AngleMaxMean = _AngleMaxMean; AngleMinMean = _AngleMinMean;
-		Local_Max_ceil = _Local_Max_ceil; Local_Max_floor = _Local_Max_floor;
-		Local_Min_floor = _Local_Min_floor; Local_Min_ceil = _Local_Min_ceil;
-		dist_max = _dist_max; dist_min = _dist_min;
-		av_power = _av_power;
+	void clear() {
+		av_power = 0;
+		_extrems.clear();
+		_dists.clear();
+		_angles.clear();
+	}
+
+	ObjectClass(std::string className, const double& extr_count, std::vector<double> extrems, std::vector<double> dists, std::vector<float> angles) {
+		_extrems = extrems;
+		_dists = dists;
+		_angles = angles;
+		_className = className;
+		av_power = ((ceil(extr_count) - extr_count) >= 0.1) ? floor(extr_count) : ceil(extr_count);
+
+		_extrems_back = 500; _extrems_forv = 500;
+		_dist_back = 250, _dist_forv = 250;
+		_angl_back = 0.000002, _angl_forv = 0.000002;
+	}
+
+	void print() {
+		printf("\nClass name: %s", _className);
+		printf("\nAvarage power = %d", av_power);
+		printf("\nExtremums: ");
+		printVectorScreen(_extrems);
+		printf("\nDistances: ");
+		printVectorScreen(_dists);
+		printf("\nAngles: ");
+		printVectorScreen(_angles);
 	}
 
 	float belongs(Object_Features obj) {
 		float pos = 0;
 		int count = obj.getAnglNumMax();
 		for (int i = 0; i < count; ++i) {
-			pos += AnglesTrust * (obj.getAnglesMax()[i] <= AngleMaxMean && obj.getAnglesMax()[i] >= AngleMinMean);
+			pos += AnglesTrust * (obj.getAnglesMax()[i] <= _angles[i] + _angl_forv && obj.getAnglesMax()[i] >= _angles[i] - _angl_back);
 		}
 		count = obj.getAnglNumMin();
 		for (int i = 0; i < count; ++i) {
-			pos += AnglesTrust * (obj.getAnglesMin()[i] <= AngleMaxMean && obj.getAnglesMin()[i] >= AngleMinMean);
+			pos += AnglesTrust * (obj.getAnglesMin()[i] <= _angles[i] + _angl_forv && obj.getAnglesMin()[i] >= _angles[i] - _angl_back);
 		}
 
 		count = obj.getDistNumMax();
 		for (int i = 0; i < count; ++i) {
-			pos += DistTrust * (obj.getDistMax()[i] <= dist_max && obj.getDistMax()[i] >= dist_min);
+			pos += DistTrust * (obj.getDistMax()[i] <= _dists[i] + _dist_forv && obj.getDistMax()[i] >= _dists[i] - _dist_back);
 		}
 		count = obj.getDistNumMin();
 		for (int i = 0; i < count; ++i) {
-			pos += DistTrust * (obj.getDistMin()[i] <= dist_max && obj.getDistMin()[i] >= dist_min);
+			pos += DistTrust * (obj.getDistMin()[i] <= _dists[i] + _dist_forv && obj.getDistMin()[i] >= _dists[i] - _dist_back);
+		}
+		count = obj.getMax();
+		/*for (int i = 0; i < count; ++i) {
+			pos += LocalsTrust * (obj.getMax() <= Local_Max_ceil && (obj.getMax() >= Local_Max_floor));
 		}
 
 		pos += LocalsTrust * (obj.getMax() <= Local_Max_ceil && (obj.getMax() >= Local_Max_floor));
-		pos += LocalsTrust * (obj.getMin() <= Local_Min_ceil && (obj.getMin() >= Local_Min_floor));
+		pos += LocalsTrust * (obj.getMin() <= Local_Min_ceil && (obj.getMin() >= Local_Min_floor));*/
 		
 		pos -= (PowTrust * (obj.getPowerMax() == av_power) + PowTrust * (obj.getPowerMin() == av_power));
 		return pos;
 	}
+
 private:
 	const float AnglesTrust = 0.25;
 	const float LocalsTrust = 0.5;
 	const float DistTrust = 0.25;
 	const float PowTrust = 0.3;
 
-	float AngleMaxMean, AngleMinMean;
-	double Local_Max_ceil, Local_Max_floor;
-	double Local_Min_floor, Local_Min_ceil;
-	double dist_max, dist_min;
+	// Thresholds
+	double _extrems_back, _extrems_forv;
+	double _dist_back, _dist_forv;
+	float _angl_back, _angl_forv;
+
+
 	int av_power;
+	std::vector<double> _extrems;
+	std::vector<double> _dists;
+	std::vector<float> _angles;
+
+	// Class name
+	std::string _className;
 };
 
 
+// for calculating avarage object features from sample set
 class AvarageMeaninig {
 public:
 	AvarageMeaninig(const int& PoliPower) {
@@ -487,9 +517,9 @@ public:
 
 		// for precision
 		std::ostringstream oss;
-		oss.precision(std::numeric_limits<double>::digits10);
 		
 		for (int i = 0; i < polinome_power - 3; ++i) {
+			oss.precision(std::numeric_limits<double>::digits10);
 			oss << std::fixed << _AngleMax[i];
 			obj += oss.str() + "\t";
 			oss.clear();

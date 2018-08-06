@@ -3,6 +3,7 @@
 #include <fstream>
 #include "CL/cl.hpp"
 #include "LoaderAndPrinter.h"
+#include "Features.h"
 #include <vector>
 using namespace std;
 
@@ -59,6 +60,9 @@ void printMatrixScreen(double** matr, const int& height, const int& width, strin
 }
 
 
+
+
+
 double** loadMatrix(string filename, const int& height, const int& width) {
 	ifstream in(filename);
 	if (!in) {
@@ -71,6 +75,7 @@ double** loadMatrix(string filename, const int& height, const int& width) {
 		for (j = 0; j < width; ++j)
 			in >> matr[i][j];
 	}
+	in.close();
 	return matr;
 }
 
@@ -103,3 +108,5 @@ cl_float* cl_loadFunc(const int& height, const int& width, string filename) {
 
 	return Vect;
 }
+
+

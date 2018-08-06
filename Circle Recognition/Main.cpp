@@ -24,6 +24,7 @@ cl_device_id device_;
 cl_kernel kernel_;
 int Pos;
 vector<string> files;
+std::vector<ObjectClass> OBJS;
 
 
 // FUNCTIONS
@@ -44,12 +45,14 @@ void CreateClassificatoin();
 
 int main(int argc, char ** argv) {
 	//Excecute();
-	setUpKernel(queue_, context_, device_, kernel_);
+	//setUpKernel(queue_, context_, device_, kernel_);
+	string filename = "Classes.txt";
+	OBJS = Read_Classification(filename, POLINOME_POWER_LARGE - 1);
 	//Draw(argc, argv);
-	CreateClassificatoin();
+	//CreateClassificatoin();
 	clReleaseKernel(kernel_);
-	clReleaseCommandQueue(queue_);
-	clReleaseContext(context_);
+	//clReleaseCommandQueue(queue_);
+	//clReleaseContext(context_);
 	printf("\nPress Enter to exit...");
 	cin.get();
 	return 1;
@@ -140,7 +143,7 @@ void ParseOneClass(AvarageMeaninig& Av, int& startPos, const int& class_count, c
 			cl_double* polinomes = new cl_double[POLINOME_POWER_LARGE*height];
 
 			calculatingKernel(queue_, context_, device_, kernel_, x_LARGE, MatrixLARGE, polinomes, height, width, POLINOME_POWER_LARGE);
-			Calculate(polinomes, height, POLINOME_POWER_LARGE, 0, width, class_count, Av);
+			Calculate(polinomes, height, POLINOME_POWER_LARGE, 0, width, class_count, Av, OBJS);
 			delete[]polinomes;
 			delete[]MatrixLARGE;
 			delete[]x_LARGE;
@@ -321,8 +324,6 @@ void RenderOnePoints(string filepath, const int& height, const int& width) {
 
 // Filename parser
 int parse_path(const string& filepath, int& height, int& width, int clas, int pressed) {
-	//bool flag_h, flag_w;
-	//int h_d, w_d;
 	int _count = 0;
 	if (filepath[FILEPATH.size()] == char(clas) + '0' && filepath[FILEPATH.size() + 2] == char(pressed) + '0') {
 		for (int i = FILEPATH.size(); i < filepath.size() - 5; ++i) {

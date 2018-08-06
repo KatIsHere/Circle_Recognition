@@ -36,7 +36,7 @@ inline void drawFunctionSet(double* polinomes, const int& height, const int& N, 
 	}
 	
 	//std::vector<Features> features;
-	vector<ObjectClass> possibleClasses = Classes_find();
+	vector<ObjectClass> possibleClasses;// = Classes_Read();
 	double extrem_max = 0, extrem_min = 0;
 	int pos_max = 0, pos_min = 0;
 	int* extrNumb = new int[height];
@@ -44,7 +44,7 @@ inline void drawFunctionSet(double* polinomes, const int& height, const int& N, 
 	double max_Y, min_Y;
 	float* possb = nullptr;
 	const clock_t start = clock();
-	findExtremums_and_features(polinomes_new, extrems, extremsValues, extrNumb, height, N, xFrom, xTo, max_Y, min_Y, pos_min, pos_max, Avar, possb, possibleClasses);
+	findExtremums_and_features(polinomes_new, extrems, extremsValues, extrNumb, height, N, xFrom, xTo, max_Y, min_Y, pos_min, pos_max);
 	const clock_t finish = clock();
 
 	//printf("EXTREMUMS TIME COUNT: %f\n", (float)(finish - start) / CLOCKS_PER_SEC);
@@ -121,10 +121,10 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 	int pos_max = 0, pos_min = 0;	
 	int* extrNumb = new int[height];
 
-	vector<ObjectClass> possibleClasses = Classes_find();
+	vector<ObjectClass> possibleClasses;// = Classes_Read();
 	float* possb = nullptr;
 	const clock_t start = clock();
-	findExtremums_and_features(polinomes, extrems, extremsValues, extrNumb, height, N, xFrom, xTo, max_Y, min_Y, pos_min, pos_max, Avar, possb, possibleClasses);
+	findExtremums_and_features(polinomes, extrems, extremsValues, extrNumb, height, N, xFrom, xTo, max_Y, min_Y, pos_min, pos_max);
 	const clock_t finish = clock();
 
 	printf("EXTREMUMS TIME COUNT: %f\n", (finish - start) / CLOCKS_PER_SEC);
