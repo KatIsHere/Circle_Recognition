@@ -212,12 +212,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
+    <None Include="Classes.txt" />
   </ItemGroup>
   <ItemGroup>
     <Intel_OpenCL_Build_Rules Include="Kernels.cl">
       <Device Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">0</Device>
       <Device Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">0</Device>
     </Intel_OpenCL_Build_Rules>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ClassFeatures.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

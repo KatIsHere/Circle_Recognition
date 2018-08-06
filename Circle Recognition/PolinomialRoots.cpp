@@ -405,7 +405,8 @@ void FindAllRootsOnSegment(int power, double *coefs, double *rootsArray, int &ro
 			negativeEdge = edgeRight; positiveEdge = edgeLeft;
 		}
 
-		root = BisectionMethod(power, negativeEdge, positiveEdge, coefs, 0.0001);
+		//root = BisectionMethod(power, negativeEdge, positiveEdge, coefs, 0.0001);
+		root = NewtonMethod(coefs, power, negativeEdge, positiveEdge, 0.1);
 		rootsArray[j] = root;
 		rootsCount = j;
 		j++;

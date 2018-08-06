@@ -3,6 +3,8 @@
 #include <cmath>
 #include <vector>
 #include "LoaderAndPrinter.h"
+#include <fstream>
+#include <sstream>
 
 struct Point {
 	double x = 0;
@@ -53,8 +55,8 @@ public:
 	void setValues(std::vector<Point> extr, const int& len) {
 		N = len;
 		extremums = extr;
-		distancesNumb = len - 1;
-		anglesNumb = len - 2;
+		distancesNumb = (len - 1 >= 0? len - 1 : 0);
+		anglesNumb = (len - 2 >= 0 ? len - 2 : 0);
 
 		distances = new double[distancesNumb];
 		angles = new float[anglesNumb];
@@ -358,129 +360,158 @@ private:
 class AvarageMeaninig {
 public:
 	AvarageMeaninig(const int& PoliPower) {
-		_AngleMax = 0.;
-		_distanceMax = 0.;
-		_AngleMin = 0.;
-		_distanceMin = 0.;
-
-		AngleMaxN = 0;
-		distanceMaxN = 0;
-		AngleMinN = 0;
-		distanceMinN = 0;
-		LocalMaxN = 0;
-		LocalMinN = 0;
+		polinome_power = PoliPower;
 
 		counter = 0;
 
 		avarage_extremum_count = 0;
 		extremum_power_sum = 0;
-		polinome_power = PoliPower;
-		_LocalMax = new double[PoliPower];
-		_LocalMin = new double[PoliPower];
-		LocalMaxN = new int[PoliPower];
-		LocalMinN = new int[PoliPower];
-		for (int i = 0; i < PoliPower; ++i) {
-			_LocalMax[i] = 0; LocalMaxN[i] = 0;
-			_LocalMin[i] = 0; LocalMinN[i] = 0;
-		}
+		_LocalMax.resize(polinome_power);
+		LocalMaxN.resize(polinome_power);
+		_AngleMax.resize(polinome_power - 2);
+		AngleMaxN.resize(polinome_power - 2);
+		_distanceMax.resize(polinome_power - 1);
+		distanceMaxN.resize(polinome_power - 1);
+	}
+	
+	AvarageMeaninig() {
+		clear();
 	}
 
+	void clear() {
+		polinome_power = 0;
+
+		counter = 0;
+
+		avarage_extremum_count = 0;
+		extremum_power_sum = 0;
+		_LocalMax.clear();
+		LocalMaxN.clear();
+		_AngleMax.clear();
+		AngleMaxN.clear();
+		_distanceMax.clear();
+		distanceMaxN.clear();
+		avaraged = false;
+	}
+
+	void setNewObj(const int& PoliPower) {
+		clear();
+		polinome_power = PoliPower;
+
+		counter = 0;
+
+		avarage_extremum_count = 0;
+		extremum_power_sum = 0;
+		_LocalMax.resize(polinome_power);
+		LocalMaxN.resize(polinome_power);
+		_AngleMax.resize(polinome_power - 2);
+		AngleMaxN.resize(polinome_power - 2);
+		_distanceMax.resize(polinome_power - 1);
+		distanceMaxN.resize(polinome_power - 1);
+		avaraged = false;
+	}
 
 	void avarage() {
-		_AngleMax = (double)_AngleMax/AngleMaxN;
-		_distanceMax = (double)_distanceMax/distanceMaxN;
-		_AngleMin = (double) _AngleMin/AngleMinN;
-		_distanceMin = (double)_distanceMin/distanceMinN;
-		avarage_extremum_count = (int)avarage_extremum_count / counter;
-		for (int i = 0; i < avarage_extremum_count; ++i) {
-
-			_LocalMax[i] = (double)_LocalMax[i] / LocalMaxN[i];
-			_LocalMin[i] = (double)_LocalMin[i] / LocalMinN[i];
+		if (!avaraged) {
+			avarage_extremum_count = (float)avarage_extremum_count / counter;
+			for (int i = 0; i < polinome_power - 2; ++i) {
+				_LocalMax[i] = (double)_LocalMax[i] / LocalMaxN[i];
+				_AngleMax[i] = (double)_AngleMax[i] / AngleMaxN[i];
+				_distanceMax[i] = (double)_distanceMax[i] / distanceMaxN[i];
+			}
+			_distanceMax[polinome_power - 2] = (double)_distanceMax[polinome_power - 2] / distanceMaxN[polinome_power - 2];
+			_LocalMax[polinome_power - 2] = (double)_LocalMax[polinome_power - 2] / LocalMaxN[polinome_power - 2];
+			_LocalMax[polinome_power - 1] = (double)_LocalMax[polinome_power - 1] / LocalMaxN[polinome_power - 1];
+			avaraged = true;
 		}
 	}
 
 
 	void add_mult(const float* AngleMax, const double* distanceMax, int AnglNumMax, int DistNumMax,
-		const float* AngleMin, const double* distanceMin, int AnglNumMin, int DistNumMin,
-		const double* LocalMax, const double* LocalMin, const int& count_max, const int& count_min) {
+		const double* LocalMax, const int& count_max) {
 		bool flag;
 		for (int i = 0; i < AnglNumMax; i++)
 		{
-			_AngleMax += AngleMax[i];
+			_AngleMax[i] += AngleMax[i];
+			AngleMaxN[i] ++;
 		}
-		AngleMaxN += AnglNumMax;
+
 		for (int i = 0; i < DistNumMax; i++)
 		{
 			flag = (distanceMax[i] <= VALUE_RESTRICTION && distanceMax[i] >= -VALUE_RESTRICTION);
-			_distanceMax += distanceMax[i] * flag;
-			distanceMaxN += flag;
+			_distanceMax[i] += distanceMax[i] * flag;
+			distanceMaxN[i] += flag;
 		}
-		for (int i = 0; i < AnglNumMin; i++)
-		{
-			_AngleMin += AngleMin[i];
-		}
-		AngleMinN += AnglNumMin;
-		for (int i = 0; i < DistNumMin; i++)
-		{
-			flag = (distanceMax[i] <= VALUE_RESTRICTION && distanceMax[i] >= -VALUE_RESTRICTION);
-			_distanceMin += distanceMin[i] * flag;
-			distanceMinN += flag;
-		}
-		avarage_extremum_count += 0.5 * count_max * flag;
 
 		for (int i = 0; i < count_max; i++)
 		{
 			flag = (LocalMax[i] <= VALUE_RESTRICTION && LocalMax[i] >= -VALUE_RESTRICTION);
 			_LocalMax[i] += LocalMax[i] * flag;
 			LocalMaxN[i] += flag;
+			avarage_extremum_count += flag;
 		}
-
-		for (int i = 0; i < count_min; i++)
-		{
-			flag = (LocalMin[i] >= -VALUE_RESTRICTION && LocalMin[i] <= VALUE_RESTRICTION);
-			_LocalMin[i] += LocalMin[i] * flag;
-			LocalMinN[i] += flag;
-		}
-		avarage_extremum_count += 0.5 * count_min * flag;
 		counter++;
 	}
 
 
 	void add_features(Object_Features features) {
 		add_mult(features.getAnglesMax(), features.getDistMax(), features.getAnglNumMax(), features.getDistNumMax(),
-			features.getAnglesMin(), features.getDistMin(), features.getAnglNumMin(), features.getDistNumMin(),
-			features.getMax_extr(), features.getMin_extr(), features.getPowerMax(), features.getPowerMin());
+			features.getMax_extr(),  features.getPowerMax());
 	}
 
 
 	void print() {
 		avarage();
-		printf("Avarage values:\n\tAngle """
-			"""Max = %.10g; Angle Min = %.10g;\n\tDistance Max = %f; Distance Min = %f;", 
-			_AngleMax, _AngleMin, _distanceMax, _distanceMin);
-		printf("\nLocal max polinome:");
-		printVectorScreen(_LocalMax, avarage_extremum_count);
-		printf("\nLocal min polinome:");
-		printVectorScreen(_LocalMin, avarage_extremum_count);
+		printf("Avarage values: \nExtremum count: %f;", avarage_extremum_count);
+		printf("\nLocal max polinome: ");
+		printVectorScreen(_LocalMax);
+		printf("\nDistances: ");
+		printVectorScreen(_distanceMax);
+		printf("\nAngles: ");
+		printVectorScreen(_AngleMax);
 	}
+
+	void toFile(std::ofstream&  file, const int& className, const bool& is_pressed) {
+		avarage();
+		std::string obj;
+		obj = "Class_" + std::to_string(className) + "_" + std::to_string(is_pressed) + ":" + std::to_string(avarage_extremum_count) + ";";
+		for (int i = 0; i < polinome_power - 1; ++i) {
+			obj+=std::to_string(_LocalMax[i]) + "\t";
+		};
+		obj += std::to_string(_LocalMax[polinome_power - 1]) + ";";
+
+		for (int i = 0; i < polinome_power - 2; ++i) {
+			obj += std::to_string(_distanceMax[i]) + "\t";
+		};
+		obj += std::to_string(_distanceMax[polinome_power - 2]) + ";";
+
+		// for precision
+		std::ostringstream oss;
+		oss.precision(std::numeric_limits<double>::digits10);
+		
+		for (int i = 0; i < polinome_power - 3; ++i) {
+			oss << std::fixed << _AngleMax[i];
+			obj += oss.str() + "\t";
+			oss.clear();
+		};
+		obj += std::to_string(_AngleMax[polinome_power - 3]) + ";\n";
+		file << obj;
+	}
+
 private:
-	int AngleMaxN;
-	int distanceMaxN;
-	int AngleMinN;
-	int distanceMinN;
+	std::vector<int> AngleMaxN;
+	std::vector<int> distanceMaxN;
 	int counter;
 
-	float _AngleMax;
-	double _distanceMax;
-	float _AngleMin;
-	double _distanceMin;
+	std::vector<float> _AngleMax;
+	std::vector<double> _distanceMax;
 
-	int* LocalMaxN;
-	int* LocalMinN;
-	double* _LocalMax;
-	double* _LocalMin;
+	std::vector<int> LocalMaxN;
+	std::vector<double> _LocalMax;
 
 	int polinome_power;
 	int extremum_power_sum;
 	double avarage_extremum_count;
+
+	bool avaraged;
 };

@@ -9,18 +9,18 @@ using namespace std;
 
 vector<ObjectClass> Classes_find(){
 	vector<ObjectClass> classes;
-	// First class
-	classes.push_back(ObjectClass(0.9999950, 0.9999930, 2850, 2050, -3100, -2400, 5900, 5000, 4));
-	// Second class
-	classes.push_back(ObjectClass(0.9999983, 0.9999975, 5100, 4500, -4900, -4300, 10000, 8800, 4));
-	// Third class
-	classes.push_back(ObjectClass(0.9999980, 0.9999970, 3900, 3200, -3200, -2700, 6900, 5700, 4));
-	// Forth class
-	classes.push_back(ObjectClass(0.9999955, 0.9999935, 2700, 2000, -2500, -2100, 4400, 5000, 2));
-	// Fifth class
-	classes.push_back(ObjectClass(0.9999990, 0.9999981, 4900, 3900, -4500, -3500, 8900, 7500, 4));
-	// Sixth class
-	classes.push_back(ObjectClass(0.9999980, 0.9999965, 3000, 2400, -3600, -2500, 6000, 4700, 2));
+	//// First class
+	//classes.push_back(ObjectClass(0.9999950, 0.9999930, 2850, 2050, -3100, -2400, 5900, 5000, 4));
+	//// Second class
+	//classes.push_back(ObjectClass(0.9999983, 0.9999975, 5100, 4500, -4900, -4300, 10000, 8800, 4));
+	//// Third class
+	//classes.push_back(ObjectClass(0.9999980, 0.9999970, 3900, 3200, -3200, -2700, 6900, 5700, 4));
+	//// Forth class
+	//classes.push_back(ObjectClass(0.9999955, 0.9999935, 2700, 2000, -2500, -2100, 4400, 5000, 2));
+	//// Fifth class
+	//classes.push_back(ObjectClass(0.9999990, 0.9999981, 4900, 3900, -4500, -3500, 8900, 7500, 4));
+	//// Sixth class
+	//classes.push_back(ObjectClass(0.9999980, 0.9999965, 3000, 2400, -3600, -2500, 6000, 4700, 2));
 	return classes;
 }
 
@@ -85,7 +85,7 @@ void findExtremums_and_features(double** polinomes, /*double* centerX, double* c
 	//printf("\nDistances for min polinome: ");
 	//printVectorScreen(features.getDistMin(), features.getDistNumMin());
 	//printf("\n");
-	////vector<ObjectClass> possibleClasses = Classes_find();
+	//vector<ObjectClass> possibleClasses = Classes_find();
 	//possibilities = new float[possibleClasses.size()];
 	//Classify(possibleClasses, features, possibilities);
 }

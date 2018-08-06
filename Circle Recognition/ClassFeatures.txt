@@ -1,0 +1,90 @@
+CLASS 1
+1) UNPRESSED:
+Extremum count: 3.982036;
+Local max polinome: -1789.37, 2761.1, -2740.63, 1281.73
+Distances: 4571.64, 5516.28, 4030.69
+Angles: 0.9999982119, 0.999998033
+
+2) PRESSED:
+Extremum count: 3.994024;
+Local max polinome: -2961.65, 1929.16, -1882.82, 2627.53
+Distances: 4908.02, 3817.74, 4512.61
+Angles: 0.9999965429, 0.99999547
+
+CLASS 2
+1) UNPRESSED:
+Extremum count: 4.000000;
+Local max polinome: -3525.58, 4822.93, -4598.46, 2879.89
+Distances: 8304.55, 8733.02, 7478.35
+Angles: 0.9999997616, 0.999999702
+
+2) PRESSED:
+Extremum count: 3.998000;
+Local max polinome: -6567.74, 3209.59, -3465.77, 5854.52
+Distances: 8288.26, 6643.72, 8106.62
+Angles: 0.999999404, 0.9999993443
+
+CLASS 3
+1) UNPRESSED:
+Extremum count: 3.994000;
+Local max polinome: -2322.6, 3594.64, -2921.49, 1998.59
+Distances: 5917.25, 6516.13, 4919.09
+Angles: 0.9999995828, 0.9999995828
+
+2) PRESSED:
+Extremum count: 4.000000;
+Local max polinome: -5575.46, 926.03, -1503.61, 5191.17
+Distances: 6483.46, 2429.65, 6665.1
+Angles: 0.9999921918, 0.999992311
+
+CLASS 4
+1) UNPRESSED:
+Extremum count: 3.440000;
+Local max polinome: -1234.27, 2305.82, -2251.91, 1469.71
+Distances: 3666.87, 4632, 3715.7
+Angles: 0.9999982715, 0.9999963641
+
+2) PRESSED:
+Extremum count: 3.823301;
+Local max polinome: -4435.27, -20.9862, -504.931, 4735.66
+Distances: 4776.69, 1003.88, 5632.19
+Angles: 0.9983173013, 0.9982743859
+
+CLASS 5
+1) UNPRESSED:
+Extremum count: 3.932000;
+Local max polinome: -3207.72, 4335.42, -4030.98, 2010.24
+Distances: 7543.14, 8181.36, 6050.79
+Angles: 0.9999998808, 0.9999998808
+
+2) PRESSED:
+Extremum count: 3.972000;
+Local max polinome: -6107.79, 1342.26, -1955.34, 5504.29
+Distances: 7084, 3258.8, 6787.46
+Angles: 0.999992311, 0.9999924898
+
+CLASS 6
+1) UNPRESSED:
+Extremum count: 3.786000;
+Local max polinome: -1645.56, 2724.18, -2880.6, 1624.35
+Distances: 4480.47, 5660.67, 4342.64
+Angles: 0.9999995232, 0.9999992847
+
+2) PRESSED:
+Extremum count: 3.150000;
+Local max polinome: -4116.2, 2342.74, -1498.93, 4352.89
+Distances: 5636.89, 2156.04, 5864.33
+Angles: 0.9986532927, 0.9986576438
+
+CLASS 7
+1) UNPRESSED:
+Extremum count: 1.764000;
+Local max polinome: -0.628753, 460.653, -1339.2, 201.383
+Distances: 2512.11, 3322.09, 684.679
+Angles: 0.9804323316, 0.9839125276
+
+2) PRESSED:
+Extremum count: 2.410822
+Local max polinome: -3184.03, 1991.28, 4474.76, -155.19
+Distances: 5905.56, 7711.32, 5044.1
+Angles: 0.9999987483, 0.9999977946

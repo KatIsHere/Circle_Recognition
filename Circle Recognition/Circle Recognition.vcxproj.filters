@@ -92,10 +92,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
+    <None Include="Classes.txt" />
   </ItemGroup>
   <ItemGroup>
     <Intel_OpenCL_Build_Rules Include="Kernels.cl">
       <Filter>OpenCL Files</Filter>
     </Intel_OpenCL_Build_Rules>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ClassFeatures.txt" />
   </ItemGroup>
 </Project>

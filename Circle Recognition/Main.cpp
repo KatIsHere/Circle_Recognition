@@ -1,8 +1,4 @@
 #include "Features.h"
-#include "LoaderAndPrinter.h"
-#include "InterpolationAndApproximation.h"
-#include "LinearEquations.h"
-#include "PolinomeBuilder.h"
 #include "Polinoms.h"
 #include "Drawing.h"
 #include "OpenCLCalculations.h"
@@ -12,14 +8,16 @@
 #include <filesystem>
 using namespace std;
 namespace fs = std::experimental::filesystem::v1;
+#define POLINOME_POWER_LARGE 6
+
 
 // GLOBAL VARIABLES
 std::string FILEPATH = "train_data/";
-const int POLINOME_POWER_LARGE = 6;
 const int DOTS = 100;
-const int CLASS = 1;
+const int CLASS_COUNT = 7;
+const int CLASS = 7;
 const bool PRESED = 0;
-AvarageMeaninig AVARAGE(POLINOME_POWER_LARGE);
+AvarageMeaninig AVARAGE(POLINOME_POWER_LARGE - 2);
 cl_command_queue queue_; 
 cl_context context_; 
 cl_device_id device_; 
@@ -39,15 +37,16 @@ void RenderOneFast(string filepath, const int& height, const int& width);
 void RenderOneApproximation(string filepath, const int& height, const int& width);
 void RenderOneReversed(string filepath, const int& height, const int& width);
 int parse_path(const string& filepath, int& height, int& width, int clas, int presed);
+void ParseOneClass(AvarageMeaninig& Av, int& startPos, const int& class_count, const bool& pressed, std::ofstream&  file);
 void Keyboard(unsigned char key, int x, int y);
-void Execute();
+void CreateClassificatoin();
 
 
 int main(int argc, char ** argv) {
 	//Excecute();
 	setUpKernel(queue_, context_, device_, kernel_);
 	//Draw(argc, argv);
-	Execute();
+	CreateClassificatoin();
 	clReleaseKernel(kernel_);
 	clReleaseCommandQueue(queue_);
 	clReleaseContext(context_);
@@ -108,20 +107,32 @@ void Draw(int argc, char ** argv) {
 	glutMainLoop();
 }
 
-void Execute() {
+void CreateClassificatoin() {
 	string path;
+	std::ofstream  file("Classes.txt", std::ofstream::out);
 	for (auto& file : fs::directory_iterator(FILEPATH))
 	{
 		path = file.path().string();
 		files.push_back(path);
 	}
-	AvarageMeaninig Av(POLINOME_POWER_LARGE);
-	string filepath = files[0];
+	int startPos = 0;
+	AvarageMeaninig Av;
+	for (int i = 1; i <= CLASS_COUNT; ++i) {
+		ParseOneClass(Av, startPos, i, false, file);
+		ParseOneClass(Av, startPos, i, true, file);
+		printf("Computed class %d!\n", i);
+	}
+	file.close();
+}
+
+void ParseOneClass(AvarageMeaninig& Av, int& startPos, const int& class_count, const bool& pressed, std::ofstream&  file) {
+	Av.setNewObj(POLINOME_POWER_LARGE - 2);
+	string filepath = files[startPos];
 	int height, width;
-	int position = 0;
-	int s = parse_path(filepath, height, width, CLASS, PRESED);
+	int position = startPos;
+	int s = parse_path(filepath, height, width, class_count, pressed);
 	int numb = 1;
-	while (s!=-1)
+	while (s != -1 && position < files.size() - 1)
 	{
 		if (s == 1) {
 			cl_float* MatrixLARGE = cl_loadFunc(height, width, filepath);
@@ -129,19 +140,20 @@ void Execute() {
 			cl_double* polinomes = new cl_double[POLINOME_POWER_LARGE*height];
 
 			calculatingKernel(queue_, context_, device_, kernel_, x_LARGE, MatrixLARGE, polinomes, height, width, POLINOME_POWER_LARGE);
-			Calculate(polinomes, height, POLINOME_POWER_LARGE, 0, width, CLASS, Av);
+			Calculate(polinomes, height, POLINOME_POWER_LARGE, 0, width, class_count, Av);
 			delete[]polinomes;
 			delete[]MatrixLARGE;
 			delete[]x_LARGE;
-			//cout << numb << " ";
-			//numb++;
 		}
 		position++;
 		filepath = files[position];
-		s = parse_path(filepath, height, width, CLASS, PRESED);
+		s = parse_path(filepath, height, width, class_count, pressed);
 	}
-	Av.print();
+	startPos = position;
+	Av.toFile(file, class_count, pressed);
+	// Av.print();
 }
+
 
 //-------------------------------------------------------------------------------------------------------
 /// SCENE RENDERING, ALL OBJECTS
@@ -308,11 +320,11 @@ void RenderOnePoints(string filepath, const int& height, const int& width) {
 
 
 // Filename parser
-int parse_path(const string& filepath, int& height, int& width, int clas, int presed) {
+int parse_path(const string& filepath, int& height, int& width, int clas, int pressed) {
 	//bool flag_h, flag_w;
 	//int h_d, w_d;
 	int _count = 0;
-	if (filepath[FILEPATH.size()] == char(clas) + '0' && filepath[FILEPATH.size() + 2] == char(presed) + '0') {
+	if (filepath[FILEPATH.size()] == char(clas) + '0' && filepath[FILEPATH.size() + 2] == char(pressed) + '0') {
 		for (int i = FILEPATH.size(); i < filepath.size() - 5; ++i) {
 			if (filepath[i] == '_')
 				_count++;
@@ -324,7 +336,7 @@ int parse_path(const string& filepath, int& height, int& width, int clas, int pr
 			}
 		}
 	}
-	if (filepath[FILEPATH.size()] > char(clas) + '0')
+	if (filepath[FILEPATH.size()] > char(clas) + '0' || filepath[FILEPATH.size() + 2] != char(pressed) + '0')
 		return -1;
 	return 0;
 }

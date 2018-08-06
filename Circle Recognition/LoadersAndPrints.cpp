@@ -3,6 +3,7 @@
 #include <fstream>
 #include "CL/cl.hpp"
 #include "LoaderAndPrinter.h"
+#include <vector>
 using namespace std;
 
 
@@ -23,6 +24,16 @@ void printVectorScreen(const double * arr, const int & size)
 {
 	for (int i = 0; i < size; ++i)
 		cout << arr[i] << ", ";
+}
+
+void printVectorScreen(const vector<double>& vec) {
+	for (int i = 0; i < vec.size(); ++i)
+		cout << vec[i] << ", ";
+}
+
+void printVectorScreen(const vector<float>& vec) {
+	for (int i = 0; i < vec.size(); ++i)
+		printf("%.10g, ", vec[i]);
 }
 
 void printVectorScreen(const float * arr, const int & size)
