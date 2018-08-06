@@ -1,6 +1,8 @@
 #pragma once
+#define VALUE_RESTRICTION 9000
 #include <cmath>
 #include <vector>
+#include "LoaderAndPrinter.h"
 
 struct Point {
 	double x = 0;
@@ -39,14 +41,7 @@ public:
 			X.y = yExtr[i];
 			extremums.push_back(X);
 		}
-		distancesNumb = len - 1;
-		anglesNumb = len - 2;
-
-		distances = new double[distancesNumb];
-		angles = new float[anglesNumb];
-		Distances(distances);
-		Angles(angles);
-		center = Center();
+		setValues(extremums, len);
 	}
 
 
@@ -65,7 +60,6 @@ public:
 		angles = new float[anglesNumb];
 		Distances(distances);
 		Angles(angles);
-		center = Center();
 	}
 
 
@@ -77,9 +71,6 @@ public:
 		return extremums;
 	}
 
-	const Point getCenter() {
-		return center;
-	}
 
 	const double* getDistances() {
 		return distances;
@@ -113,10 +104,11 @@ private:
 	float* angles;
 	int distancesNumb;
 	double* distances;
-	Point center;
 	std::vector<Point> extremums;
 
-
+	/*
+	* returns distances between extremums
+	*/
 	void Distances(double* Distance) {
 		for (int i = 0; i < distancesNumb; i++)	{
 			Distance[i] = extremums[i].distance(extremums[i + 1]);
@@ -124,29 +116,18 @@ private:
 	}
 
 
+	/*
+	* returns cos of all ancgles
+	* based on law of cosines: cos C = (a**2 + b**2 - c**2)/(2ab)
+	* the BIGGER the meaning ----> the SMALLER the angle
+	* angle from 0 to pi
+	*/
 	void Angles(float* Angles) {
-		/* returns cos of all ancgles
-		* based on law of cosines: cos C = (a**2 + b**2 - c**2)/(2ab)
-		* the BIGGER the meaning ----> the SMALLER the angle
-		* angle from 0 to pi
-		*/
 		float rb;
 		for (int i = 0; i < anglesNumb; ++i) {
 			rb = extremums[i].distance(extremums[i + 2]);
 			Angles[i] = (distances[i] * distances[i] + distances[i + 1] * distances[i + 1] - rb*rb)/(2* distances[i]* distances[i+1]);
 		}
-	}
-
-
-	Point Center() {
-		Point P;
-		P.x = (extremums[N - 1].x + extremums[0].x) / 2;
-		double sum = 0;
-		for (int i = 0; i < N; ++i) {
-			sum += extremums[i].y;
-		}
-		P.y = sum;
-		return P;
 	}
 };
 
@@ -171,69 +152,75 @@ public:
 		angles_n_min = min_polinome.anglNumb();
 		dist_n_min = min_polinome.distNumb();
 		_local_max = local_max; _local_min = local_min;
+		_powerMax = power_max;
+		_powerMin = power_min;
+		max_extr_value = y_max_poli;
+		min_extr_value = y_min_poli;
 	}
 
-	Object_Features(const Features& max_poli, const Features& min_poli) {
-		max_polinome = max_poli;
-		min_polinome = min_poli;
-		angles_n_max = max_polinome.anglNumb();
-		dist_n_max = max_polinome.distNumb();
-		angles_n_min = min_polinome.anglNumb();
-		dist_n_min = min_polinome.distNumb();
+	//Object_Features(const Features& max_poli, const Features& min_poli) {
+	//	max_polinome = max_poli;
+	//	min_polinome = min_poli;
+	//	angles_n_max = max_polinome.anglNumb();
+	//	dist_n_max = max_polinome.distNumb();
+	//	angles_n_min = min_polinome.anglNumb();
+	//	dist_n_min = min_polinome.distNumb();
+	//}
+
+	//// returns probability of angles similarity
+	//float compareAngles(Object_Features obj_2, const float Eps = 0.1) {
+	//	int h = 0;
+	//	const float * angles_max_2 = obj_2.max_polinome.getAngles();
+	//	const float* angles_min_2 = obj_2.min_polinome.getAngles();
+	//	const float* angles_max = max_polinome.getAngles();
+	//	const float* angles_min = min_polinome.getAngles();
+	//	for (int i = 0; i < angles_n_max; ++i) {
+	//		if (abs(angles_max_2[i] - angles_max[i]) < Eps)
+	//			h++;
+	//	}
+	//	for (int i = 0; i < angles_n_min; ++i) {
+	//		if (abs(angles_min[i] - angles_min_2[i]) < Eps)
+	//			h++;
+	//	}
+
+	//	delete[]angles_max_2; delete[]angles_min_2;
+	//	delete[] angles_max; delete[]angles_min;
+	//	return (float)h / (angles_n_min + angles_n_max);
+	//}
+
+	//// returns probability of distanses similarity
+	//float compareDistances(Object_Features obj_2, const float Eps = 0.1) {
+	//	int h = 0;
+	//	const double * dist_max_2 = obj_2.max_polinome.getDistances();
+	//	const double* dist_min_2 = obj_2.min_polinome.getDistances();
+	//	const double* dist_max = max_polinome.getDistances();
+	//	const double* dist_min = min_polinome.getDistances();
+	//	for (int i = 0; i < dist_n_max; ++i) {
+	//		if (abs(dist_max_2[i] - dist_max[i]) < Eps)
+	//			h++;
+	//	}
+	//	for (int i = 0; i < dist_n_min; ++i) {
+	//		if (abs(dist_min_2[i] - dist_min[i]) < Eps)
+	//			h++;
+	//	}
+
+	//	delete[]dist_max_2; delete[]dist_min_2;
+	//	delete[] dist_max; delete[]dist_min;
+	//	return (float)h / (dist_n_max + dist_n_min);
+	//}
+
+
+	//bool small_obj(const double& threshold_max, const double& threshold_min) {
+	//	return (_local_max < threshold_max && _local_min > threshold_min);
+	//}
+
+	const double* getMin_extr() {
+		return min_extr_value;
 	}
 
-	// returns probability of angles similarity
-	float compareAngles(Object_Features obj_2, const float Eps = 0.1) {
-		int h = 0;
-		const float * angles_max_2 = obj_2.max_polinome.getAngles();
-		const float* angles_min_2 = obj_2.min_polinome.getAngles();
-		const float* angles_max = max_polinome.getAngles();
-		const float* angles_min = min_polinome.getAngles();
-		for (int i = 0; i < angles_n_max; ++i) {
-			if (abs(angles_max_2[i] - angles_max[i]) < Eps)
-				h++;
-		}
-		for (int i = 0; i < angles_n_min; ++i) {
-			if (abs(angles_min[i] - angles_min_2[i]) < Eps)
-				h++;
-		}
-
-		delete[]angles_max_2; delete[]angles_min_2;
-		delete[] angles_max; delete[]angles_min;
-		return (float)h / (angles_n_min + angles_n_max);
+	const double* getMax_extr() {
+		return max_extr_value;
 	}
-
-	// returns probability of distanses similarity
-	float compareDistances(Object_Features obj_2, const float Eps = 0.1) {
-		int h = 0;
-		const double * dist_max_2 = obj_2.max_polinome.getDistances();
-		const double* dist_min_2 = obj_2.min_polinome.getDistances();
-		const double* dist_max = max_polinome.getDistances();
-		const double* dist_min = min_polinome.getDistances();
-		for (int i = 0; i < dist_n_max; ++i) {
-			if (abs(dist_max_2[i] - dist_max[i]) < Eps)
-				h++;
-		}
-		for (int i = 0; i < dist_n_min; ++i) {
-			if (abs(dist_min_2[i] - dist_min[i]) < Eps)
-				h++;
-		}
-
-		delete[]dist_max_2; delete[]dist_min_2;
-		delete[] dist_max; delete[]dist_min;
-		return (float)h / (dist_n_max + dist_n_min);
-	}
-
-
-	bool small_obj(const double& threshold_max, const double& threshold_min) {
-		return (_local_max < threshold_max && _local_min > threshold_min);
-	}
-
-
-	bool operator==(const Object_Features& obj_2) {
-		double percentage = 0;
-	}
-
 
 	Features getMax_Polinome() {
 		return max_polinome;
@@ -284,6 +271,14 @@ public:
 		return _local_min;
 	}
 
+	const int& getPowerMax() {
+		return _powerMax;
+	}
+
+	const int& getPowerMin() {
+		return _powerMin;
+	}
+
 private:
 	Features max_polinome;
 	Features min_polinome;
@@ -291,6 +286,9 @@ private:
 	int angles_n_max, angles_n_min;
 	int dist_n_max, dist_n_min;
 	double _AnglesTrust = 0.6, _DistTrust = 0.4;
+	int _powerMax, _powerMin;
+	double* max_extr_value;
+	double* min_extr_value;
 };
 
 
@@ -339,13 +337,15 @@ public:
 
 		pos += LocalsTrust * (obj.getMax() <= Local_Max_ceil && (obj.getMax() >= Local_Max_floor));
 		pos += LocalsTrust * (obj.getMin() <= Local_Min_ceil && (obj.getMin() >= Local_Min_floor));
-
+		
+		pos -= (PowTrust * (obj.getPowerMax() == av_power) + PowTrust * (obj.getPowerMin() == av_power));
 		return pos;
 	}
 private:
 	const float AnglesTrust = 0.25;
 	const float LocalsTrust = 0.5;
 	const float DistTrust = 0.25;
+	const float PowTrust = 0.3;
 
 	float AngleMaxMean, AngleMinMean;
 	double Local_Max_ceil, Local_Max_floor;
@@ -357,14 +357,11 @@ private:
 
 class AvarageMeaninig {
 public:
-	AvarageMeaninig() {
+	AvarageMeaninig(const int& PoliPower) {
 		_AngleMax = 0.;
 		_distanceMax = 0.;
 		_AngleMin = 0.;
 		_distanceMin = 0.;
-		_LocalMax = 0.;
-		_LocalMin = 0.;
-
 
 		AngleMaxN = 0;
 		distanceMaxN = 0;
@@ -372,92 +369,118 @@ public:
 		distanceMinN = 0;
 		LocalMaxN = 0;
 		LocalMinN = 0;
+
+		counter = 0;
+
+		avarage_extremum_count = 0;
+		extremum_power_sum = 0;
+		polinome_power = PoliPower;
+		_LocalMax = new double[PoliPower];
+		_LocalMin = new double[PoliPower];
+		LocalMaxN = new int[PoliPower];
+		LocalMinN = new int[PoliPower];
+		for (int i = 0; i < PoliPower; ++i) {
+			_LocalMax[i] = 0; LocalMaxN[i] = 0;
+			_LocalMin[i] = 0; LocalMinN[i] = 0;
+		}
 	}
+
 
 	void avarage() {
-		_AngleMax = (float)_AngleMax/AngleMaxN;
-		_distanceMax = (float)_distanceMax/distanceMaxN;
-		_AngleMin = (float) _AngleMin/AngleMinN;
-		_distanceMin = (float)_distanceMin/distanceMinN;
-		_LocalMax = (float)_LocalMax/LocalMaxN;
-		_LocalMin = (float)_LocalMin/LocalMinN;
-	}
+		_AngleMax = (double)_AngleMax/AngleMaxN;
+		_distanceMax = (double)_distanceMax/distanceMaxN;
+		_AngleMin = (double) _AngleMin/AngleMinN;
+		_distanceMin = (double)_distanceMin/distanceMinN;
+		avarage_extremum_count = (int)avarage_extremum_count / counter;
+		for (int i = 0; i < avarage_extremum_count; ++i) {
 
-
-	void add_one(float AngleMax, double distanceMax, float AngleMin,
-		double distanceMin, double LocalMax, double LocalMin) {
-		_AngleMax += AngleMax;
-		_distanceMax += distanceMax;
-		_AngleMin += AngleMin;
-		_distanceMin += distanceMin;
-		_LocalMax += LocalMax;
-		_LocalMin += LocalMin;
-
-		AngleMaxN += 1;
-		distanceMaxN += 1;
-		AngleMinN += 1;
-		distanceMinN += 1;
-		LocalMaxN++;
-		LocalMinN++;
+			_LocalMax[i] = (double)_LocalMax[i] / LocalMaxN[i];
+			_LocalMin[i] = (double)_LocalMin[i] / LocalMinN[i];
+		}
 	}
 
 
 	void add_mult(const float* AngleMax, const double* distanceMax, int AnglNumMax, int DistNumMax,
 		const float* AngleMin, const double* distanceMin, int AnglNumMin, int DistNumMin,
-		double LocalMax, double LocalMin) {
+		const double* LocalMax, const double* LocalMin, const int& count_max, const int& count_min) {
+		bool flag;
 		for (int i = 0; i < AnglNumMax; i++)
 		{
 			_AngleMax += AngleMax[i];
 		}
+		AngleMaxN += AnglNumMax;
 		for (int i = 0; i < DistNumMax; i++)
 		{
-			_distanceMax += distanceMax[i];
+			flag = (distanceMax[i] <= VALUE_RESTRICTION && distanceMax[i] >= -VALUE_RESTRICTION);
+			_distanceMax += distanceMax[i] * flag;
+			distanceMaxN += flag;
 		}
 		for (int i = 0; i < AnglNumMin; i++)
 		{
 			_AngleMin += AngleMin[i];
 		}
+		AngleMinN += AnglNumMin;
 		for (int i = 0; i < DistNumMin; i++)
 		{
-			_distanceMin += distanceMin[i];
+			flag = (distanceMax[i] <= VALUE_RESTRICTION && distanceMax[i] >= -VALUE_RESTRICTION);
+			_distanceMin += distanceMin[i] * flag;
+			distanceMinN += flag;
 		}
-		_LocalMax += LocalMax;
-		_LocalMin += LocalMin;
+		avarage_extremum_count += 0.5 * count_max * flag;
 
-		AngleMaxN += AnglNumMax;
-		distanceMaxN += DistNumMax;
-		AngleMinN += AnglNumMin;
-		distanceMinN += DistNumMin;
-		LocalMaxN++;
-		LocalMinN++;
+		for (int i = 0; i < count_max; i++)
+		{
+			flag = (LocalMax[i] <= VALUE_RESTRICTION && LocalMax[i] >= -VALUE_RESTRICTION);
+			_LocalMax[i] += LocalMax[i] * flag;
+			LocalMaxN[i] += flag;
+		}
+
+		for (int i = 0; i < count_min; i++)
+		{
+			flag = (LocalMin[i] >= -VALUE_RESTRICTION && LocalMin[i] <= VALUE_RESTRICTION);
+			_LocalMin[i] += LocalMin[i] * flag;
+			LocalMinN[i] += flag;
+		}
+		avarage_extremum_count += 0.5 * count_min * flag;
+		counter++;
 	}
 
 
 	void add_features(Object_Features features) {
 		add_mult(features.getAnglesMax(), features.getDistMax(), features.getAnglNumMax(), features.getDistNumMax(),
 			features.getAnglesMin(), features.getDistMin(), features.getAnglNumMin(), features.getDistNumMin(),
-			features.getMax(), features.getMin());
+			features.getMax_extr(), features.getMin_extr(), features.getPowerMax(), features.getPowerMin());
 	}
 
 
 	void print() {
 		avarage();
-		printf("Avarage values:\n\tLocal Max = %f; Local Min = %f;\n\tAngle """
-			"""Max = %f; Angle Min = %f;\n\tDistance Max = %f; Distance Min = %f;", 
-			_LocalMax, _LocalMin, _AngleMax, _AngleMin, _distanceMax, _distanceMin);
+		printf("Avarage values:\n\tAngle """
+			"""Max = %.10g; Angle Min = %.10g;\n\tDistance Max = %f; Distance Min = %f;", 
+			_AngleMax, _AngleMin, _distanceMax, _distanceMin);
+		printf("\nLocal max polinome:");
+		printVectorScreen(_LocalMax, avarage_extremum_count);
+		printf("\nLocal min polinome:");
+		printVectorScreen(_LocalMin, avarage_extremum_count);
 	}
 private:
 	int AngleMaxN;
 	int distanceMaxN;
 	int AngleMinN;
 	int distanceMinN;
-	int LocalMaxN;
-	int LocalMinN;
+	int counter;
 
 	float _AngleMax;
 	double _distanceMax;
 	float _AngleMin;
 	double _distanceMin;
-	double _LocalMax;
-	double _LocalMin;
+
+	int* LocalMaxN;
+	int* LocalMinN;
+	double* _LocalMax;
+	double* _LocalMin;
+
+	int polinome_power;
+	int extremum_power_sum;
+	double avarage_extremum_count;
 };

@@ -9,22 +9,26 @@
 #include <vector>
 #include <fstream>
 #include "Classify.h"
-//#include <experimental/filesystem>
 #include <filesystem>
 using namespace std;
 namespace fs = std::experimental::filesystem::v1;
+
+// GLOBAL VARIABLES
 std::string FILEPATH = "train_data/";
-
-
-//#define RENDER_CENTER
-
 const int POLINOME_POWER_LARGE = 6;
 const int DOTS = 100;
-const int CLASS = 3;
+const int CLASS = 1;
 const bool PRESED = 0;
-AvarageMeaninig AVARAGE;
-cl_command_queue queue_; cl_context context_; cl_device_id device_; cl_kernel kernel_;
+AvarageMeaninig AVARAGE(POLINOME_POWER_LARGE);
+cl_command_queue queue_; 
+cl_context context_; 
+cl_device_id device_; 
+cl_kernel kernel_;
+int Pos;
+vector<string> files;
 
+
+// FUNCTIONS
 void RenderApproximation(void);
 void RenderPoints(void);
 void RenderReversed(void);
@@ -42,8 +46,8 @@ void Execute();
 int main(int argc, char ** argv) {
 	//Excecute();
 	setUpKernel(queue_, context_, device_, kernel_);
-	Draw(argc, argv);
-	//Execute();
+	//Draw(argc, argv);
+	Execute();
 	clReleaseKernel(kernel_);
 	clReleaseCommandQueue(queue_);
 	clReleaseContext(context_);
@@ -51,9 +55,6 @@ int main(int argc, char ** argv) {
 	cin.get();
 	return 1;
 }
-
-int Pos;
-vector<string> files;
 
 
 //-------------------------------------------------------------------------------------------------------
@@ -114,7 +115,7 @@ void Execute() {
 		path = file.path().string();
 		files.push_back(path);
 	}
-	AvarageMeaninig Av;
+	AvarageMeaninig Av(POLINOME_POWER_LARGE);
 	string filepath = files[0];
 	int height, width;
 	int position = 0;
@@ -145,7 +146,7 @@ void Execute() {
 //-------------------------------------------------------------------------------------------------------
 /// SCENE RENDERING, ALL OBJECTS
 
-// CONVENTIONAL METHOD
+// Conventional mathod(on CPU)
 void RenderApproximation(void) {
 	string filepath = files[Pos];
 	int height, width;
@@ -183,7 +184,7 @@ void RenderFast(void) {
 	RenderOneFast(filepath, height, width);
 }
 
-
+// Render Reversed objects
 void RenderReversed(void) {
 	string filepath = files[Pos];
 	int height, width;
@@ -195,7 +196,7 @@ void RenderReversed(void) {
 	RenderOneReversed(filepath, height, width);
 }
 
-
+// Render raw data
 void RenderPoints(void) {
 	string filepath = files[Pos];
 	int height, width;
@@ -306,7 +307,7 @@ void RenderOnePoints(string filepath, const int& height, const int& width) {
 }
 
 
-// filename parser
+// Filename parser
 int parse_path(const string& filepath, int& height, int& width, int clas, int presed) {
 	//bool flag_h, flag_w;
 	//int h_d, w_d;
@@ -329,7 +330,7 @@ int parse_path(const string& filepath, int& height, int& width, int clas, int pr
 }
 
 
-// Keyboard functions
+// Keyboard functions for GLUT
 void Keyboard(unsigned char key, int x, int y){
 	switch (key) {
 	case 13:	// 'Enter'
