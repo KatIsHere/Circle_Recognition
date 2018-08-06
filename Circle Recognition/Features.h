@@ -161,62 +161,6 @@ public:
 		min_extr_value = y_min_poli;
 	}
 
-	//Object_Features(const Features& max_poli, const Features& min_poli) {
-	//	max_polinome = max_poli;
-	//	min_polinome = min_poli;
-	//	angles_n_max = max_polinome.anglNumb();
-	//	dist_n_max = max_polinome.distNumb();
-	//	angles_n_min = min_polinome.anglNumb();
-	//	dist_n_min = min_polinome.distNumb();
-	//}
-
-	//// returns probability of angles similarity
-	//float compareAngles(Object_Features obj_2, const float Eps = 0.1) {
-	//	int h = 0;
-	//	const float * angles_max_2 = obj_2.max_polinome.getAngles();
-	//	const float* angles_min_2 = obj_2.min_polinome.getAngles();
-	//	const float* angles_max = max_polinome.getAngles();
-	//	const float* angles_min = min_polinome.getAngles();
-	//	for (int i = 0; i < angles_n_max; ++i) {
-	//		if (abs(angles_max_2[i] - angles_max[i]) < Eps)
-	//			h++;
-	//	}
-	//	for (int i = 0; i < angles_n_min; ++i) {
-	//		if (abs(angles_min[i] - angles_min_2[i]) < Eps)
-	//			h++;
-	//	}
-
-	//	delete[]angles_max_2; delete[]angles_min_2;
-	//	delete[] angles_max; delete[]angles_min;
-	//	return (float)h / (angles_n_min + angles_n_max);
-	//}
-
-	//// returns probability of distanses similarity
-	//float compareDistances(Object_Features obj_2, const float Eps = 0.1) {
-	//	int h = 0;
-	//	const double * dist_max_2 = obj_2.max_polinome.getDistances();
-	//	const double* dist_min_2 = obj_2.min_polinome.getDistances();
-	//	const double* dist_max = max_polinome.getDistances();
-	//	const double* dist_min = min_polinome.getDistances();
-	//	for (int i = 0; i < dist_n_max; ++i) {
-	//		if (abs(dist_max_2[i] - dist_max[i]) < Eps)
-	//			h++;
-	//	}
-	//	for (int i = 0; i < dist_n_min; ++i) {
-	//		if (abs(dist_min_2[i] - dist_min[i]) < Eps)
-	//			h++;
-	//	}
-
-	//	delete[]dist_max_2; delete[]dist_min_2;
-	//	delete[] dist_max; delete[]dist_min;
-	//	return (float)h / (dist_n_max + dist_n_min);
-	//}
-
-
-	//bool small_obj(const double& threshold_max, const double& threshold_min) {
-	//	return (_local_max < threshold_max && _local_min > threshold_min);
-	//}
-
 	const double* getMin_extr() {
 		return min_extr_value;
 	}
@@ -339,28 +283,29 @@ public:
 		for (int i = 0; i < count; ++i) {
 			pos += AnglesTrust * (obj.getAnglesMax()[i] <= _angles[i] + _angl_forv && obj.getAnglesMax()[i] >= _angles[i] - _angl_back);
 		}
-		count = obj.getAnglNumMin();
-		for (int i = 0; i < count; ++i) {
-			pos += AnglesTrust * (obj.getAnglesMin()[i] <= _angles[i] + _angl_forv && obj.getAnglesMin()[i] >= _angles[i] - _angl_back);
-		}
+		//count = obj.getAnglNumMin();
+		//for (int i = 0; i < count; ++i) {
+		//	pos += AnglesTrust * (obj.getAnglesMin()[i] <= _angles[i] + _angl_forv && obj.getAnglesMin()[i] >= _angles[i] - _angl_back);
+		//}
 
 		count = obj.getDistNumMax();
 		for (int i = 0; i < count; ++i) {
 			pos += DistTrust * (obj.getDistMax()[i] <= _dists[i] + _dist_forv && obj.getDistMax()[i] >= _dists[i] - _dist_back);
 		}
-		count = obj.getDistNumMin();
+		//count = obj.getDistNumMin();
+		//for (int i = 0; i < count; ++i) {
+		//	pos += DistTrust * (obj.getDistMin()[i] <= _dists[i] + _dist_forv && obj.getDistMin()[i] >= _dists[i] - _dist_back);
+		//}
+		//count = obj.getPowerMin();
+		//for (int i = 0; i < count; ++i) {
+		//	pos += LocalsTrust * (obj.getMin_extr()[i] <= _extrems[i] + _extrems_forv && obj.getMin_extr()[i] >= _extrems[i] - _extrems_back);
+		//}
+		count = obj.getPowerMax();
 		for (int i = 0; i < count; ++i) {
-			pos += DistTrust * (obj.getDistMin()[i] <= _dists[i] + _dist_forv && obj.getDistMin()[i] >= _dists[i] - _dist_back);
+			pos += LocalsTrust * (obj.getMax_extr()[i] <= _extrems[i] + _extrems_forv && obj.getMax_extr()[i] >= _extrems[i] - _extrems_back);
 		}
-		count = obj.getMax();
-		/*for (int i = 0; i < count; ++i) {
-			pos += LocalsTrust * (obj.getMax() <= Local_Max_ceil && (obj.getMax() >= Local_Max_floor));
-		}
-
-		pos += LocalsTrust * (obj.getMax() <= Local_Max_ceil && (obj.getMax() >= Local_Max_floor));
-		pos += LocalsTrust * (obj.getMin() <= Local_Min_ceil && (obj.getMin() >= Local_Min_floor));*/
 		
-		pos -= (PowTrust * (obj.getPowerMax() == av_power) + PowTrust * (obj.getPowerMin() == av_power));
+		pos -= (PowTrust * (obj.getPowerMax() != av_power) + PowTrust * (obj.getPowerMin() != av_power));
 		return pos;
 	}
 

@@ -7538,7 +7538,7 @@ PolinomeRealRoots:
 	movl	12(%eax), %ecx
 	movl	%ecx, 264(%esp)
 	movl	8(%eax), %ecx
-	movl	%ecx, 1340(%esp)
+	movl	%ecx, 1332(%esp)
 	movl	(%eax), %edi
 	movl	%edi, 1124(%esp)
 	movl	4(%eax), %eax
@@ -7579,7 +7579,7 @@ PolinomeRealRoots:
 	leal	-4(%edi,%edx,4), %esi
 	movl	%esi, 148(%esp)
 	leal	(,%edx,4), %eax
-	movl	%eax, 1660(%esp)
+	movl	%eax, 1336(%esp)
 	movl	$-4, %ecx
 	subl	%eax, %ecx
 	movl	%ecx, 268(%esp)
@@ -7663,17 +7663,17 @@ PolinomeRealRoots:
 	movl	%edi, 1664(%esp)
 	movl	1148(%esp), %edi
 	leal	(,%edi,4), %edi
-	movl	%edi, 1656(%esp)
+	movl	%edi, 1660(%esp)
 	movl	%ecx, 1240(%esp)
 	movl	1144(%esp), %ecx
 	leal	(,%ecx,4), %ecx
-	movl	%ecx, 1652(%esp)
+	movl	%ecx, 1656(%esp)
 	movl	1140(%esp), %ecx
 	leal	(,%ecx,4), %ecx
-	movl	%ecx, 1648(%esp)
+	movl	%ecx, 1652(%esp)
 	movl	1136(%esp), %ecx
 	leal	(,%ecx,4), %ecx
-	movl	%ecx, 1644(%esp)
+	movl	%ecx, 1648(%esp)
 	movl	%eax, 1132(%esp)
 	movl	%ebx, %eax
 	movl	%esi, %ebx
@@ -7706,13 +7706,13 @@ PolinomeRealRoots:
 	vinsertps	$32, (%esi,%ecx), %xmm1, %xmm1
 	movl	1760(%esp), %ecx
 	vinsertps	$48, (%esi,%ecx), %xmm1, %xmm1
-	movl	1644(%esp), %ecx
-	vmovss	(%esi,%ecx), %xmm2
 	movl	1648(%esp), %ecx
-	vinsertps	$16, (%esi,%ecx), %xmm2, %xmm2
+	vmovss	(%esi,%ecx), %xmm2
 	movl	1652(%esp), %ecx
-	vinsertps	$32, (%esi,%ecx), %xmm2, %xmm2
+	vinsertps	$16, (%esi,%ecx), %xmm2, %xmm2
 	movl	1656(%esp), %ecx
+	vinsertps	$32, (%esi,%ecx), %xmm2, %xmm2
+	movl	1660(%esp), %ecx
 	vinsertps	$48, (%esi,%ecx), %xmm2, %xmm2
 	vinsertf128	$1, %xmm1, %ymm2, %ymm1
 	vdivps	%ymm0, %ymm1, %ymm0
@@ -7880,8 +7880,8 @@ PolinomeRealRoots:
 	vextractps	$2, %xmm0, 4(%eax,%edx,4)
 	movl	1052(%esp), %ecx
 	vextractps	$3, %xmm0, 4(%eax,%ecx,4)
-	cmpl	$3, 1340(%esp)
-	movl	1660(%esp), %ecx
+	cmpl	$3, 1332(%esp)
+	movl	1336(%esp), %ecx
 	jl	.LBB5_17
 	movl	92(%esp), %edx
 	movl	1140(%esp), %eax
@@ -7958,13 +7958,13 @@ PolinomeRealRoots:
 	leal	-1(%eax), %edi
 	movl	1148(%esp), %eax
 	leal	-1(%eax), %eax
-	movl	%eax, 1328(%esp)
+	movl	%eax, 1660(%esp)
 	movl	1144(%esp), %eax
 	leal	-1(%eax), %eax
 	movl	%eax, 1656(%esp)
 	movl	1140(%esp), %eax
 	leal	-1(%eax), %eax
-	movl	%eax, 1324(%esp)
+	movl	%eax, 1328(%esp)
 	movl	1136(%esp), %eax
 	leal	-1(%eax), %ebx
 	movl	156(%esp), %eax
@@ -7972,18 +7972,18 @@ PolinomeRealRoots:
 	movl	%eax, 1120(%esp)
 	shll	$2, %ecx
 	movl	%ecx, 1652(%esp)
-	movl	1340(%esp), %ecx
+	movl	1332(%esp), %ecx
 	shll	$2, %edx
 	movl	%edx, 1648(%esp)
 	shll	$2, %esi
 	movl	%esi, 1644(%esp)
 	shll	$2, %edi
-	movl	%edi, 1640(%esp)
-	shll	$2, 1328(%esp)
+	movl	%edi, 1600(%esp)
+	shll	$2, 1660(%esp)
 	shll	$2, 1656(%esp)
-	shll	$2, 1324(%esp)
+	shll	$2, 1328(%esp)
 	shll	$2, %ebx
-	movl	%ebx, 1600(%esp)
+	movl	%ebx, 1596(%esp)
 	movl	$2, %eax
 	movl	152(%esp), %edx
 	.align	16, 0x90
@@ -8072,7 +8072,7 @@ PolinomeRealRoots:
 	movl	1760(%esp), %edx
 	leal	(%ecx,%edx,4), %ecx
 	movl	%ecx, 1436(%esp)
-	imull	1340(%esp), %eax
+	imull	1332(%esp), %eax
 	movl	%eax, 348(%esp)
 	vxorps	.LCPI5_1, %ymm0, %ymm0
 	vmovaps	%ymm0, 288(%esp)
@@ -8114,7 +8114,7 @@ PolinomeRealRoots:
 	vpbroadcastd	.LCPI5_4, %ymm0
 	vbroadcastsd	.LCPI5_6, %ymm3
 	vptest	%ymm6, %ymm1
-	movl	1340(%esp), %edi
+	movl	1332(%esp), %edi
 	jb	.LBB5_24
 	vmovdqa	%ymm0, 1344(%esp)
 	vpand	%ymm0, %ymm1, %ymm0
@@ -8126,7 +8126,7 @@ PolinomeRealRoots:
 	vpextrb	$14, %xmm0, %edx
 	vpextrb	$12, %xmm0, %ecx
 	vpextrb	$10, %xmm0, %eax
-	movl	%eax, 1596(%esp)
+	movl	%eax, 1592(%esp)
 	vpextrb	$8, %xmm0, %eax
 	movl	%eax, 1568(%esp)
 	vpextrb	$6, %xmm0, %eax
@@ -8181,7 +8181,7 @@ PolinomeRealRoots:
 	movl	1088(%esp), %eax
 	vmovss	(%esi,%eax), %xmm0
 .LBB5_37:
-	movl	1596(%esp), %eax
+	movl	1592(%esp), %eax
 	testb	$1, %al
 	je	.LBB5_39
 	movl	1080(%esp), %eax
@@ -8231,9 +8231,9 @@ PolinomeRealRoots:
 	vmovapd	%ymm3, %ymm6
 	.align	16, 0x90
 .LBB5_25:
-	movl	1660(%esp), %edx
+	movl	1336(%esp), %edx
 	leal	(%ecx,%edx), %edx
-	movl	1640(%esp), %esi
+	movl	1600(%esp), %esi
 	vmovss	(%esi,%edx), %xmm0
 	movl	1644(%esp), %esi
 	vinsertps	$16, (%esi,%edx), %xmm0, %xmm0
@@ -8241,13 +8241,13 @@ PolinomeRealRoots:
 	vinsertps	$32, (%esi,%edx), %xmm0, %xmm0
 	movl	1652(%esp), %esi
 	vinsertps	$48, (%esi,%edx), %xmm0, %xmm0
-	movl	1600(%esp), %esi
+	movl	1596(%esp), %esi
 	vmovss	(%esi,%edx), %xmm1
-	movl	1324(%esp), %esi
+	movl	1328(%esp), %esi
 	vinsertps	$16, (%esi,%edx), %xmm1, %xmm1
 	movl	1656(%esp), %esi
 	vinsertps	$32, (%esi,%edx), %xmm1, %xmm1
-	movl	1328(%esp), %esi
+	movl	1660(%esp), %esi
 	vinsertps	$48, (%esi,%edx), %xmm1, %xmm1
 	vinsertf128	$1, %xmm0, %ymm1, %ymm0
 	vcvtpd2psy	%ymm3, %xmm1
@@ -8333,7 +8333,7 @@ PolinomeRealRoots:
 .LBB5_51:
 	vpextrb	$10, %xmm5, %esi
 	movl	%edi, %eax
-	movl	%eax, 1596(%esp)
+	movl	%eax, 1592(%esp)
 	testb	$1, %al
 	movl	1560(%esp), %ebx
 	movl	1564(%esp), %edx
@@ -8401,7 +8401,7 @@ PolinomeRealRoots:
 	movl	(%ebx,%edx,4), %eax
 .LBB5_67:
 	movl	%eax, 1440(%esp)
-	movl	1596(%esp), %ecx
+	movl	1592(%esp), %ecx
 	testb	$1, %cl
 	je	.LBB5_69
 	movl	1144(%esp), %edx
@@ -8466,7 +8466,7 @@ PolinomeRealRoots:
 	vpextrd	$1, %xmm7, %eax
 	movl	%eax, (%ebx,%edx,4)
 .LBB5_83:
-	movl	1596(%esp), %eax
+	movl	1592(%esp), %eax
 	testb	$1, %al
 	movl	1236(%esp), %edx
 	je	.LBB5_85
@@ -8566,7 +8566,7 @@ PolinomeRealRoots:
 	vmovaps	%ymm0, 800(%esp)
 	vxorps	%ymm0, %ymm0, %ymm0
 	vblendvps	%ymm4, 1472(%esp), %ymm0, %ymm0
-	movl	1340(%esp), %edi
+	movl	1332(%esp), %edi
 	testl	%edi, %edi
 	jg	.LBB5_97
 	vmovdqa	.LCPI5_11, %xmm1
@@ -8663,7 +8663,7 @@ PolinomeRealRoots:
 	vpxor	%xmm1, %xmm1, %xmm1
 	testb	$1, %cl
 	vpxor	%xmm0, %xmm0, %xmm0
-	movl	1340(%esp), %edi
+	movl	1332(%esp), %edi
 	movl	980(%esp), %ecx
 	je	.LBB5_116
 	vmovss	(%eax,%ecx,4), %xmm0
@@ -8745,7 +8745,7 @@ PolinomeRealRoots:
 	vpextrb	$14, %xmm0, %edx
 	vpextrb	$12, %xmm0, %ecx
 	vpextrb	$10, %xmm0, %eax
-	movl	%eax, 1596(%esp)
+	movl	%eax, 1592(%esp)
 	vpextrb	$8, %xmm0, %eax
 	movl	%eax, 1568(%esp)
 	vpextrb	$6, %xmm0, %eax
@@ -8800,7 +8800,7 @@ PolinomeRealRoots:
 	movl	1092(%esp), %eax
 	vmovss	(%esi,%eax), %xmm7
 .LBB5_133:
-	movl	1596(%esp), %eax
+	movl	1592(%esp), %eax
 	testb	$1, %al
 	je	.LBB5_135
 	movl	1084(%esp), %eax
@@ -8850,9 +8850,9 @@ PolinomeRealRoots:
 	vmovapd	%ymm3, %ymm0
 	.align	16, 0x90
 .LBB5_121:
-	movl	1660(%esp), %edx
+	movl	1336(%esp), %edx
 	leal	(%ecx,%edx), %edx
-	movl	1640(%esp), %esi
+	movl	1600(%esp), %esi
 	vmovss	(%esi,%edx), %xmm1
 	movl	1644(%esp), %esi
 	vinsertps	$16, (%esi,%edx), %xmm1, %xmm1
@@ -8860,13 +8860,13 @@ PolinomeRealRoots:
 	vinsertps	$32, (%esi,%edx), %xmm1, %xmm1
 	movl	1652(%esp), %esi
 	vinsertps	$48, (%esi,%edx), %xmm1, %xmm1
-	movl	1600(%esp), %esi
+	movl	1596(%esp), %esi
 	vmovss	(%esi,%edx), %xmm2
-	movl	1324(%esp), %esi
+	movl	1328(%esp), %esi
 	vinsertps	$16, (%esi,%edx), %xmm2, %xmm2
 	movl	1656(%esp), %esi
 	vinsertps	$32, (%esi,%edx), %xmm2, %xmm2
-	movl	1328(%esp), %esi
+	movl	1660(%esp), %esi
 	vinsertps	$48, (%esi,%edx), %xmm2, %xmm2
 	vinsertf128	$1, %xmm1, %ymm2, %ymm1
 	vcvtpd2psy	%ymm3, %xmm2
@@ -8955,7 +8955,7 @@ PolinomeRealRoots:
 .LBB5_147:
 	vpextrb	$10, %xmm1, %ecx
 	movl	%esi, %eax
-	movl	%eax, 1596(%esp)
+	movl	%eax, 1592(%esp)
 	testb	$1, %al
 	movl	1560(%esp), %ebx
 	je	.LBB5_149
@@ -9020,7 +9020,7 @@ PolinomeRealRoots:
 	movl	(%ebx,%edx,4), %eax
 .LBB5_163:
 	movl	%eax, 1376(%esp)
-	movl	1596(%esp), %edx
+	movl	1592(%esp), %edx
 	testb	$1, %dl
 	je	.LBB5_165
 	movl	1144(%esp), %edx
@@ -9086,7 +9086,7 @@ PolinomeRealRoots:
 	movl	1140(%esp), %edx
 	movl	%eax, (%ebx,%edx,4)
 .LBB5_179:
-	movl	1596(%esp), %eax
+	movl	1592(%esp), %eax
 	testb	$1, %al
 	je	.LBB5_181
 	vpextrd	$2, %xmm1, %eax
@@ -9185,7 +9185,7 @@ PolinomeRealRoots:
 	vpextrd	$3, %xmm1, (%edx,%esi,4)
 .LBB5_191:
 	vblendvps	%ymm2, 1472(%esp), %ymm7, %ymm1
-	movl	1340(%esp), %eax
+	movl	1332(%esp), %eax
 	testl	%eax, %eax
 	jg	.LBB5_192
 	vmovdqa	.LCPI5_11, %xmm0
@@ -9235,6 +9235,7 @@ PolinomeRealRoots:
 	vmovaps	%ymm0, 480(%esp)
 	vpand	%ymm0, %ymm2, %ymm1
 	vptest	%ymm1, %ymm1
+	movl	1336(%esp), %ecx
 	vmovdqa	1344(%esp), %ymm0
 	vmovaps	%ymm4, %ymm6
 	movl	%eax, %edi
@@ -9248,7 +9249,7 @@ PolinomeRealRoots:
 	vpxor	%ymm2, %ymm0, %ymm0
 	vmovdqa	%ymm0, 1376(%esp)
 	vptest	%ymm2, %ymm1
-	jb	.LBB5_349
+	jb	.LBB5_351
 	vmovaps	%ymm3, 1152(%esp)
 	vmovaps	%ymm6, 1248(%esp)
 	vpxor	%xmm0, %xmm0, %xmm0
@@ -9260,7 +9261,7 @@ PolinomeRealRoots:
 	vpextrb	$14, %xmm0, %edx
 	vpextrb	$12, %xmm0, %ecx
 	vpextrb	$10, %xmm0, %eax
-	movl	%eax, 1596(%esp)
+	movl	%eax, 1592(%esp)
 	vpextrb	$8, %xmm0, %eax
 	movl	%eax, 1568(%esp)
 	vpextrb	$6, %xmm0, %eax
@@ -9316,7 +9317,7 @@ PolinomeRealRoots:
 	movl	1520(%esp), %eax
 	vmovss	(%esi,%eax), %xmm3
 .LBB5_210:
-	movl	1596(%esp), %eax
+	movl	1592(%esp), %eax
 	testb	$1, %al
 	je	.LBB5_212
 	movl	1516(%esp), %eax
@@ -9360,7 +9361,8 @@ PolinomeRealRoots:
 	vcmpltps	%ymm7, %ymm2, %ymm0
 	vpshufb	.LCPI5_5, %ymm0, %ymm0
 	vpermq	$8, %ymm0, %ymm0
-	movl	1340(%esp), %edi
+	movl	1332(%esp), %edi
+	movl	1336(%esp), %ecx
 .LBB5_218:
 	vpmovzxwd	%xmm0, %ymm0
 	vpslld	$31, %ymm0, %ymm0
@@ -9387,36 +9389,38 @@ PolinomeRealRoots:
 	vblendvps	%ymm0, %ymm3, %ymm6, %ymm6
 	jmp	.LBB5_219
 	.align	16, 0x90
-.LBB5_349:
+.LBB5_351:
 	vmovaps	%ymm7, %ymm4
 	vmovaps	%ymm3, %ymm7
 	vbroadcastsd	.LCPI5_6, %ymm1
 	vpxor	%xmm2, %xmm2, %xmm2
 	testl	%edi, %edi
 	movl	%edi, %eax
+	movl	%ecx, %edx
 	movl	1124(%esp), %ecx
 	vmovapd	%ymm1, %ymm0
-	movl	1328(%esp), %edi
-	movl	1324(%esp), %ebx
+	movl	1328(%esp), %ebx
 	jle	.LBB5_350
 	.align	16, 0x90
-.LBB5_351:
-	movl	1660(%esp), %edx
-	leal	(%ecx,%edx), %edx
-	movl	1640(%esp), %esi
-	vmovss	(%esi,%edx), %xmm2
-	movl	1644(%esp), %esi
-	vinsertps	$16, (%esi,%edx), %xmm2, %xmm2
-	movl	1648(%esp), %esi
-	vinsertps	$32, (%esi,%edx), %xmm2, %xmm2
-	movl	1652(%esp), %esi
-	vinsertps	$48, (%esi,%edx), %xmm2, %xmm2
-	movl	1600(%esp), %esi
-	vmovss	(%esi,%edx), %xmm3
+.LBB5_352:
+	movl	%edx, %esi
+	leal	(%ecx,%esi), %edx
+	movl	1600(%esp), %edi
+	vmovss	(%edi,%edx), %xmm2
+	movl	1644(%esp), %edi
+	vinsertps	$16, (%edi,%edx), %xmm2, %xmm2
+	movl	1648(%esp), %edi
+	vinsertps	$32, (%edi,%edx), %xmm2, %xmm2
+	movl	1652(%esp), %edi
+	vinsertps	$48, (%edi,%edx), %xmm2, %xmm2
+	movl	1596(%esp), %edi
+	vmovss	(%edi,%edx), %xmm3
 	vinsertps	$16, (%ebx,%edx), %xmm3, %xmm3
-	movl	1656(%esp), %esi
-	vinsertps	$32, (%esi,%edx), %xmm3, %xmm3
+	movl	1656(%esp), %edi
+	vinsertps	$32, (%edi,%edx), %xmm3, %xmm3
+	movl	1660(%esp), %edi
 	vinsertps	$48, (%edi,%edx), %xmm3, %xmm3
+	movl	%esi, %edx
 	vinsertf128	$1, %xmm2, %ymm3, %ymm3
 	vcvtpd2psy	%ymm1, %xmm1
 	vcvtpd2psy	%ymm0, %xmm0
@@ -9428,7 +9432,7 @@ PolinomeRealRoots:
 	addl	$-4, %ecx
 	decl	%eax
 	testl	%eax, %eax
-	jg	.LBB5_351
+	jg	.LBB5_352
 	vcmpltps	%ymm4, %ymm2, %ymm0
 	vpshufb	.LCPI5_5, %ymm0, %ymm0
 	vpermq	$8, %ymm0, %ymm2
@@ -9455,7 +9459,8 @@ PolinomeRealRoots:
 	vmovaps	1376(%esp), %ymm0
 	vblendvps	%ymm0, %ymm3, %ymm6, %ymm6
 	vmovaps	%ymm4, %ymm7
-	movl	1340(%esp), %edi
+	movl	1332(%esp), %edi
+	movl	%edx, %ecx
 .LBB5_219:
 	testl	%eax, %eax
 	vmovdqa	1344(%esp), %ymm0
@@ -9533,7 +9538,7 @@ PolinomeRealRoots:
 	vmovss	%xmm1, (%ecx,%esi,4)
 .LBB5_226:
 	vpextrb	$10, %xmm0, %ecx
-	movl	%ebx, 1596(%esp)
+	movl	%ebx, 1592(%esp)
 	testb	$1, %bl
 	vmovaps	640(%esp), %xmm1
 	je	.LBB5_228
@@ -9597,7 +9602,7 @@ PolinomeRealRoots:
 	movl	(%ebx,%edx,4), %eax
 .LBB5_242:
 	movl	%eax, 1536(%esp)
-	movl	1596(%esp), %edx
+	movl	1592(%esp), %edx
 	testb	$1, %dl
 	vpcmpeqd	%ymm6, %ymm6, %ymm6
 	je	.LBB5_244
@@ -9666,7 +9671,7 @@ PolinomeRealRoots:
 	movl	1140(%esp), %edx
 	movl	%eax, (%edi,%edx,4)
 .LBB5_258:
-	movl	1596(%esp), %eax
+	movl	1592(%esp), %eax
 	testb	$1, %al
 	movl	1240(%esp), %esi
 	je	.LBB5_260
@@ -9837,7 +9842,7 @@ PolinomeRealRoots:
 	movl	1128(%esp), %esi
 	movl	(%esi,%eax,4), %eax
 .LBB5_282:
-	movl	%eax, 1596(%esp)
+	movl	%eax, 1592(%esp)
 	testb	$1, %bl
 	je	.LBB5_284
 	movl	1244(%esp), %eax
@@ -9866,7 +9871,7 @@ PolinomeRealRoots:
 	movl	%esi, %edx
 	movl	1132(%esp), %esi
 	movl	(%edi,%esi,4), %esi
-	movl	%esi, 1596(%esp)
+	movl	%esi, 1592(%esp)
 	movl	1148(%esp), %esi
 	movl	(%edi,%esi,4), %esi
 	movl	%esi, 1696(%esp)
@@ -9880,7 +9885,7 @@ PolinomeRealRoots:
 	movl	1136(%esp), %edx
 	movl	(%edi,%edx,4), %edi
 .LBB5_288:
-	vmovd	1596(%esp), %xmm1
+	vmovd	1592(%esp), %xmm1
 	vpinsrd	$1, %ebx, %xmm1, %xmm1
 	vpinsrd	$2, %eax, %xmm1, %xmm1
 	vpinsrd	$3, %ecx, %xmm1, %xmm1
@@ -9903,12 +9908,12 @@ PolinomeRealRoots:
 	movl	%edi, %esi
 	vmovaps	%ymm3, %ymm4
 .LBB5_289:
-	movl	1660(%esp), %eax
+	movl	1336(%esp), %eax
 	movl	272(%esp), %edx
 	addl	%eax, %edx
 	movl	276(%esp), %eax
 	incl	%eax
-	movl	1340(%esp), %ecx
+	movl	1332(%esp), %ecx
 	cmpl	%ecx, %eax
 	jne	.LBB5_13
 .LBB5_17:
@@ -9916,7 +9921,7 @@ PolinomeRealRoots:
 	movl	988(%esp), %eax
 	movl	260(%esp), %ecx
 	leal	(%eax,%ecx,4), %eax
-	movl	%eax, 1328(%esp)
+	movl	%eax, 1344(%esp)
 	movl	1132(%esp), %ecx
 	vmovd	(%eax,%ecx,4), %xmm0
 	movl	1244(%esp), %ecx
@@ -9944,22 +9949,22 @@ PolinomeRealRoots:
 	vextracti128	$1, %ymm1, %xmm2
 	vpextrd	$3, %xmm2, %ebx
 	vpextrd	$2, %xmm2, %ecx
-	movl	%ecx, 1440(%esp)
-	vpextrd	$1, %xmm2, %ecx
 	movl	%ecx, 1472(%esp)
-	vmovd	%xmm2, 1508(%esp)
+	vpextrd	$1, %xmm2, %ecx
+	movl	%ecx, 1508(%esp)
+	vmovd	%xmm2, 1512(%esp)
 	vpextrd	$3, %xmm1, %ecx
-	movl	%ecx, 1512(%esp)
+	movl	%ecx, 1516(%esp)
 	vpextrd	$2, %xmm1, %esi
 	vpextrd	$1, %xmm1, %edx
 	vmovd	%xmm1, %edi
 	vptest	%ymm6, %ymm3
 	movl	984(%esp), %ecx
 	jb	.LBB5_290
-	movl	%edx, 1520(%esp)
-	movl	%esi, 1516(%esp)
-	movl	%edi, 1376(%esp)
-	movl	%ebx, 1436(%esp)
+	movl	%edx, 1524(%esp)
+	movl	%esi, 1520(%esp)
+	movl	%edi, 1436(%esp)
+	movl	%ebx, 1440(%esp)
 	xorl	%edx, %edx
 	movl	1048(%esp), %eax
 	movl	1060(%esp), %esi
@@ -9968,16 +9973,19 @@ PolinomeRealRoots:
 	.align	16, 0x90
 .LBB5_290:
 	movl	220(%esp), %ecx
-	movl	%ebx, 1436(%esp)
+	movl	%ebx, 1440(%esp)
 	leal	(%ecx,%edi,4), %ebx
 	movl	%ebx, 1728(%esp)
-	movl	%edi, 1376(%esp)
+	movl	%edi, 1436(%esp)
 	leal	(%ecx,%edx,4), %edi
 	movl	%edi, 1696(%esp)
-	movl	%edx, 1520(%esp)
+	movl	%edx, 1524(%esp)
 	leal	(%ecx,%esi,4), %edx
 	movl	%edx, 1664(%esp)
-	movl	%esi, 1516(%esp)
+	movl	%esi, 1520(%esp)
+	movl	1516(%esp), %edx
+	leal	(%ecx,%edx,4), %edx
+	movl	%edx, 1660(%esp)
 	movl	1512(%esp), %edx
 	leal	(%ecx,%edx,4), %edx
 	movl	%edx, 1656(%esp)
@@ -9988,11 +9996,8 @@ PolinomeRealRoots:
 	leal	(%ecx,%edx,4), %edx
 	movl	%edx, 1648(%esp)
 	movl	1440(%esp), %edx
-	leal	(%ecx,%edx,4), %edx
-	movl	%edx, 1644(%esp)
-	movl	1436(%esp), %edx
 	leal	(%ecx,%edx,4), %ecx
-	movl	%ecx, 1640(%esp)
+	movl	%ecx, 1644(%esp)
 	movl	1044(%esp), %ecx
 	movl	1048(%esp), %edx
 	leal	(%ecx,%edx,4), %esi
@@ -10006,46 +10011,46 @@ PolinomeRealRoots:
 	movl	984(%esp), %esi
 	leal	(%ecx,%esi,4), %esi
 	addl	%edx, %esi
-	movl	%esi, 1568(%esp)
+	movl	%esi, 1592(%esp)
 	movl	976(%esp), %edi
 	leal	(%ecx,%edi,4), %esi
 	addl	%edx, %esi
-	movl	%esi, 1564(%esp)
+	movl	%esi, 1568(%esp)
 	movl	924(%esp), %edi
 	leal	(%ecx,%edi,4), %esi
 	addl	%edx, %esi
-	movl	%esi, 1560(%esp)
+	movl	%esi, 1564(%esp)
 	movl	1060(%esp), %esi
 	leal	(%ecx,%esi,4), %esi
 	addl	%edx, %esi
-	movl	%esi, 1556(%esp)
+	movl	%esi, 1560(%esp)
 	movl	980(%esp), %esi
 	leal	(%ecx,%esi,4), %esi
 	addl	%edx, %esi
-	movl	%esi, 1536(%esp)
+	movl	%esi, 1556(%esp)
 	movl	1052(%esp), %esi
 	leal	(%ecx,%esi,4), %ecx
 	addl	%edx, %ecx
-	movl	%ecx, 1532(%esp)
+	movl	%ecx, 1536(%esp)
 	movl	$1, %edx
 	movl	1132(%esp), %ebx
 	movl	1144(%esp), %esi
 	movl	1136(%esp), %ecx
 	.align	16, 0x90
 .LBB5_291:
-	movl	1532(%esp), %edi
+	movl	1536(%esp), %edi
 	vmovss	-4(%edi,%edx,4), %xmm0
 	vmovss	%xmm0, 1760(%esp)
-	movl	1536(%esp), %edi
+	movl	1556(%esp), %edi
 	vmovss	-4(%edi,%edx,4), %xmm2
 	vmovdqa	%ymm3, %ymm1
-	movl	1556(%esp), %edi
-	vmovss	-4(%edi,%edx,4), %xmm3
 	movl	1560(%esp), %edi
-	vmovss	-4(%edi,%edx,4), %xmm4
+	vmovss	-4(%edi,%edx,4), %xmm3
 	movl	1564(%esp), %edi
-	vmovss	-4(%edi,%edx,4), %xmm5
+	vmovss	-4(%edi,%edx,4), %xmm4
 	movl	1568(%esp), %edi
+	vmovss	-4(%edi,%edx,4), %xmm5
+	movl	1592(%esp), %edi
 	vmovss	-4(%edi,%edx,4), %xmm6
 	movl	1596(%esp), %edi
 	vmovss	-4(%edi,%edx,4), %xmm7
@@ -10059,16 +10064,16 @@ PolinomeRealRoots:
 	movl	1664(%esp), %edi
 	vmovss	%xmm6, -4(%edi,%edx,4)
 	vpcmpeqd	%ymm6, %ymm6, %ymm6
-	movl	1656(%esp), %edi
+	movl	1660(%esp), %edi
 	vmovss	%xmm5, -4(%edi,%edx,4)
-	movl	1652(%esp), %edi
+	movl	1656(%esp), %edi
 	vmovss	%xmm4, -4(%edi,%edx,4)
-	movl	1648(%esp), %edi
+	movl	1652(%esp), %edi
 	vmovss	%xmm3, -4(%edi,%edx,4)
 	vmovdqa	%ymm1, %ymm3
-	movl	1644(%esp), %edi
+	movl	1648(%esp), %edi
 	vmovss	%xmm2, -4(%edi,%edx,4)
-	movl	1640(%esp), %edi
+	movl	1644(%esp), %edi
 	vmovss	1760(%esp), %xmm0
 	vmovss	%xmm0, -4(%edi,%edx,4)
 	vmovd	(%eax,%ebx,4), %xmm0
@@ -10102,24 +10107,27 @@ PolinomeRealRoots:
 	movl	140(%esp), %ecx
 	movl	972(%esp), %ebx
 	leal	(%ecx,%ebx,4), %ebx
-	movl	%ebx, 1564(%esp)
+	movl	%ebx, 1568(%esp)
 	leal	(%ecx,%edi,4), %edi
-	movl	%edi, 1560(%esp)
+	movl	%edi, 1564(%esp)
 	movl	976(%esp), %edi
 	leal	(%ecx,%edi,4), %edi
-	movl	%edi, 1556(%esp)
+	movl	%edi, 1560(%esp)
 	movl	924(%esp), %edi
 	leal	(%ecx,%edi,4), %edi
-	movl	%edi, 1536(%esp)
+	movl	%edi, 1556(%esp)
 	leal	(%ecx,%esi,4), %esi
-	movl	%esi, 1532(%esp)
+	movl	%esi, 1536(%esp)
 	movl	980(%esp), %esi
 	leal	(%ecx,%esi,4), %esi
-	movl	%esi, 1528(%esp)
+	movl	%esi, 1532(%esp)
 	movl	1052(%esp), %esi
 	leal	(%ecx,%esi,4), %ecx
-	movl	%ecx, 1524(%esp)
+	movl	%ecx, 1528(%esp)
 	movl	220(%esp), %ecx
+	movl	1524(%esp), %esi
+	leal	(%ecx,%esi,4), %esi
+	movl	%esi, 1524(%esp)
 	movl	1520(%esp), %esi
 	leal	(%ecx,%esi,4), %esi
 	movl	%esi, 1520(%esp)
@@ -10138,27 +10146,24 @@ PolinomeRealRoots:
 	movl	1440(%esp), %esi
 	leal	(%ecx,%esi,4), %esi
 	movl	%esi, 1440(%esp)
-	movl	1436(%esp), %esi
-	leal	(%ecx,%esi,4), %esi
-	movl	%esi, 1436(%esp)
 	leal	(%ecx,%edx,4), %ecx
-	movl	1376(%esp), %esi
+	movl	1436(%esp), %esi
 	leal	(%ecx,%esi,4), %ecx
-	movl	%ecx, 1376(%esp)
+	movl	%ecx, 1436(%esp)
 	addl	144(%esp), %eax
 	addl	%edx, %eax
 	movl	1044(%esp), %ecx
 	leal	(%ecx,%eax,4), %ecx
-	movl	%ecx, 1344(%esp)
+	movl	%ecx, 1376(%esp)
 	leal	1(%edx), %ecx
-	movl	%ecx, 1640(%esp)
+	movl	%ecx, 1644(%esp)
 	shll	$2, %edx
 	xorl	%ecx, %ecx
 	xorl	%esi, %esi
 	xorl	%ebx, %ebx
 	.align	16, 0x90
 .LBB5_295:
-	movl	%ecx, 1568(%esp)
+	movl	%ecx, 1592(%esp)
 	vpbroadcastd	.LCPI5_4, %ymm0
 	vpand	%ymm0, %ymm3, %ymm0
 	vpcmpeqd	%ymm7, %ymm0, %ymm0
@@ -10171,22 +10176,22 @@ PolinomeRealRoots:
 	movl	%ecx, 1696(%esp)
 	vpextrb	$2, %xmm1, %eax
 	vpextrb	$0, %xmm1, %ecx
-	movl	%ecx, 1644(%esp)
+	movl	%ecx, 1648(%esp)
 	vpxor	%xmm0, %xmm0, %xmm0
 	testb	$1, %cl
 	vxorpd	%xmm2, %xmm2, %xmm2
 	je	.LBB5_297
-	movl	1344(%esp), %ecx
+	movl	1376(%esp), %ecx
 	vmovss	(%ecx,%ebx), %xmm2
 .LBB5_297:
 	vmovdqa	%ymm3, 1600(%esp)
 	vpextrb	$8, %xmm1, %ecx
 	movl	%ecx, 1728(%esp)
-	movl	%eax, 1648(%esp)
+	movl	%eax, 1652(%esp)
 	testb	$1, %al
 	je	.LBB5_299
 	leal	(%edx,%esi), %edi
-	movl	1564(%esp), %ecx
+	movl	1568(%esp), %ecx
 	vmovss	(%ecx,%edi), %xmm0
 .LBB5_299:
 	vpextrb	$10, %xmm1, %ecx
@@ -10197,70 +10202,70 @@ PolinomeRealRoots:
 	vxorps	%xmm4, %xmm4, %xmm4
 	je	.LBB5_301
 	leal	(%edx,%esi), %edi
-	movl	1560(%esp), %ecx
+	movl	1564(%esp), %ecx
 	vmovss	(%ecx,%edi), %xmm4
 .LBB5_301:
 	vpextrb	$12, %xmm1, %ecx
-	movl	%ecx, 1656(%esp)
+	movl	%ecx, 1660(%esp)
 	movl	1760(%esp), %ecx
 	testb	$1, %cl
 	je	.LBB5_303
 	leal	(%edx,%esi), %edi
-	movl	1556(%esp), %ecx
+	movl	1560(%esp), %ecx
 	vmovss	(%ecx,%edi), %xmm3
 .LBB5_303:
 	vpextrb	$14, %xmm1, %eax
-	movl	%eax, 1652(%esp)
+	movl	%eax, 1656(%esp)
 	vxorps	%xmm5, %xmm5, %xmm5
 	movl	1728(%esp), %ecx
 	testb	$1, %cl
 	vpxor	%xmm6, %xmm6, %xmm6
 	je	.LBB5_305
 	leal	(%edx,%esi), %edi
-	movl	1536(%esp), %ecx
+	movl	1556(%esp), %ecx
 	vmovss	(%ecx,%edi), %xmm6
 .LBB5_305:
 	movl	1664(%esp), %ecx
 	testb	$1, %cl
 	je	.LBB5_307
 	leal	(%edx,%esi), %edi
-	movl	1532(%esp), %ecx
+	movl	1536(%esp), %ecx
 	vmovss	(%ecx,%edi), %xmm5
 .LBB5_307:
 	vpxor	%xmm7, %xmm7, %xmm7
-	movl	1656(%esp), %ecx
+	movl	1660(%esp), %ecx
 	testb	$1, %cl
 	vpxor	%xmm1, %xmm1, %xmm1
 	je	.LBB5_309
 	leal	(%edx,%esi), %edi
-	movl	1528(%esp), %ecx
+	movl	1532(%esp), %ecx
 	vmovss	(%ecx,%edi), %xmm1
 .LBB5_309:
-	movl	1652(%esp), %ecx
+	movl	1656(%esp), %ecx
 	testb	$1, %cl
 	je	.LBB5_311
 	leal	(%edx,%esi), %edi
-	movl	1524(%esp), %ecx
+	movl	1528(%esp), %ecx
 	vmovss	(%ecx,%edi), %xmm7
 .LBB5_311:
-	movl	1644(%esp), %eax
+	movl	1648(%esp), %eax
 	testb	$1, %al
 	je	.LBB5_313
-	movl	1376(%esp), %ecx
+	movl	1436(%esp), %ecx
 	vmovss	%xmm2, (%ecx,%ebx)
 .LBB5_313:
-	movl	1648(%esp), %eax
+	movl	1652(%esp), %eax
 	testb	$1, %al
 	je	.LBB5_315
 	leal	(%edx,%esi), %edi
-	movl	1520(%esp), %ecx
+	movl	1524(%esp), %ecx
 	vmovss	%xmm0, (%ecx,%edi)
 .LBB5_315:
 	movl	1696(%esp), %ecx
 	testb	$1, %cl
 	je	.LBB5_317
 	leal	(%edx,%esi), %edi
-	movl	1516(%esp), %ecx
+	movl	1520(%esp), %ecx
 	vmovss	%xmm4, (%ecx,%edi)
 .LBB5_317:
 	movl	%ebx, 1596(%esp)
@@ -10268,47 +10273,47 @@ PolinomeRealRoots:
 	testb	$1, %cl
 	je	.LBB5_319
 	leal	(%edx,%esi), %edi
-	movl	1512(%esp), %ecx
+	movl	1516(%esp), %ecx
 	vmovss	%xmm3, (%ecx,%edi)
 .LBB5_319:
 	movl	1728(%esp), %ecx
 	testb	$1, %cl
-	movl	1328(%esp), %eax
+	movl	1344(%esp), %eax
 	je	.LBB5_321
 	leal	(%edx,%esi), %edi
-	movl	1508(%esp), %ecx
+	movl	1512(%esp), %ecx
 	vmovss	%xmm6, (%ecx,%edi)
 .LBB5_321:
 	movl	1664(%esp), %ecx
 	testb	$1, %cl
 	je	.LBB5_323
 	leal	(%edx,%esi), %edi
-	movl	1472(%esp), %ecx
+	movl	1508(%esp), %ecx
 	vmovss	%xmm5, (%ecx,%edi)
 .LBB5_323:
-	movl	1656(%esp), %ecx
+	movl	1660(%esp), %ecx
 	testb	$1, %cl
 	vpcmpeqd	%ymm6, %ymm6, %ymm6
 	je	.LBB5_325
 	leal	(%edx,%esi), %edi
-	movl	1440(%esp), %ecx
+	movl	1472(%esp), %ecx
 	vmovss	%xmm1, (%ecx,%edi)
 .LBB5_325:
-	movl	1652(%esp), %ecx
+	movl	1656(%esp), %ecx
 	testb	$1, %cl
 	je	.LBB5_327
 	leal	(%edx,%esi), %edi
-	movl	1436(%esp), %ecx
+	movl	1440(%esp), %ecx
 	vmovss	%xmm7, (%ecx,%edi)
 .LBB5_327:
-	movl	1644(%esp), %ecx
+	movl	1648(%esp), %ecx
 	testb	$1, %cl
 	je	.LBB5_329
 	movl	1136(%esp), %ecx
 	movl	(%eax,%ecx,4), %ecx
 .LBB5_329:
-	movl	%ecx, 1644(%esp)
-	movl	1648(%esp), %ecx
+	movl	%ecx, 1648(%esp)
+	movl	1652(%esp), %ecx
 	testb	$1, %cl
 	vpxor	%ymm7, %ymm7, %ymm7
 	movl	1244(%esp), %ecx
@@ -10316,7 +10321,7 @@ PolinomeRealRoots:
 	movl	1140(%esp), %edi
 	movl	(%eax,%edi,4), %edi
 .LBB5_331:
-	movl	%edi, 1648(%esp)
+	movl	%edi, 1652(%esp)
 	movl	1696(%esp), %ebx
 	testb	$1, %bl
 	je	.LBB5_333
@@ -10343,9 +10348,9 @@ PolinomeRealRoots:
 	je	.LBB5_339
 	movl	(%eax,%ecx,4), %ebx
 .LBB5_339:
-	movl	1640(%esp), %ecx
+	movl	1644(%esp), %ecx
 	vmovd	%ecx, %xmm1
-	movl	1656(%esp), %ecx
+	movl	1660(%esp), %ecx
 	testb	$1, %cl
 	je	.LBB5_341
 	movl	1236(%esp), %ecx
@@ -10353,7 +10358,7 @@ PolinomeRealRoots:
 .LBB5_341:
 	vbroadcastss	%xmm1, %ymm1
 	movl	%eax, %edi
-	movl	1652(%esp), %eax
+	movl	1656(%esp), %eax
 	testb	$1, %al
 	movl	%edi, %eax
 	je	.LBB5_343
@@ -10364,8 +10369,8 @@ PolinomeRealRoots:
 	vpinsrd	$1, %ebx, %xmm0, %xmm0
 	vpinsrd	$2, %ecx, %xmm0, %xmm0
 	vpinsrd	$3, %edi, %xmm0, %xmm2
-	vmovd	1644(%esp), %xmm0
-	movl	1648(%esp), %eax
+	vmovd	1648(%esp), %xmm0
+	movl	1652(%esp), %eax
 	vpinsrd	$1, %eax, %xmm0, %xmm0
 	movl	1696(%esp), %eax
 	vpinsrd	$2, %eax, %xmm0, %xmm0
@@ -10377,9 +10382,9 @@ PolinomeRealRoots:
 	vpand	%ymm3, %ymm0, %ymm3
 	movl	1596(%esp), %ebx
 	addl	$4, %ebx
-	movl	1568(%esp), %ecx
+	movl	1592(%esp), %ecx
 	adcl	$0, %ecx
-	incl	1640(%esp)
+	incl	1644(%esp)
 	addl	$4, %esi
 	vptest	%ymm3, %ymm3
 	jne	.LBB5_295
@@ -10390,7 +10395,7 @@ PolinomeRealRoots:
 	incl	%eax
 	movl	%eax, 216(%esp)
 	cmpl	208(%esp), %eax
-	movl	1340(%esp), %edx
+	movl	1332(%esp), %edx
 	movl	1124(%esp), %edi
 	vmovapd	160(%esp), %ymm2
 	movl	148(%esp), %esi
@@ -10423,7 +10428,7 @@ PolinomeRealRoots:
 	imull	%eax, %ecx
 	movl	264(%esp), %ebx
 	leal	(%ebx,%ecx,4), %ecx
-	movl	%ecx, 1600(%esp)
+	movl	%ecx, 1596(%esp)
 	shll	$2, %edx
 	movl	%edx, 1508(%esp)
 	leal	(,%edi,4), %ecx
@@ -10438,7 +10443,7 @@ PolinomeRealRoots:
 	imull	%ebx, %eax
 	movl	220(%esp), %edx
 	leal	(%edx,%eax,4), %eax
-	movl	%eax, 1596(%esp)
+	movl	%eax, 1592(%esp)
 	movl	208(%esp), %eax
 	leal	1(%esi,%eax,8), %eax
 	imull	%edi, %eax
@@ -10461,7 +10466,7 @@ PolinomeRealRoots:
 	movl	%eax, 1376(%esp)
 	leal	-8(%ecx), %eax
 	movl	%eax, 1344(%esp)
-	movl	1596(%esp), %esi
+	movl	1592(%esp), %esi
 	leal	-2(%edi), %eax
 	movl	%eax, 1516(%esp)
 	leal	4(,%edi,4), %eax
@@ -10472,12 +10477,12 @@ PolinomeRealRoots:
 	movl	$2147483647, %eax
 	vmovd	%eax, %xmm3
 	movl	1528(%esp), %eax
-	movl	1600(%esp), %ecx
+	movl	1596(%esp), %ecx
 	vmovsd	.LCPI5_6, %xmm2
 .LBB5_347:
 	movl	%ebx, 1568(%esp)
-	movl	%esi, 1596(%esp)
-	movl	%ecx, 1600(%esp)
+	movl	%esi, 1592(%esp)
+	movl	%ecx, 1596(%esp)
 	movl	%eax, 1528(%esp)
 	movl	%eax, %esi
 	imull	%edi, %esi
@@ -10490,7 +10495,7 @@ PolinomeRealRoots:
 	movl	1532(%esp), %ecx
 	leal	(%ecx,%esi), %ecx
 	movl	%ecx, 1664(%esp)
-	movl	%esi, 1640(%esp)
+	movl	%esi, 1600(%esp)
 	xorl	%ecx, %ecx
 	xorl	%esi, %esi
 	xorl	%edi, %edi
@@ -10507,7 +10512,7 @@ PolinomeRealRoots:
 	vdivss	(%ebx,%esi,4), %xmm0, %xmm0
 	movl	1728(%esp), %ebx
 	movl	1760(%esp), %esi
-	movl	1600(%esp), %eax
+	movl	1596(%esp), %eax
 	vmovss	%xmm0, (%eax,%ecx)
 	movl	1696(%esp), %eax
 	addl	1556(%esp), %ecx
@@ -10520,7 +10525,7 @@ PolinomeRealRoots:
 	.align	16, 0x90
 .LBB5_348:
 	movl	%esi, %eax
-	movl	%esi, 1640(%esp)
+	movl	%esi, 1600(%esp)
 	imull	1524(%esp), %eax
 	movl	%eax, 1644(%esp)
 .LBB5_355:
@@ -10565,7 +10570,7 @@ PolinomeRealRoots:
 	jg	.LBB5_357
 .LBB5_360:
 	movl	988(%esp), %eax
-	movl	1640(%esp), %ecx
+	movl	1600(%esp), %ecx
 	movl	$1, 4(%eax,%ecx,4)
 	movl	264(%esp), %eax
 	movl	1644(%esp), %ecx
@@ -10573,7 +10578,7 @@ PolinomeRealRoots:
 	vxorps	.LCPI5_14, %xmm0, %xmm0
 	movl	1044(%esp), %eax
 	vmovss	%xmm0, 4(%eax,%ecx,4)
-	movl	1340(%esp), %esi
+	movl	1332(%esp), %esi
 	cmpl	$3, %esi
 	jl	.LBB5_372
 	movl	1440(%esp), %eax
@@ -10606,7 +10611,7 @@ PolinomeRealRoots:
 	cmpl	%esi, 1664(%esp)
 	movl	%edi, %ecx
 	jne	.LBB5_363
-	movl	1640(%esp), %eax
+	movl	1600(%esp), %eax
 	movl	1664(%esp), %ecx
 	leal	(%ecx,%eax), %ecx
 	movl	%ecx, 1728(%esp)
@@ -10619,7 +10624,7 @@ PolinomeRealRoots:
 	vmovss	%xmm0, 1656(%esp)
 	movl	1664(%esp), %eax
 	leal	-1(%eax), %eax
-	imull	1340(%esp), %eax
+	imull	1332(%esp), %eax
 	addl	1644(%esp), %eax
 	movl	%eax, 1652(%esp)
 	vxorps	.LCPI5_14, %xmm0, %xmm0
@@ -10638,7 +10643,7 @@ PolinomeRealRoots:
 .LBB5_368:
 	vmovapd	%xmm0, %xmm1
 	xorl	%ebx, %ebx
-	movl	1340(%esp), %eax
+	movl	1332(%esp), %eax
 	testl	%eax, %eax
 	movl	$0, %esi
 	vmovapd	%xmm2, %xmm4
@@ -10674,7 +10679,7 @@ PolinomeRealRoots:
 	vmovss	(%ecx,%eax,4), %xmm0
 .LBB5_379:
 	xorl	%ecx, %ecx
-	movl	1340(%esp), %eax
+	movl	1332(%esp), %eax
 	testl	%eax, %eax
 	movl	%eax, %esi
 	movl	$0, %eax
@@ -10715,7 +10720,7 @@ PolinomeRealRoots:
 	ja	.LBB5_387
 	vmovapd	%xmm0, %xmm5
 .LBB5_387:
-	movl	1340(%esp), %ebx
+	movl	1332(%esp), %ebx
 	ja	.LBB5_389
 	vmovapd	%xmm1, %xmm0
 .LBB5_389:
@@ -10804,11 +10809,11 @@ PolinomeRealRoots:
 	addl	1564(%esp), %ebx
 	movl	1664(%esp), %eax
 	incl	%eax
-	movl	1340(%esp), %esi
+	movl	1332(%esp), %esi
 	cmpl	%esi, %eax
 	jne	.LBB5_362
 .LBB5_372:
-	movl	1640(%esp), %ebx
+	movl	1600(%esp), %ebx
 	addl	1532(%esp), %ebx
 	movl	988(%esp), %eax
 	cmpl	$0, (%eax,%ebx,4)
@@ -10825,7 +10830,7 @@ PolinomeRealRoots:
 .LBB5_374:
 	movl	1760(%esp), %eax
 	vmovss	(%eax,%ecx), %xmm0
-	movl	1596(%esp), %eax
+	movl	1592(%esp), %eax
 	vmovss	%xmm0, (%eax,%ecx)
 	addl	$4, %ecx
 	adcl	$0, %esi
@@ -10834,13 +10839,13 @@ PolinomeRealRoots:
 	cmpl	(%eax,%ebx,4), %edi
 	jl	.LBB5_374
 .LBB5_375:
-	movl	1596(%esp), %edi
+	movl	1592(%esp), %edi
 	addl	1472(%esp), %edi
 	movl	1564(%esp), %eax
 	addl	%eax, %edx
 	movl	1568(%esp), %ebx
 	addl	%eax, %ebx
-	movl	1600(%esp), %ecx
+	movl	1596(%esp), %ecx
 	addl	1508(%esp), %ecx
 	movl	1528(%esp), %eax
 	incl	%eax
@@ -10849,7 +10854,7 @@ PolinomeRealRoots:
 	movl	%esi, 1512(%esp)
 	cmpl	212(%esp), %esi
 	movl	%edi, %esi
-	movl	1340(%esp), %edi
+	movl	1332(%esp), %edi
 	jne	.LBB5_347
 .LBB5_376:
 	leal	-12(%ebp), %esp

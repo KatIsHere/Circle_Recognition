@@ -15,7 +15,7 @@ namespace fs = std::experimental::filesystem::v1;
 std::string FILEPATH = "train_data/";
 const int DOTS = 100;
 const int CLASS_COUNT = 7;
-const int CLASS = 1;
+const int CLASS = 6;
 const bool PRESED = 0;
 AvarageMeaninig AVARAGE(POLINOME_POWER_LARGE - 2);
 cl_command_queue queue_; 
