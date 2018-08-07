@@ -24,7 +24,6 @@ inline void drawFunctionSet(double* polinomes, const int& height, const int& N, 
 	double** extrems = new double*[height];
 	double** extremsValues = new double*[height];
 
-	double maxF, minF;
 	float redCh, greenCh, blueCh;
 	// MAX and MIN values of the set
 	double** polinomes_new = new double*[height];
@@ -134,7 +133,6 @@ inline void drawFunctionSet(double** polinomes, const int& height, const int& N,
 
 	printf("EXTREMUMS TIME COUNT: %f\n", (finish - start) / CLOCKS_PER_SEC);
 
-	double maxF, minF;
 	float redCh, greenCh, blueCh;
 
 	// Drawing approximated polinomes, extreme values

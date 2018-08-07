@@ -15,13 +15,13 @@ namespace fs = std::experimental::filesystem::v1;
 std::string FILEPATH = "train_data/";
 const int DOTS = 100;
 const int CLASS_COUNT = 7;
-const int CLASS = 6;
-const bool PRESED = 0;
+int CLASS = 2;
+bool PRESED = 1;
 AvarageMeaninig AVARAGE(POLINOME_POWER_LARGE - 2);
 cl_command_queue queue_; 
 cl_context context_; 
 cl_device_id device_; 
-cl_kernel kernel_;
+cl_kernel kernel_poli, kernel_extr;
 int Pos;
 vector<string> files;
 std::vector<ObjectClass> OBJS;
@@ -30,13 +30,11 @@ std::vector<ObjectClass> OBJS;
 // FUNCTIONS
 void RenderApproximation(void);
 void RenderPoints(void);
-void RenderReversed(void);
 void Draw(int argc, char ** argv);
 void RenderFast(void);
 void RenderOnePoints(string filepath, const int& height, const int& width);
 void RenderOneFast(string filepath, const int& height, const int& width);
 void RenderOneApproximation(string filepath, const int& height, const int& width);
-void RenderOneReversed(string filepath, const int& height, const int& width);
 int parse_path(const string& filepath, int& height, int& width, int clas, int presed);
 void ParseOneClass(AvarageMeaninig& Av, int& startPos, const int& class_count, const bool& pressed, std::ofstream&  file);
 void Keyboard(unsigned char key, int x, int y);
@@ -44,12 +42,14 @@ void CreateClassificatoin();
 
 
 int main(int argc, char ** argv) {
-	setUpKernel(queue_, context_, device_, kernel_);
+	setUpKernel(queue_, context_, device_, kernel_poli, kernel_extr);
 	string filename = "Classes.txt";
 	OBJS = Read_Classification(filename, POLINOME_POWER_LARGE - 1);
+
 	Draw(argc, argv);
 	//CreateClassificatoin();
-	clReleaseKernel(kernel_);
+	clReleaseKernel(kernel_poli);
+	clReleaseKernel(kernel_extr);
 	clReleaseCommandQueue(queue_);
 	clReleaseContext(context_);
 	printf("\nPress Enter to exit...");
@@ -97,64 +97,11 @@ void Draw(int argc, char ** argv) {
 	//glutCreateWindow("Real data graph");
 	//glutDisplayFunc(RenderPoints);
 
-	// Reversed polinomes
-	//glutInit(&argc, argv);
-	//glutInitWindowSize(WindowWidth, WindowHeight);
-	//glutInitWindowPosition(WindowPosX + 100, WindowPosY + 160);
-	//glutCreateWindow("Reversed data graph");
-	//glutDisplayFunc(RenderReversed);
-
 	glutKeyboardFunc(Keyboard);
 
 	glutMainLoop();
 }
 
-void CreateClassificatoin() {
-	string path;
-	std::ofstream  file("Classes.txt", std::ofstream::out);
-	for (auto& file : fs::directory_iterator(FILEPATH))
-	{
-		path = file.path().string();
-		files.push_back(path);
-	}
-	int startPos = 0;
-	AvarageMeaninig Av;
-	for (int i = 1; i <= CLASS_COUNT; ++i) {
-		ParseOneClass(Av, startPos, i, false, file);
-		ParseOneClass(Av, startPos, i, true, file);
-		printf("Computed class %d!\n", i);
-	}
-	file.close();
-}
-
-void ParseOneClass(AvarageMeaninig& Av, int& startPos, const int& class_count, const bool& pressed, std::ofstream&  file) {
-	Av.setNewObj(POLINOME_POWER_LARGE - 2);
-	string filepath = files[startPos];
-	int height, width;
-	int position = startPos;
-	int s = parse_path(filepath, height, width, class_count, pressed);
-	int numb = 1;
-	while (s != -1 && position < files.size() - 1)
-	{
-		if (s == 1) {
-			cl_float* MatrixLARGE = cl_loadFunc(height, width, filepath);
-			cl_float* x_LARGE = xCreateCLSet(0, width, width);
-			cl_double* polinomes = new cl_double[POLINOME_POWER_LARGE*height];
-
-			calculatingKernel(queue_, context_, device_, kernel_, x_LARGE, MatrixLARGE, polinomes, height, width, POLINOME_POWER_LARGE);
-			Calculate(polinomes, height, POLINOME_POWER_LARGE, 0, width, class_count, Av, OBJS);
-			delete[]polinomes;
-			delete[]MatrixLARGE;
-			delete[]x_LARGE;
-		}
-		position++;
-		filepath = files[position];
-		s = parse_path(filepath, height, width, class_count, pressed);
-	}
-	startPos = position;
-	Av.toFile(file, class_count, pressed);
-	// Av.print();
-}
 
 
 //-------------------------------------------------------------------------------------------------------
@@ -190,25 +137,14 @@ void RenderFast(void) {
 		Pos++;
 		filepath = files[Pos];
 		s = parse_path(filepath, height, width, CLASS, PRESED);
-	}
-	if (s == -1) {
-		cin.get();
-		exit(0);
+		if (s == -1) {
+			cin.get();
+			exit(0);
+		}
 	}
 	RenderOneFast(filepath, height, width);
 }
 
-// Render Reversed objects
-void RenderReversed(void) {
-	string filepath = files[Pos];
-	int height, width;
-	while (!parse_path(filepath, height, width, CLASS, PRESED))
-	{
-		Pos++;
-		filepath = files[Pos];
-	}
-	RenderOneReversed(filepath, height, width);
-}
 
 // Render raw data
 void RenderPoints(void) {
@@ -261,8 +197,27 @@ void RenderOneFast(string filepath, const int& height, const int& width) {
 	cl_float* x_LARGE = xCreateCLSet(0, width, width);
 	cl_double* polinomes = new cl_double[POLINOME_POWER_LARGE*height];
 
-	//openclCalculating(x_LARGE, MatrixLARGE, polinomes, height, width, POLINOME_POWER_LARGE);
-	calculatingKernel(queue_, context_, device_, kernel_, x_LARGE, MatrixLARGE, polinomes, height, width, POLINOME_POWER_LARGE);
+	cl_float* roots = new cl_float[height * (POLINOME_POWER_LARGE - 1)];
+	cl_int* roots_count = new cl_int[height];
+	cl_double* coefs = new cl_double[height * (POLINOME_POWER_LARGE)];
+
+	calculatingKernel_poli(queue_, context_, device_, kernel_poli, x_LARGE, MatrixLARGE, polinomes, height, width, POLINOME_POWER_LARGE);
+	
+	for (int i = 0; i < height; ++i) {
+		roots[i] = 0; roots_count[i] = 0;
+	}
+
+	for (int i = height; i < height * POLINOME_POWER_LARGE - height; ++i) {
+		roots[i] = 0; 
+	}
+
+	for (int i = 0; i < height; ++i) {
+		for (int j = 0; j < POLINOME_POWER_LARGE; ++j) {
+			coefs[i*(POLINOME_POWER_LARGE) + j] = polinomes[i*(POLINOME_POWER_LARGE) + j + 1] * (j + 1);
+		}
+	}
+
+	calculatingKernel_extrems(queue_, context_, device_, kernel_extr, coefs, roots, roots_count, (POLINOME_POWER_LARGE - 1), height, 0, width, 1.);
 
 	glClearColor(0.98f, 0.98f, 0.98f, 1.0f);
 	glClearColor(0.98f, 0.98f, 0.98f, 1.0f);
@@ -276,32 +231,9 @@ void RenderOneFast(string filepath, const int& height, const int& width) {
 	delete[]polinomes;
 	delete[]MatrixLARGE;
 	delete[]x_LARGE;
-}
-
-
-void RenderOneReversed(string filepath, const int& height, const int& width) {
-	double** Matrix = loadMatrix(filepath, height, width);
-	double** MatrixLARGE = ReverseMatrix(Matrix, height, width);
-	double* x_LARGE = xCreateSet(0, height, height);
-	double** polinomes_LARGE = buidPolinome(x_LARGE, MatrixLARGE, width, height, POLINOME_POWER_LARGE, 0);
-	glClearColor(0.98f, 0.98f, 0.98f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	// Reset transformations
-	glLoadIdentity();
-	drawFunctionSet(polinomes_LARGE, width, POLINOME_POWER_LARGE, 0, height, AVARAGE);
-	glutSwapBuffers();
-
-	// DELETE ALL DATA
-	for (int i = 0; i < width; ++i)
-		delete[]polinomes_LARGE[i];
-	delete[]polinomes_LARGE;
-	for (int i = 0; i < width; ++i)
-		delete[]MatrixLARGE[i];
-	delete[]MatrixLARGE;
-	for (int i = 0; i < height; ++i)
-		delete[]Matrix[i];
-	delete[]Matrix;
-	delete[]x_LARGE;
+	delete[]roots;
+	delete[]roots_count;
+	delete[]coefs;
 }
 
 
@@ -336,7 +268,7 @@ int parse_path(const string& filepath, int& height, int& width, int clas, int pr
 			}
 		}
 	}
-	if (filepath[FILEPATH.size()] > char(clas) + '0' || filepath[FILEPATH.size() + 2] != char(pressed) + '0')
+	if (filepath[FILEPATH.size()] > char(clas) + '0')// || filepath[FILEPATH.size() + 2] != char(pressed) + '0')
 		return -1;
 	return 0;
 }
@@ -347,23 +279,107 @@ void Keyboard(unsigned char key, int x, int y){
 	switch (key) {
 	case 13:	// 'Enter'
 		Pos++;
-		//cout << "Enter registered\n";
-		glutPostRedisplay();
-		break;
-	case ' ':	// 'Space'
-		//cout << "Space registered\n";
 		glutPostRedisplay();
 		break;
 	case 8:		//'Backspace'
 		Pos--;
-		//cout << "Backspace registered\n";
 		glutPostRedisplay();
 		break;
-	//case 27:	// esc
-	//	glutLeaveGameMode();
-	//	//glutLeaveMainLoop();
-	//	break;
+	case '1':
+		CLASS = 1;
+		Pos = 0;
+		glutPostRedisplay();
+		break;
+	case '2':
+		CLASS = 2;
+		Pos = 0;
+		glutPostRedisplay();
+		break;
+	case '3':
+		CLASS = 3;
+		Pos = 0;
+		glutPostRedisplay();
+		break;
+	case '4':
+		CLASS = 4;
+		Pos = 0;
+		glutPostRedisplay();
+		break;
+	case '5':
+		CLASS = 5;
+		Pos = 0;
+		glutPostRedisplay();
+		break;
+	case '6':
+		CLASS = 6;
+		Pos = 0;
+		glutPostRedisplay();
+		break;
+	case '7':
+		CLASS = 7;
+		Pos = 0;
+		glutPostRedisplay();
+		break;
+	case 'p':
+		PRESED = true;
+		Pos = 0;
+		glutPostRedisplay();
+		break;
+	case ' ':
+		PRESED = false;
+		Pos = 0;
+		glutPostRedisplay();
+		break;
 	default:
 		break;
 	}
+}
+
+
+// Classify objects
+void CreateClassificatoin() {
+	string path;
+	std::ofstream  file("Classes.txt", std::ofstream::out);
+	for (auto& file : fs::directory_iterator(FILEPATH))
+	{
+		path = file.path().string();
+		files.push_back(path);
+	}
+	int startPos = 0;
+	AvarageMeaninig Av;
+	for (int i = 1; i <= CLASS_COUNT; ++i) {
+		ParseOneClass(Av, startPos, i, false, file);
+		ParseOneClass(Av, startPos, i, true, file);
+		printf("Computed class %d!\n", i);
+	}
+	file.close();
+}
+
+void ParseOneClass(AvarageMeaninig& Av, int& startPos, const int& class_count, const bool& pressed, std::ofstream&  file) {
+	Av.setNewObj(POLINOME_POWER_LARGE - 2);
+	string filepath = files[startPos];
+	int height, width;
+	int position = startPos;
+	int s = parse_path(filepath, height, width, class_count, pressed);
+	int numb = 1;
+	while (s != -1 && position < files.size() - 1)
+	{
+		if (s == 1) {
+			cl_float* MatrixLARGE = cl_loadFunc(height, width, filepath);
+			cl_float* x_LARGE = xCreateCLSet(0, width, width);
+			cl_double* polinomes = new cl_double[POLINOME_POWER_LARGE*height];
+
+			calculatingKernel_poli(queue_, context_, device_, kernel_poli, x_LARGE, MatrixLARGE, polinomes, height, width, POLINOME_POWER_LARGE);
+			Calculate(polinomes, height, POLINOME_POWER_LARGE, 0, width, class_count, Av, OBJS);
+			delete[]polinomes;
+			delete[]MatrixLARGE;
+			delete[]x_LARGE;
+		}
+		position++;
+		filepath = files[position];
+		s = parse_path(filepath, height, width, class_count, pressed);
+	}
+	startPos = position;
+	Av.toFile(file, class_count, pressed);
+	// Av.print();
 }

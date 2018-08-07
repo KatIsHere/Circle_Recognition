@@ -70,19 +70,6 @@ double* xCreateSet(double start, double finish, const int& N) {
 }
 
 
-double** ReverseMatrix(double** matr, const int& hight, const int& wigth) {
-	double** matrRev = new double*[wigth];
-	for (int i = 0; i < wigth; ++i) {
-		matrRev[i] = new double[hight];
-		for (int j = 0; j < hight; ++j) {
-			matrRev[i][j] = matr[j][i];
-		}
-	}
-	return matrRev;
-}
-
-
-
 /*
 * Builds a set of approximation polinomes on a matrix --- one polinome per a row
 * Counts computational time, and prints it, if (printTime == true)

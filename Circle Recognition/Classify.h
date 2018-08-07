@@ -114,18 +114,18 @@ Object_Features findExtremums_and_features(double** polinomes, /*double* centerX
 
 	Object_Features features(extrems[k_max], extremsValues[k_max], extrems[k_min], extremsValues[k_min], powerMax, powerMin, extrem_max, extrem_min);
 	
-	printf("\nLocal max: %f, local min: %f", extrem_max, extrem_min);
-	printf("\nAngles for max polinome: ");
-	//printVectorScreen(features.getAnglesMax(), features.getAnglNumMax());
-	printVectorPresigion(features.getAnglesMax(), features.getAnglNumMax());
-	printf("\nAngles for min polinome: ");
-	//printVectorScreen(features.getAnglesMin(), features.getAnglNumMin());
-	printVectorPresigion(features.getAnglesMin(), features.getAnglNumMin());
-	printf("\nDistances for max polinome: ");
-	printVectorScreen(features.getDistMax(), features.getDistNumMax());
-	printf("\nDistances for min polinome: ");
-	printVectorScreen(features.getDistMin(), features.getDistNumMin());
-	printf("\n");
+	//printf("\nLocal max: %f, local min: %f", extrem_max, extrem_min);
+	//printf("\nAngles for max polinome: ");
+	////printVectorScreen(features.getAnglesMax(), features.getAnglNumMax());
+	//printVectorPresigion(features.getAnglesMax(), features.getAnglNumMax());
+	//printf("\nAngles for min polinome: ");
+	////printVectorScreen(features.getAnglesMin(), features.getAnglNumMin());
+	//printVectorPresigion(features.getAnglesMin(), features.getAnglNumMin());
+	//printf("\nDistances for max polinome: ");
+	//printVectorScreen(features.getDistMax(), features.getDistNumMax());
+	//printf("\nDistances for min polinome: ");
+	//printVectorScreen(features.getDistMin(), features.getDistNumMin());
+	//printf("\n");
 	
 	return features;
 }
@@ -167,3 +167,4 @@ inline void Calculate(double* polinomes, const int& height, const int& N, const 
 	delete[]extrems; delete[]extremsValues;
 	delete[]extrNumb;
 }
+

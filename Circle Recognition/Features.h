@@ -5,6 +5,7 @@
 #include "LoaderAndPrinter.h"
 #include <fstream>
 #include <sstream>
+#include <iostream>
 #include <string>
 
 struct Point {
@@ -126,7 +127,7 @@ private:
 	* angle from 0 to pi
 	*/
 	void Angles(float* Angles) {
-		float rb;
+		double rb;
 		for (int i = 0; i < anglesNumb; ++i) {
 			rb = extremums[i].distance(extremums[i + 2]);
 			Angles[i] = (distances[i] * distances[i] + distances[i + 1] * distances[i + 1] - rb*rb)/(2* distances[i]* distances[i+1]);
@@ -267,7 +268,7 @@ public:
 	}
 
 	void print() {
-		printf("\nClass name: %s", _className);
+		std::cout << "\nClass name: %s" + _className;
 		printf("\nAvarage power = %d", av_power);
 		printf("\nExtremums: ");
 		printVectorScreen(_extrems);
@@ -283,23 +284,23 @@ public:
 		for (int i = 0; i < count; ++i) {
 			pos += AnglesTrust * (obj.getAnglesMax()[i] <= _angles[i] + _angl_forv && obj.getAnglesMax()[i] >= _angles[i] - _angl_back);
 		}
-		//count = obj.getAnglNumMin();
-		//for (int i = 0; i < count; ++i) {
-		//	pos += AnglesTrust * (obj.getAnglesMin()[i] <= _angles[i] + _angl_forv && obj.getAnglesMin()[i] >= _angles[i] - _angl_back);
-		//}
+		count = obj.getAnglNumMin();
+		for (int i = 0; i < count; ++i) {
+			pos += AnglesTrust * (obj.getAnglesMin()[i] <= _angles[i] + _angl_forv && obj.getAnglesMin()[i] >= _angles[i] - _angl_back);
+		}
 
 		count = obj.getDistNumMax();
 		for (int i = 0; i < count; ++i) {
 			pos += DistTrust * (obj.getDistMax()[i] <= _dists[i] + _dist_forv && obj.getDistMax()[i] >= _dists[i] - _dist_back);
 		}
-		//count = obj.getDistNumMin();
-		//for (int i = 0; i < count; ++i) {
-		//	pos += DistTrust * (obj.getDistMin()[i] <= _dists[i] + _dist_forv && obj.getDistMin()[i] >= _dists[i] - _dist_back);
-		//}
-		//count = obj.getPowerMin();
-		//for (int i = 0; i < count; ++i) {
-		//	pos += LocalsTrust * (obj.getMin_extr()[i] <= _extrems[i] + _extrems_forv && obj.getMin_extr()[i] >= _extrems[i] - _extrems_back);
-		//}
+		count = obj.getDistNumMin();
+		for (int i = 0; i < count; ++i) {
+			pos += DistTrust * (obj.getDistMin()[i] <= _dists[i] + _dist_forv && obj.getDistMin()[i] >= _dists[i] - _dist_back);
+		}
+		count = obj.getPowerMin();
+		for (int i = 0; i < count; ++i) {
+			pos += LocalsTrust * (obj.getMin_extr()[i] <= _extrems[i] + _extrems_forv && obj.getMin_extr()[i] >= _extrems[i] - _extrems_back);
+		}
 		count = obj.getPowerMax();
 		for (int i = 0; i < count; ++i) {
 			pos += LocalsTrust * (obj.getMax_extr()[i] <= _extrems[i] + _extrems_forv && obj.getMax_extr()[i] >= _extrems[i] - _extrems_back);
@@ -310,9 +311,9 @@ public:
 	}
 
 private:
-	const float AnglesTrust = 0.25;
-	const float LocalsTrust = 0.5;
-	const float DistTrust = 0.25;
+	const float AnglesTrust = 0.2;
+	const float LocalsTrust = 0.2;
+	const float DistTrust = 0.20;
 	const float PowTrust = 0.3;
 
 	// Thresholds
