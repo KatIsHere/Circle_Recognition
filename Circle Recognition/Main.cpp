@@ -197,27 +197,35 @@ void RenderOneFast(string filepath, const int& height, const int& width) {
 	cl_float* x_LARGE = xCreateCLSet(0, width, width);
 	cl_double* polinomes = new cl_double[POLINOME_POWER_LARGE*height];
 
-	cl_float* roots = new cl_float[height * (POLINOME_POWER_LARGE - 1)];
-	cl_int* roots_count = new cl_int[height];
-	cl_double* coefs = new cl_double[height * (POLINOME_POWER_LARGE)];
-
 	calculatingKernel_poli(queue_, context_, device_, kernel_poli, x_LARGE, MatrixLARGE, polinomes, height, width, POLINOME_POWER_LARGE);
 	
-	for (int i = 0; i < height; ++i) {
-		roots[i] = 0; roots_count[i] = 0;
-	}
 
-	for (int i = height; i < height * POLINOME_POWER_LARGE - height; ++i) {
-		roots[i] = 0; 
-	}
+	//cl_float* roots = new cl_float[height * (POLINOME_POWER_LARGE - 2)];
+	//cl_int* roots_count = new cl_int[height];
+	//cl_double* coefs = new cl_double[height * (POLINOME_POWER_LARGE - 1)];
+	//for (int i = 0; i < height; ++i) {
+	//	roots[i] = 0; roots_count[i] = 0;
+	//}
 
-	for (int i = 0; i < height; ++i) {
-		for (int j = 0; j < POLINOME_POWER_LARGE; ++j) {
-			coefs[i*(POLINOME_POWER_LARGE) + j] = polinomes[i*(POLINOME_POWER_LARGE) + j + 1] * (j + 1);
-		}
-	}
+	//for (int i = height; i < height * POLINOME_POWER_LARGE - height; ++i) {
+	//	roots[i] = 0; 
+	//}
 
-	calculatingKernel_extrems(queue_, context_, device_, kernel_extr, coefs, roots, roots_count, (POLINOME_POWER_LARGE - 1), height, 0, width, 1.);
+	//for (int i = 0; i < height; ++i) {
+	//	for (int j = 0; j < POLINOME_POWER_LARGE - 1; ++j) {
+	//		coefs[i*(POLINOME_POWER_LARGE) + j] = polinomes[i*(POLINOME_POWER_LARGE) + j + 1] * (j + 1);
+	//		cout << coefs[i*(POLINOME_POWER_LARGE) + j] << "\t";
+	//	}
+	//}
+
+	//calculatingKernel_extrems(queue_, context_, device_, kernel_extr, coefs, roots, roots_count, (POLINOME_POWER_LARGE - 1), height, 1, width, 1);
+
+	//for (int i = 0; i < height * (POLINOME_POWER_LARGE - 1); ++i) {
+	//	cout << roots[i] << "\t";
+	//}
+	//cout << "\n";
+	//for (int i = 0; i < height; ++i)
+	//	cout << roots_count[i] << "\t";
 
 	glClearColor(0.98f, 0.98f, 0.98f, 1.0f);
 	glClearColor(0.98f, 0.98f, 0.98f, 1.0f);
@@ -231,9 +239,9 @@ void RenderOneFast(string filepath, const int& height, const int& width) {
 	delete[]polinomes;
 	delete[]MatrixLARGE;
 	delete[]x_LARGE;
-	delete[]roots;
-	delete[]roots_count;
-	delete[]coefs;
+	// delete[]roots;
+	// delete[]roots_count;
+	// delete[]coefs;
 }
 
 

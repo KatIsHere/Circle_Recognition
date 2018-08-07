@@ -2211,7 +2211,7 @@ PolinomeRealRoots:
 	.long	5
 	.long	6
 	.long	7
-.LCPI3_3:
+.LCPI3_4:
 	.long	0
 	.long	2
 	.long	4
@@ -2220,7 +2220,7 @@ PolinomeRealRoots:
 	.long	0
 	.long	0
 	.long	0
-.LCPI3_7:
+.LCPI3_8:
 	.byte	0
 	.byte	1
 	.byte	4
@@ -2253,38 +2253,31 @@ PolinomeRealRoots:
 	.byte	128
 	.byte	128
 	.byte	128
-.LCPI3_9:
-	.long	4294967295
-	.long	2147483647
-	.long	4294967295
-	.long	2147483647
-	.long	4294967295
-	.long	2147483647
-	.long	4294967295
-	.long	2147483647
-.LCPI3_13:
+.LCPI3_11:
 	.zero	32
+.LCPI3_12:
+	.zero	32,255
 	.section	.rodata.cst4,"aM",@progbits,4
 	.align	4
 .LCPI3_1:
-	.long	2147483647
-.LCPI3_6:
-	.long	1
-.LCPI3_8:
-	.long	1056964608
-.LCPI3_11:
 	.long	1090519040
-.LCPI3_12:
+.LCPI3_2:
+	.long	2147483647
+.LCPI3_7:
+	.long	1
+.LCPI3_9:
+	.long	1056964608
+.LCPI3_13:
 	.long	0
 	.section	.rodata.cst8,"aM",@progbits,8
 	.align	8
-.LCPI3_2:
-	.quad	4576918229304087675
-.LCPI3_10:
+.LCPI3_3:
 	.quad	4591870180066957722
+.LCPI3_10:
+	.quad	4562254508917369340
 	.section	.rodata.cst16,"aM",@progbits,16
 	.align	16
-.LCPI3_4:
+.LCPI3_5:
 	.byte	128
 	.byte	128
 	.byte	128
@@ -2301,7 +2294,7 @@ PolinomeRealRoots:
 	.byte	128
 	.byte	12
 	.byte	128
-.LCPI3_5:
+.LCPI3_6:
 	.byte	0
 	.byte	128
 	.byte	4
@@ -2343,144 +2336,449 @@ PolinomeFindRoots:
 	.cfi_offset %edi, -16
 .Ltmp38:
 	.cfi_offset %ebx, -12
+	movl	12(%ebp), %edx
+	movl	(%edx), %ecx
 	movl	8(%ebp), %eax
-	movl	56(%eax), %edx
-	movl	%edx, 380(%esp)
-	movl	12(%ebp), %ecx
-	movl	(%ecx), %edi
-	movl	52(%eax), %esi
-	movl	%esi, 188(%esp)
-	imull	%esi, %edi
-	movl	%edi, 124(%esp)
+	imull	52(%eax), %ecx
+	movl	%ecx, 112(%esp)
 	movl	28(%eax), %esi
-	movl	%esi, 120(%esp)
-	leal	(%edi,%esi), %esi
-	movl	%esi, 888(%esp)
-	movl	4(%ecx), %ecx
-	imull	%edx, %ecx
-	addl	32(%eax), %ecx
-	movl	%ecx, 180(%esp)
-	movl	20(%eax), %ecx
+	movl	%esi, 108(%esp)
+	leal	(%ecx,%esi), %ecx
 	movl	%ecx, 988(%esp)
-	movl	16(%eax), %ecx
-	movl	%ecx, 1340(%esp)
+	movl	56(%eax), %ecx
+	imull	4(%edx), %ecx
+	movl	20(%eax), %edx
+	movl	%edx, 924(%esp)
+	movl	16(%eax), %edx
+	movl	%edx, 1148(%esp)
 	vmovss	12(%eax), %xmm0
-	vmovaps	%xmm0, 688(%esp)
+	vmovaps	%ymm0, 416(%esp)
 	vmovss	8(%eax), %xmm0
-	vmovaps	%xmm0, 352(%esp)
-	movl	(%eax), %ecx
-	movl	%ecx, 116(%esp)
-	movl	4(%eax), %ecx
-	movl	%ecx, 1564(%esp)
+	vmovaps	%ymm0, 384(%esp)
+	movl	(%eax), %edx
+	movl	%edx, 116(%esp)
+	movl	4(%eax), %edx
+	movl	%edx, 1572(%esp)
+	movl	32(%eax), %edx
+	movl	52(%eax), %esi
+	movl	%esi, 220(%esp)
+	movl	56(%eax), %esi
+	movl	%esi, 380(%esp)
+	addl	%ecx, %edx
+	movl	%edx, 212(%esp)
 	movl	88(%eax), %eax
-	movl	%eax, 1336(%esp)
-	sarl	$3, %edx
-	movl	%edx, 348(%esp)
-	je	.LBB3_29
+	movl	%eax, 1340(%esp)
+	movl	%esi, %ecx
+	movl	%eax, %esi
+	sarl	$3, %ecx
+	movl	%ecx, 376(%esp)
+	movl	16(%ebp), %edi
+	je	.LBB3_46
+	vxorps	%ymm4, %ymm4, %ymm4
+	vmovaps	416(%esp), %ymm2
+	vpermps	%ymm2, %ymm4, %ymm0
+	movl	212(%esp), %eax
+	vmovd	%eax, %xmm1
+	vbroadcastss	%xmm1, %ymm1
+	vpaddd	.LCPI3_0, %ymm1, %ymm1
+	vcvtdq2ps	%ymm1, %ymm1
+	vmulps	%ymm0, %ymm1, %ymm0
+	vmovaps	384(%esp), %ymm3
+	vaddss	%xmm2, %xmm3, %xmm1
+	vbroadcastss	%xmm1, %ymm1
+	vaddps	%ymm0, %ymm1, %ymm2
+	vmovaps	%ymm2, 160(%esp)
+	vpshufd	$1, %xmm2, %xmm1
+	vsubss	%xmm2, %xmm1, %xmm2
+	vmovss	.LCPI3_1, %xmm1
+	vmulss	%xmm1, %xmm2, %xmm2
+	vbroadcastss	%xmm2, %ymm2
+	vmovaps	%ymm2, 320(%esp)
+	vpermps	%ymm3, %ymm4, %ymm2
+	vaddps	%ymm2, %ymm0, %ymm2
+	vmovaps	%ymm2, 128(%esp)
+	vpshufd	$1, %xmm2, %xmm0
+	vsubss	%xmm2, %xmm0, %xmm0
+	vmulss	%xmm1, %xmm0, %xmm0
+	vbroadcastss	%xmm0, %ymm0
+	vmovaps	%ymm0, 288(%esp)
 	movl	$-1, %eax
-	xorl	%esi, %esi
-	testl	%ecx, %ecx
-	movl	%ecx, %edx
+	xorl	%ebx, %ebx
+	movl	1572(%esp), %edx
+	testl	%edx, %edx
 	movl	$0, %ecx
 	cmovlel	%eax, %ecx
 	vmovd	%ecx, %xmm0
 	vbroadcastss	%xmm0, %ymm0
-	vmovaps	%ymm0, 288(%esp)
-	cmovlel	%esi, %eax
-	movl	$0, 184(%esp)
+	vmovaps	%ymm0, 256(%esp)
+	cmovlel	%ebx, %eax
+	movl	$0, 216(%esp)
 	vmovd	%eax, %xmm0
 	vbroadcastss	%xmm0, %ymm0
-	vmovaps	%ymm0, 256(%esp)
-	movl	124(%esp), %eax
-	movl	120(%esp), %ecx
+	vmovaps	%ymm0, 224(%esp)
+	movl	112(%esp), %eax
+	movl	108(%esp), %ecx
 	leal	(%eax,%ecx), %eax
 	movl	%edx, %ecx
 	imull	%eax, %ecx
-	movl	116(%esp), %esi
-	leal	(%esi,%ecx,4), %edi
+	movl	116(%esp), %ebx
+	leal	(%ebx,%ecx,8), %ecx
+	movl	%ecx, 1456(%esp)
 	leal	-1(%edx), %ecx
 	imull	%eax, %ecx
-	leal	(%esi,%ecx,4), %esi
-	movl	%edx, %ecx
-	movl	%edi, %edx
-	leal	-4(,%ecx,4), %eax
-	movl	%eax, 176(%esp)
-	leal	(,%ecx,4), %eax
-	movl	%eax, 172(%esp)
-	vbroadcastss	688(%esp), %ymm0
-	vmovaps	%ymm0, 640(%esp)
-	vbroadcastss	352(%esp), %ymm0
-	vmovaps	%ymm0, 224(%esp)
-	movl	180(%esp), %eax
-	vmovd	%eax, %xmm0
-	vbroadcastss	%xmm0, %ymm0
-	vpaddd	.LCPI3_0, %ymm0, %ymm0
-	vcvtdq2ps	%ymm0, %ymm0
-	vmovaps	%ymm0, 128(%esp)
-	vpxor	%ymm6, %ymm6, %ymm6
-	vpbroadcastd	.LCPI3_1, %ymm0
-	vmovdqa	%ymm0, 608(%esp)
-	vbroadcastsd	.LCPI3_2, %ymm0
-	vmovapd	%ymm0, 576(%esp)
-	vbroadcastss	.LCPI3_11, %ymm0
-	vmovaps	%ymm0, 192(%esp)
-	movl	888(%esp), %eax
+	leal	(%ebx,%ecx,8), %ecx
+	leal	-8(,%edx,8), %eax
+	movl	%eax, 124(%esp)
+	leal	(,%edx,8), %eax
+	movl	%eax, 120(%esp)
+	vpbroadcastd	.LCPI3_2, %ymm0
+	vmovdqa	%ymm0, 1216(%esp)
+	vbroadcastsd	.LCPI3_3, %ymm0
+	vmovapd	%ymm0, 608(%esp)
+	movl	988(%esp), %ebx
 	.align	16, 0x90
 .LBB3_2:
-	movl	%esi, 984(%esp)
-	movl	%eax, 892(%esp)
-	movl	%edx, 1500(%esp)
-	movl	%eax, %edx
-	imull	%ecx, %edx
-	subl	%eax, %edx
-	movl	%edx, 828(%esp)
+	movl	%ebx, 1052(%esp)
+	movl	%ecx, 920(%esp)
+	movl	%ebx, %eax
+	imull	1572(%esp), %eax
+	subl	%ebx, %eax
+	movl	%eax, 828(%esp)
 	xorl	%eax, %eax
 	vmovaps	128(%esp), %ymm0
+	vmovapd	160(%esp), %ymm1
+	vmovapd	%ymm1, 832(%esp)
 	.align	16, 0x90
 .LBB3_3:
-	vmovaps	%ymm0, 512(%esp)
-	movl	%eax, 572(%esp)
-	vmovaps	640(%esp), %ymm2
-	vfmadd213ps	224(%esp), %ymm0, %ymm2
-	vmovaps	%ymm2, 1088(%esp)
-	testl	%ecx, %ecx
+	vmovaps	%ymm0, 864(%esp)
+	movl	%eax, 604(%esp)
+	movl	%ebx, 1576(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1576(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str, (%esp)
+	vzeroupper
+	calll	opencl_printf
+	movl	%ebx, 1580(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1580(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str, (%esp)
+	calll	opencl_printf
+	movl	%ebx, 1584(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1584(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str, (%esp)
+	calll	opencl_printf
+	movl	%ebx, 1588(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1588(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str, (%esp)
+	calll	opencl_printf
+	movl	%ebx, 1592(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1592(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str, (%esp)
+	calll	opencl_printf
+	movl	%ebx, 1596(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1596(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str, (%esp)
+	calll	opencl_printf
+	movl	%ebx, 1600(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1600(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str, (%esp)
+	calll	opencl_printf
+	movl	%ebx, 1604(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1604(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str, (%esp)
+	calll	opencl_printf
+	vmovaps	864(%esp), %ymm0
+	vcvtps2pd	%xmm0, %ymm0
+	vmovapd	%ymm0, 1344(%esp)
+	vmovlpd	%xmm0, 1608(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1608(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str1, (%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovapd	1344(%esp), %ymm0
+	vmovhpd	%xmm0, 1616(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1616(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str1, (%esp)
+	vextractf128	$1, %ymm0, 1536(%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovapd	1536(%esp), %xmm0
+	vmovlpd	%xmm0, 1624(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1624(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str1, (%esp)
+	calll	opencl_printf
+	vmovapd	1536(%esp), %xmm0
+	vmovhpd	%xmm0, 1632(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1632(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str1, (%esp)
+	vmovaps	864(%esp), %ymm0
+	vextractf128	$1, %ymm0, %xmm0
+	vcvtps2pd	%xmm0, %ymm0
+	vmovaps	%ymm0, 1376(%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovapd	1376(%esp), %ymm0
+	vmovlpd	%xmm0, 1640(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1640(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str1, (%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovapd	1376(%esp), %ymm0
+	vmovhpd	%xmm0, 1648(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1648(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str1, (%esp)
+	vextractf128	$1, %ymm0, 1536(%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovapd	1536(%esp), %xmm0
+	vmovlpd	%xmm0, 1656(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1656(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str1, (%esp)
+	calll	opencl_printf
+	vmovapd	1536(%esp), %xmm0
+	vmovhpd	%xmm0, 1664(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1664(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str1, (%esp)
+	calll	opencl_printf
+	movl	$0, 1676(%esp)
+	movl	$0, 1672(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1672(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str2, (%esp)
+	calll	opencl_printf
+	movl	$0, 1684(%esp)
+	movl	$0, 1680(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1680(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str2, (%esp)
+	calll	opencl_printf
+	movl	$0, 1692(%esp)
+	movl	$0, 1688(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1688(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str2, (%esp)
+	calll	opencl_printf
+	movl	$0, 1700(%esp)
+	movl	$0, 1696(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1696(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str2, (%esp)
+	calll	opencl_printf
+	movl	$0, 1708(%esp)
+	movl	$0, 1704(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1704(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str2, (%esp)
+	calll	opencl_printf
+	movl	$0, 1716(%esp)
+	movl	$0, 1712(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1712(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str2, (%esp)
+	calll	opencl_printf
+	movl	$0, 1724(%esp)
+	movl	$0, 1720(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1720(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str2, (%esp)
+	calll	opencl_printf
+	movl	$0, 1732(%esp)
+	movl	$0, 1728(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	movl	%esi, %edi
+	leal	1728(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str2, (%esp)
+	calll	opencl_printf
+	cmpl	$0, 1572(%esp)
 	jle	.LBB3_4
 	xorl	%esi, %esi
-	xorl	%edi, %edi
+	movl	$0, 1248(%esp)
 	xorl	%ebx, %ebx
-	vxorps	%ymm0, %ymm0, %ymm0
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, 1280(%esp)
 	.align	16, 0x90
 .LBB3_6:
-	vmovaps	%ymm0, 1568(%esp)
+	movl	%esi, 1504(%esp)
 	vmovd	%ebx, %xmm0
-	vpermd	%ymm0, %ymm6, %ymm1
-	vmovaps	%ymm2, %ymm0
-	calll	__ocl_svml_s9_pownf8
-	vmovaps	1088(%esp), %ymm2
-	vpxor	%ymm6, %ymm6, %ymm6
-	movl	1564(%esp), %ecx
-	movl	984(%esp), %eax
-	vbroadcastss	(%eax,%esi), %ymm1
-	vfmadd213ps	1568(%esp), %ymm0, %ymm1
-	addl	$4, %esi
-	adcl	$0, %edi
+	vpbroadcastd	%xmm0, %xmm1
+	vmovdqa	%xmm1, 1536(%esp)
+	vmovaps	1344(%esp), %ymm0
+	calll	__ocl_svml_s9_pown4
+	vmovaps	%ymm0, 1408(%esp)
+	vmovaps	1376(%esp), %ymm0
+	vmovaps	1536(%esp), %xmm1
+	calll	__ocl_svml_s9_pown4
+	vmovaps	%ymm0, 1472(%esp)
+	movl	920(%esp), %eax
+	vmovsd	(%eax,%esi), %xmm0
+	vmovaps	%ymm0, 1536(%esp)
+	vmovsd	%xmm0, 1736(%esp)
+	movl	16(%ebp), %esi
+	movl	%esi, 12(%esp)
+	movl	%edi, 8(%esp)
+	leal	1736(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str3, (%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovaps	1536(%esp), %ymm0
+	vmovsd	%xmm0, 1744(%esp)
+	movl	%esi, 12(%esp)
+	movl	%edi, 8(%esp)
+	leal	1744(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str3, (%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovaps	1536(%esp), %ymm0
+	vmovsd	%xmm0, 1752(%esp)
+	movl	%esi, 12(%esp)
+	movl	%edi, 8(%esp)
+	leal	1752(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str3, (%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovaps	1536(%esp), %ymm0
+	vmovsd	%xmm0, 1760(%esp)
+	movl	%esi, 12(%esp)
+	movl	%edi, 8(%esp)
+	leal	1760(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str3, (%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovaps	1536(%esp), %ymm0
+	vmovsd	%xmm0, 1768(%esp)
+	movl	%esi, 12(%esp)
+	movl	%edi, 8(%esp)
+	leal	1768(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str3, (%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovaps	1536(%esp), %ymm0
+	vmovsd	%xmm0, 1776(%esp)
+	movl	%esi, 12(%esp)
+	movl	%edi, 8(%esp)
+	leal	1776(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str3, (%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovaps	1536(%esp), %ymm0
+	vmovsd	%xmm0, 1784(%esp)
+	movl	%esi, 12(%esp)
+	movl	%edi, 8(%esp)
+	leal	1784(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str3, (%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovapd	1536(%esp), %ymm0
+	vmovsd	%xmm0, 1792(%esp)
+	movl	%esi, 12(%esp)
+	movl	%edi, 8(%esp)
+	leal	1792(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str3, (%esp)
+	vpermpd	$0, %ymm0, %ymm0
+	vmovaps	1280(%esp), %ymm2
+	vcvtps2pd	%xmm2, %ymm1
+	vmovapd	1408(%esp), %ymm3
+	vfmadd213pd	%ymm1, %ymm0, %ymm3
+	vcvtpd2psy	%ymm3, %xmm1
+	vextractf128	$1, %ymm2, %xmm2
+	vcvtps2pd	%xmm2, %ymm2
+	vmovapd	1472(%esp), %ymm3
+	vfmadd213pd	%ymm2, %ymm0, %ymm3
+	vcvtpd2psy	%ymm3, %xmm0
+	vinsertf128	$1, %xmm0, %ymm1, %ymm0
+	vmovapd	%ymm0, 1280(%esp)
+	movl	1504(%esp), %eax
+	addl	$8, %eax
+	movl	%eax, %esi
+	adcl	$0, 1248(%esp)
+	vzeroupper
+	calll	opencl_printf
 	incl	%ebx
-	cmpl	%ebx, %ecx
-	vmovaps	%ymm1, %ymm0
+	cmpl	%ebx, 1572(%esp)
 	jne	.LBB3_6
 	jmp	.LBB3_7
 	.align	16, 0x90
 .LBB3_4:
-	vxorps	%ymm1, %ymm1, %ymm1
+	vxorpd	%ymm0, %ymm0, %ymm0
+	vmovapd	%ymm0, 1280(%esp)
 .LBB3_7:
-	vmovaps	%ymm2, 1088(%esp)
-	vmovaps	%ymm1, 832(%esp)
-	vandps	608(%esp), %ymm1, %ymm0
+	vmovaps	1280(%esp), %ymm0
+	vandps	1216(%esp), %ymm0, %ymm0
 	vextractf128	$1, %ymm0, %xmm1
 	vcvtps2pd	%xmm1, %ymm1
-	vmovapd	576(%esp), %ymm2
+	vmovapd	608(%esp), %ymm2
 	vcmpltpd	%ymm2, %ymm1, %ymm1
-	vmovdqa	.LCPI3_3, %ymm3
+	vmovdqa	.LCPI3_4, %ymm3
 	vpermd	%ymm1, %ymm3, %ymm1
 	vmovdqa	%ymm1, 768(%esp)
 	vcvtps2pd	%xmm0, %ymm0
@@ -2488,1383 +2786,1609 @@ PolinomeFindRoots:
 	vpermd	%ymm0, %ymm3, %ymm0
 	vmovdqa	%ymm0, 736(%esp)
 	vinserti128	$1, %xmm1, %ymm0, %ymm0
-	vmovdqa	%ymm0, 480(%esp)
-	vpcmpeqd	%ymm7, %ymm7, %ymm7
-	vpxor	%ymm7, %ymm0, %ymm0
-	vmovdqa	%ymm0, 1504(%esp)
+	vmovdqa	%ymm0, 544(%esp)
+	vpxor	.LCPI3_12, %ymm0, %ymm0
+	vmovdqa	%ymm0, 1088(%esp)
 	vptest	%ymm0, %ymm0
+	movl	16(%ebp), %edi
+	movl	1052(%esp), %esi
 	je	.LBB3_8
-	vmovaps	1088(%esp), %ymm0
-	vaddps	640(%esp), %ymm0, %ymm2
-	vmovaps	%ymm2, 1056(%esp)
-	testl	%ecx, %ecx
-	vpxor	%ymm1, %ymm1, %ymm1
-	jle	.LBB3_37
+	vmovapd	832(%esp), %ymm1
+	vextractf128	$1, %ymm1, %xmm0
+	vcvtps2pd	%xmm0, %ymm0
+	vmovapd	%ymm0, 1152(%esp)
+	vcvtps2pd	%xmm1, %ymm4
+	vmovdqa	%ymm4, 1408(%esp)
+	movl	1572(%esp), %eax
+	testl	%eax, %eax
+	vxorpd	%ymm1, %ymm1, %ymm1
+	jle	.LBB3_54
 	xorl	%esi, %esi
 	xorl	%edi, %edi
 	xorl	%ebx, %ebx
-	vxorps	%ymm0, %ymm0, %ymm0
+	vxorpd	%ymm1, %ymm1, %ymm1
 	.align	16, 0x90
-.LBB3_36:
-	vmovaps	%ymm0, 1568(%esp)
+.LBB3_53:
+	vmovapd	%ymm1, 1536(%esp)
 	vmovd	%ebx, %xmm0
-	vpermd	%ymm0, %ymm6, %ymm1
-	vmovaps	%ymm2, %ymm0
-	calll	__ocl_svml_s9_pownf8
-	movl	1500(%esp), %eax
-	vmovaps	1056(%esp), %ymm2
-	vpxor	%ymm6, %ymm6, %ymm6
-	movl	1564(%esp), %ecx
-	vbroadcastss	(%eax,%esi), %ymm1
-	vfmadd213ps	1568(%esp), %ymm0, %ymm1
-	addl	$4, %esi
+	vpbroadcastd	%xmm0, %xmm1
+	vmovdqa	%xmm1, 1472(%esp)
+	vmovdqa	%ymm4, %ymm0
+	calll	__ocl_svml_s9_pown4
+	vmovdqa	%ymm0, 1504(%esp)
+	vmovapd	1152(%esp), %ymm0
+	vmovaps	1472(%esp), %xmm1
+	calll	__ocl_svml_s9_pown4
+	movl	1456(%esp), %ecx
+	movl	1572(%esp), %eax
+	vmovdqa	1408(%esp), %ymm4
+	vbroadcastsd	(%ecx,%esi), %ymm1
+	vmovaps	1536(%esp), %ymm3
+	vcvtps2pd	%xmm3, %ymm2
+	vmovapd	1504(%esp), %ymm5
+	vfmadd213pd	%ymm2, %ymm1, %ymm5
+	vcvtpd2psy	%ymm5, %xmm2
+	vextractf128	$1, %ymm3, %xmm3
+	vcvtps2pd	%xmm3, %ymm3
+	vfmadd213pd	%ymm3, %ymm1, %ymm0
+	vcvtpd2psy	%ymm0, %xmm0
+	vinsertf128	$1, %xmm0, %ymm2, %ymm1
+	addl	$8, %esi
 	adcl	$0, %edi
 	incl	%ebx
-	cmpl	%ebx, %ecx
-	vmovaps	%ymm1, %ymm0
-	jne	.LBB3_36
-.LBB3_37:
-	vmovaps	%ymm2, 1056(%esp)
-	vpbroadcastd	.LCPI3_6, %ymm0
-	vmovdqa	%ymm0, 1024(%esp)
-	vpand	608(%esp), %ymm1, %ymm2
-	vcvtps2pd	%xmm2, %ymm0
-	vmovapd	576(%esp), %ymm3
-	vcmpltpd	%ymm3, %ymm0, %ymm0
-	vmovdqa	.LCPI3_3, %ymm4
-	vpermd	%ymm0, %ymm4, %ymm0
-	vextracti128	$1, %ymm2, %xmm2
+	cmpl	%ebx, %eax
+	jne	.LBB3_53
+.LBB3_54:
+	vmovapd	%ymm1, 1536(%esp)
+	vmovdqa	%ymm4, 1408(%esp)
+	vpbroadcastd	.LCPI3_7, %ymm0
+	vmovdqa	%ymm0, 1248(%esp)
+	vandpd	1216(%esp), %ymm1, %ymm0
+	vcvtps2pd	%xmm0, %ymm1
+	vmovapd	608(%esp), %ymm2
+	vcmpltpd	%ymm2, %ymm1, %ymm1
+	vmovdqa	.LCPI3_4, %ymm3
+	vpermd	%ymm1, %ymm3, %ymm1
+	vmovdqa	%ymm1, 1056(%esp)
+	vextractf128	$1, %ymm0, %xmm0
+	vcvtps2pd	%xmm0, %ymm0
+	vcmpltpd	%ymm2, %ymm0, %ymm0
+	vpermd	%ymm0, %ymm3, %ymm0
+	vmovdqa	%ymm0, 992(%esp)
+	vinserti128	$1, %xmm0, %ymm1, %ymm0
+	vmovdqa	736(%esp), %ymm1
+	vpshufb	.LCPI3_6, %xmm1, %xmm1
+	vmovdqa	768(%esp), %ymm2
+	vpshufb	.LCPI3_5, %xmm2, %xmm2
+	vpor	%xmm2, %xmm1, %xmm1
+	vpmovzxwd	%xmm1, %ymm1
+	vpslld	$31, %ymm1, %ymm1
+	vblendvps	%ymm1, .LCPI3_11, %ymm0, %ymm2
+	vptest	%ymm2, %ymm2
+	movl	1340(%esp), %esi
+	movl	16(%ebp), %edi
+	movl	1052(%esp), %ebx
+	je	.LBB3_90
+	vmovdqa	1536(%esp), %ymm5
+	vextracti128	$1, %ymm5, %xmm1
+	vpshufd	$3, %xmm1, %xmm0
+	movl	924(%esp), %ecx
+	movl	(%ecx,%ebx,4), %eax
+	addl	828(%esp), %eax
+	vpcmpeqd	%ymm4, %ymm4, %ymm4
+	vptest	%ymm4, %ymm2
+	jb	.LBB3_56
+	vmovdqa	1248(%esp), %ymm3
+	vpand	%ymm3, %ymm2, %ymm2
+	vpxor	%ymm3, %ymm3, %ymm3
+	vpcmpeqd	%ymm3, %ymm2, %ymm2
+	vpxor	%ymm4, %ymm2, %ymm2
+	vpshufb	.LCPI3_8, %ymm2, %ymm2
+	vpermq	$8, %ymm2, %ymm2
+	vpextrb	$6, %xmm2, %ecx
+	movl	%ecx, 1504(%esp)
+	vpextrb	$4, %xmm2, %ebx
+	vpextrb	$2, %xmm2, %edi
+	vpextrb	$0, %xmm2, %ecx
+	movl	%ecx, 512(%esp)
+	testb	$1, %cl
+	movl	1148(%esp), %edx
+	je	.LBB3_59
+	vmovss	%xmm5, (%edx,%eax,4)
+.LBB3_59:
+	vpextrb	$8, %xmm2, %ecx
+	movl	%ecx, 1184(%esp)
+	movl	%edi, %ecx
+	movl	%ecx, 640(%esp)
+	testb	$1, %cl
+	je	.LBB3_61
+	vpshufd	$1, %xmm5, %xmm3
+	vmovss	%xmm3, (%edx,%eax,4)
+.LBB3_61:
+	vpextrb	$10, %xmm2, %ecx
+	movl	%ecx, 1472(%esp)
+	movl	%ebx, 672(%esp)
+	testb	$1, %bl
+	je	.LBB3_63
+	vmovhlps	%xmm5, %xmm5, %xmm3
+	vmovss	%xmm3, (%edx,%eax,4)
+.LBB3_63:
+	vpextrb	$12, %xmm2, %ecx
+	movl	1504(%esp), %ebx
+	testb	$1, %bl
+	je	.LBB3_65
+	vpshufd	$3, %xmm5, %xmm3
+	vmovss	%xmm3, (%edx,%eax,4)
+.LBB3_65:
+	vpextrb	$14, %xmm2, %edi
+	movl	1184(%esp), %ebx
+	testb	$1, %bl
+	je	.LBB3_67
+	vmovss	%xmm1, (%edx,%eax,4)
+.LBB3_67:
+	movl	1472(%esp), %ebx
+	testb	$1, %bl
+	je	.LBB3_69
+	vpshufd	$1, %xmm1, %xmm2
+	vmovss	%xmm2, (%edx,%eax,4)
+.LBB3_69:
+	movl	%ecx, 704(%esp)
+	testb	$1, %cl
+	je	.LBB3_71
+	vmovhlps	%xmm1, %xmm1, %xmm1
+	vmovss	%xmm1, (%edx,%eax,4)
+.LBB3_71:
+	movl	%edi, %ecx
+	testb	$1, %cl
+	je	.LBB3_73
+	vmovss	%xmm0, (%edx,%eax,4)
+.LBB3_73:
+	movl	%ecx, 928(%esp)
+	movl	924(%esp), %eax
+	movl	1052(%esp), %edx
+	incl	(%eax,%edx,4)
+	movl	512(%esp), %eax
+	testb	$1, %al
+	je	.LBB3_75
+	movl	16(%ebp), %eax
+	movl	%eax, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1940(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str5, (%esp)
+	vzeroupper
+	calll	opencl_printf
+.LBB3_75:
+	movl	640(%esp), %eax
+	testb	$1, %al
+	movl	16(%ebp), %edi
+	je	.LBB3_77
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1941(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str5, (%esp)
+	vzeroupper
+	calll	opencl_printf
+.LBB3_77:
+	movl	672(%esp), %eax
+	testb	$1, %al
+	movl	1052(%esp), %ebx
+	je	.LBB3_79
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1942(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str5, (%esp)
+	vzeroupper
+	calll	opencl_printf
+.LBB3_79:
+	movl	1504(%esp), %eax
+	testb	$1, %al
+	je	.LBB3_81
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1943(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str5, (%esp)
+	vzeroupper
+	calll	opencl_printf
+.LBB3_81:
+	movl	1184(%esp), %eax
+	testb	$1, %al
+	je	.LBB3_83
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1944(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str5, (%esp)
+	vzeroupper
+	calll	opencl_printf
+.LBB3_83:
+	movl	1472(%esp), %eax
+	testb	$1, %al
+	je	.LBB3_85
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1945(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str5, (%esp)
+	vzeroupper
+	calll	opencl_printf
+.LBB3_85:
+	movl	704(%esp), %eax
+	testb	$1, %al
+	je	.LBB3_87
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1946(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str5, (%esp)
+	vzeroupper
+	calll	opencl_printf
+.LBB3_87:
+	movl	928(%esp), %eax
+	testb	$1, %al
+	je	.LBB3_90
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1947(%esp), %eax
+	jmp	.LBB3_89
+.LBB3_56:
+	movl	1148(%esp), %edx
+	vmovss	%xmm0, (%edx,%eax,4)
+	incl	(%ecx,%ebx,4)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1932(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str5, (%esp)
+	vzeroupper
+	calll	opencl_printf
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1933(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str5, (%esp)
+	calll	opencl_printf
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1934(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str5, (%esp)
+	calll	opencl_printf
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1935(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str5, (%esp)
+	calll	opencl_printf
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1936(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str5, (%esp)
+	calll	opencl_printf
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1937(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str5, (%esp)
+	calll	opencl_printf
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1938(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str5, (%esp)
+	calll	opencl_printf
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1939(%esp), %eax
+.LBB3_89:
+	movl	%eax, 4(%esp)
+	movl	$.L.str5, (%esp)
+	vzeroupper
+	calll	opencl_printf
+.LBB3_90:
+	vmovdqa	992(%esp), %ymm0
+	vpshufb	.LCPI3_5, %xmm0, %xmm0
+	vmovdqa	1056(%esp), %ymm1
+	vpshufb	.LCPI3_6, %xmm1, %xmm1
+	vpor	%xmm0, %xmm1, %xmm0
+	vpmovzxwd	%xmm0, %ymm0
+	vpslld	$31, %ymm0, %ymm0
+	vmovaps	1088(%esp), %ymm1
+	vblendvps	%ymm0, .LCPI3_11, %ymm1, %ymm0
+	vptest	%ymm0, %ymm0
+	movl	%ebx, %esi
+	vmovapd	1152(%esp), %ymm6
+	vmovaps	1536(%esp), %ymm3
+	je	.LBB3_8
+	vxorps	%ymm1, %ymm1, %ymm1
+	vcmpnltps	1280(%esp), %ymm1, %ymm1
+	vmovaps	1248(%esp), %ymm4
+	vorps	%ymm4, %ymm1, %ymm1
+	vxorps	%ymm2, %ymm2, %ymm2
+	vcmpltps	%ymm3, %ymm2, %ymm2
+	vpslld	$31, %ymm2, %ymm2
+	vpcmpeqd	%ymm3, %ymm3, %ymm3
+	vblendvps	%ymm2, %ymm4, %ymm3, %ymm2
+	vpcmpeqd	%ymm2, %ymm1, %ymm1
+	vpandn	%ymm0, %ymm1, %ymm0
+	vmovdqa	%ymm0, 704(%esp)
+	vptest	%ymm0, %ymm0
+	je	.LBB3_8
+	vmovaps	864(%esp), %ymm0
+	vcmpltps	832(%esp), %ymm0, %ymm0
+	vpshufb	.LCPI3_8, %ymm0, %ymm0
+	vpermq	$8, %ymm0, %ymm1
+	vpunpcklbw	%xmm0, %xmm1, %xmm0
+	vpslld	$31, %xmm0, %xmm0
+	vpsrad	$31, %xmm0, %xmm0
+	vpmovsxdq	%xmm0, %ymm0
+	vmovapd	1344(%esp), %ymm4
+	vmovapd	1408(%esp), %ymm7
+	vblendvpd	%ymm0, %ymm4, %ymm7, %ymm2
+	vcvtpd2psy	%ymm2, %xmm2
+	vpunpckhbw	%xmm0, %xmm1, %xmm1
+	vpslld	$31, %xmm1, %xmm1
+	vpsrad	$31, %xmm1, %xmm1
+	vpmovsxdq	%xmm1, %ymm1
+	vmovapd	1376(%esp), %ymm5
+	vblendvpd	%ymm1, %ymm5, %ymm6, %ymm3
+	vcvtpd2psy	%ymm3, %xmm3
+	vinsertf128	$1, %xmm3, %ymm2, %ymm2
+	vmovapd	%ymm2, 1184(%esp)
+	vblendvpd	%ymm0, %ymm7, %ymm4, %ymm0
+	vcvtpd2psy	%ymm0, %xmm0
+	vblendvpd	%ymm1, %ymm6, %ymm5, %ymm1
+	vcvtpd2psy	%ymm1, %xmm1
+	vinsertf128	$1, %xmm1, %ymm0, %ymm0
+	vmovapd	%ymm0, 1152(%esp)
+	vaddps	%ymm2, %ymm0, %ymm0
+	vbroadcastss	.LCPI3_9, %ymm1
+	vmulps	%ymm1, %ymm0, %ymm2
+	vmovaps	%ymm2, 928(%esp)
+	cmpl	$0, 1572(%esp)
+	jle	.LBB3_93
+	vmovaps	%ymm1, 1088(%esp)
+	xorl	%esi, %esi
+	xorl	%edi, %edi
+	xorl	%ebx, %ebx
+	vxorpd	%ymm5, %ymm5, %ymm5
+	vxorpd	%ymm4, %ymm4, %ymm4
+	vxorps	%ymm1, %ymm1, %ymm1
+	.align	16, 0x90
+.LBB3_107:
+	vmovapd	%ymm5, 1504(%esp)
+	vmovaps	%ymm1, 1536(%esp)
+	vmovd	%ebx, %xmm0
+	vpermd	%ymm0, %ymm4, %ymm1
+	vmovaps	%ymm2, %ymm0
+	calll	__ocl_svml_s9_pownf8
+	vxorpd	%ymm4, %ymm4, %ymm4
+	movl	1456(%esp), %eax
+	vbroadcastsd	(%eax,%esi), %ymm1
+	vextractf128	$1, %ymm0, %xmm2
+	vcvtps2pd	%xmm2, %ymm3
+	vmovaps	928(%esp), %ymm2
+	vfmadd213pd	1504(%esp), %ymm1, %ymm3
+	vcvtps2pd	%xmm0, %ymm0
+	vfmadd213pd	1536(%esp), %ymm1, %ymm0
+	addl	$8, %esi
+	adcl	$0, %edi
+	incl	%ebx
+	cmpl	%ebx, 1572(%esp)
+	vmovapd	%ymm0, %ymm1
+	vmovapd	%ymm3, %ymm5
+	jne	.LBB3_107
+	jmp	.LBB3_94
+.LBB3_93:
+	vmovaps	%ymm1, 1088(%esp)
+	vxorps	%ymm0, %ymm0, %ymm0
+	vxorpd	%ymm3, %ymm3, %ymm3
+	vxorpd	%ymm4, %ymm4, %ymm4
+.LBB3_94:
+	vmovapd	%ymm0, 640(%esp)
+	vmovapd	%ymm3, 672(%esp)
+	vmovaps	1152(%esp), %ymm0
+	vsubps	1184(%esp), %ymm0, %ymm0
+	vandps	1216(%esp), %ymm0, %ymm0
+	vextractf128	$1, %ymm0, %xmm1
+	vcvtps2pd	%xmm1, %ymm1
+	vbroadcastsd	.LCPI3_10, %ymm3
+	vmovapd	%ymm3, 992(%esp)
+	vcmpltpd	%ymm1, %ymm3, %ymm1
+	vmovdqa	.LCPI3_4, %ymm7
+	vpermd	%ymm1, %ymm7, %ymm1
+	vmovdqa	%ymm1, 512(%esp)
+	vmovdqa	.LCPI3_5, %xmm5
+	vpshufb	%xmm5, %xmm1, %xmm1
+	vcvtps2pd	%xmm0, %ymm0
+	vcmpltpd	%ymm0, %ymm3, %ymm0
+	vpermd	%ymm0, %ymm7, %ymm0
+	vmovdqa	%ymm0, 480(%esp)
+	vmovdqa	.LCPI3_6, %xmm6
+	vpshufb	%xmm6, %xmm0, %xmm0
+	vpor	%xmm1, %xmm0, %xmm0
+	vpmovzxwd	%xmm0, %ymm0
+	vpslld	$31, %ymm0, %ymm0
+	vmovaps	704(%esp), %ymm3
+	vblendvps	%ymm0, %ymm3, %ymm4, %ymm0
+	vptest	%ymm0, %ymm0
+	je	.LBB3_101
+	vpand	224(%esp), %ymm0, %ymm3
+	vmovaps	%ymm0, 448(%esp)
+	vptest	%ymm3, %ymm3
+	vmovaps	%ymm0, 1056(%esp)
+	vmovapd	640(%esp), %ymm0
+	vmovapd	672(%esp), %ymm1
+	vmovaps	%ymm2, 1472(%esp)
+	vmovaps	%ymm2, 928(%esp)
+	vmovaps	1152(%esp), %ymm2
+	vmovaps	%ymm2, 1408(%esp)
+	vmovaps	1184(%esp), %ymm2
+	vmovaps	%ymm2, 1376(%esp)
+	movl	1572(%esp), %eax
+	vmovdqa	.LCPI3_4, %ymm7
+	je	.LBB3_96
+	.align	16, 0x90
+.LBB3_105:
+	vmovdqa	%ymm3, 1344(%esp)
+	vpxor	%ymm3, %ymm3, %ymm3
+	vcmpltpd	%ymm3, %ymm0, %ymm2
+	vpermd	%ymm2, %ymm7, %ymm2
+	vpshufb	%xmm6, %xmm2, %xmm2
+	vmovdqa	.LCPI3_5, %xmm5
+	vcmpltpd	%ymm3, %ymm1, %ymm3
+	vpermd	%ymm3, %ymm7, %ymm3
+	vpshufb	%xmm5, %xmm3, %xmm3
+	vpor	%xmm3, %xmm2, %xmm2
+	vpmovzxwd	%xmm2, %ymm2
+	vpslld	$31, %ymm2, %ymm2
+	vmovaps	1472(%esp), %ymm3
+	vmovaps	1376(%esp), %ymm6
+	vblendvps	%ymm2, %ymm3, %ymm6, %ymm6
+	vmovaps	%ymm6, 1376(%esp)
+	vxorps	%ymm2, %ymm2, %ymm2
+	vcmpltpd	%ymm0, %ymm2, %ymm0
+	vpermd	%ymm0, %ymm7, %ymm0
+	vpshufb	.LCPI3_6, %xmm0, %xmm0
+	vcmpltpd	%ymm1, %ymm2, %ymm1
+	vpermd	%ymm1, %ymm7, %ymm1
+	vpshufb	%xmm5, %xmm1, %xmm1
+	vpor	%xmm1, %xmm0, %xmm0
+	vpmovzxwd	%xmm0, %ymm0
+	vpslld	$31, %ymm0, %ymm0
+	vmovaps	1408(%esp), %ymm1
+	vblendvps	%ymm0, %ymm3, %ymm1, %ymm1
+	vmovaps	%ymm1, 1408(%esp)
+	vaddps	%ymm6, %ymm1, %ymm0
+	vmulps	1088(%esp), %ymm0, %ymm2
+	vmovaps	%ymm2, 1472(%esp)
+	vmovdqa	1344(%esp), %ymm0
+	vpand	1248(%esp), %ymm0, %ymm0
+	vpcmpeqd	.LCPI3_11, %ymm0, %ymm0
+	vxorps	%ymm1, %ymm1, %ymm1
+	vmovaps	%ymm1, 1536(%esp)
+	vpxor	.LCPI3_12, %ymm0, %ymm0
+	vmovaps	1056(%esp), %ymm1
+	vblendvps	%ymm0, %ymm2, %ymm1, %ymm1
+	vmovaps	%ymm1, 1056(%esp)
+	xorl	%esi, %esi
+	xorl	%edi, %edi
+	xorl	%ebx, %ebx
+	vxorps	%ymm2, %ymm2, %ymm2
+	.align	16, 0x90
+.LBB3_103:
+	vmovaps	%ymm2, 1504(%esp)
+	vmovd	%ebx, %xmm0
+	vpermd	%ymm0, %ymm4, %ymm1
+	vmovaps	1472(%esp), %ymm0
+	calll	__ocl_svml_s9_pownf8
+	vxorps	%ymm4, %ymm4, %ymm4
+	movl	1572(%esp), %eax
+	movl	1456(%esp), %ecx
+	vbroadcastsd	(%ecx,%esi), %ymm2
+	vextractf128	$1, %ymm0, %xmm1
+	vcvtps2pd	%xmm1, %ymm1
+	vfmadd213pd	1504(%esp), %ymm2, %ymm1
+	vcvtps2pd	%xmm0, %ymm0
+	vfmadd213pd	1536(%esp), %ymm2, %ymm0
+	addl	$8, %esi
+	adcl	$0, %edi
+	incl	%ebx
+	cmpl	%ebx, %eax
+	vmovapd	%ymm0, 1536(%esp)
+	vmovapd	%ymm1, %ymm2
+	jne	.LBB3_103
+	vmovaps	1408(%esp), %ymm2
+	vsubps	1376(%esp), %ymm2, %ymm2
+	vandps	1216(%esp), %ymm2, %ymm2
+	vextractf128	$1, %ymm2, %xmm3
+	vcvtps2pd	%xmm3, %ymm3
+	vmovapd	992(%esp), %ymm6
+	vcmpltpd	%ymm3, %ymm6, %ymm3
+	vmovdqa	.LCPI3_4, %ymm7
+	vpermd	%ymm3, %ymm7, %ymm3
+	vmovdqa	.LCPI3_5, %xmm5
+	vpshufb	%xmm5, %xmm3, %xmm3
 	vcvtps2pd	%xmm2, %ymm2
-	vcmpltpd	%ymm3, %ymm2, %ymm2
-	vpermd	%ymm2, %ymm4, %ymm2
-	vinserti128	$1, %xmm2, %ymm0, %ymm3
-	vmovdqa	736(%esp), %ymm4
-	vpshufb	.LCPI3_5, %xmm4, %xmm4
-	vmovdqa	768(%esp), %ymm5
-	vpshufb	.LCPI3_4, %xmm5, %xmm5
+	vcmpltpd	%ymm2, %ymm6, %ymm2
+	vpermd	%ymm2, %ymm7, %ymm2
+	vmovdqa	.LCPI3_6, %xmm6
+	vpshufb	%xmm6, %xmm2, %xmm2
+	vpor	%xmm3, %xmm2, %xmm2
+	vpmovzxwd	%xmm2, %ymm2
+	vpslld	$31, %ymm2, %ymm2
+	vmovaps	1344(%esp), %ymm3
+	vblendvps	%ymm2, %ymm3, %ymm4, %ymm3
+	vptest	%ymm3, %ymm3
+	jne	.LBB3_105
+.LBB3_96:
+	vmovdqa	448(%esp), %ymm0
+	vpand	256(%esp), %ymm0, %ymm4
+	vptest	%ymm4, %ymm4
+	vmovaps	%ymm0, 1536(%esp)
+	vmovaps	928(%esp), %ymm2
+	vmovdqa	%ymm7, %ymm5
+	vmovapd	672(%esp), %ymm1
+	vmovapd	640(%esp), %ymm3
+	je	.LBB3_98
+	.align	16, 0x90
+.LBB3_97:
+	vmovdqa	%ymm4, 1504(%esp)
+	vpxor	%ymm7, %ymm7, %ymm7
+	vcmpltpd	%ymm7, %ymm3, %ymm4
+	vmovdqa	%ymm5, %ymm0
+	vpermd	%ymm4, %ymm0, %ymm4
+	vpshufb	%xmm6, %xmm4, %xmm4
+	vmovdqa	.LCPI3_5, %xmm6
+	vcmpltpd	%ymm7, %ymm1, %ymm5
+	vpermd	%ymm5, %ymm0, %ymm5
+	vpshufb	%xmm6, %xmm5, %xmm5
 	vpor	%xmm5, %xmm4, %xmm4
 	vpmovzxwd	%xmm4, %ymm4
 	vpslld	$31, %ymm4, %ymm4
-	vblendvps	%ymm4, %ymm6, %ymm3, %ymm5
-	vptest	%ymm5, %ymm5
-	vpcmpeqd	%ymm7, %ymm7, %ymm7
-	je	.LBB3_56
-	vextracti128	$1, %ymm1, %xmm4
-	vpshufd	$3, %xmm4, %xmm3
-	movl	988(%esp), %eax
-	movl	892(%esp), %ecx
-	movl	(%eax,%ecx,4), %eax
-	addl	828(%esp), %eax
-	vptest	%ymm7, %ymm5
-	jb	.LBB3_54
-	vpand	1024(%esp), %ymm5, %ymm5
-	vpcmpeqd	%ymm6, %ymm5, %ymm5
-	vpxor	%ymm7, %ymm5, %ymm5
-	vpshufb	.LCPI3_7, %ymm5, %ymm5
-	vpermq	$8, %ymm5, %ymm5
-	vpextrb	$6, %xmm5, %ecx
-	movl	%ecx, 1568(%esp)
-	vpextrb	$4, %xmm5, %ecx
-	vpextrb	$2, %xmm5, %edx
-	vpextrb	$0, %xmm5, %ebx
-	testb	$1, %bl
-	je	.LBB3_41
-	movl	1340(%esp), %esi
-	vmovss	%xmm1, (%esi,%eax,4)
-.LBB3_41:
-	vpextrb	$8, %xmm5, %esi
-	testb	$1, %dl
-	je	.LBB3_43
-	vpshufd	$1, %xmm1, %xmm6
-	movl	1340(%esp), %edx
-	vmovss	%xmm6, (%edx,%eax,4)
-.LBB3_43:
-	vpextrb	$10, %xmm5, %edi
-	testb	$1, %cl
-	je	.LBB3_45
-	vmovhlps	%xmm1, %xmm1, %xmm6
-	movl	1340(%esp), %ecx
-	vmovss	%xmm6, (%ecx,%eax,4)
-.LBB3_45:
-	vpextrb	$12, %xmm5, %ecx
-	movl	1568(%esp), %edx
-	testb	$1, %dl
-	je	.LBB3_47
-	vpshufd	$3, %xmm1, %xmm6
-	movl	1340(%esp), %edx
-	vmovss	%xmm6, (%edx,%eax,4)
-.LBB3_47:
-	vpextrb	$14, %xmm5, %edx
-	movl	%esi, %ebx
-	testb	$1, %bl
-	je	.LBB3_49
-	movl	1340(%esp), %esi
-	vmovss	%xmm4, (%esi,%eax,4)
-.LBB3_49:
-	movl	%edi, %ebx
-	testb	$1, %bl
-	vxorps	%ymm6, %ymm6, %ymm6
-	je	.LBB3_51
-	vpshufd	$1, %xmm4, %xmm5
-	movl	1340(%esp), %esi
-	vmovss	%xmm5, (%esi,%eax,4)
-.LBB3_51:
-	testb	$1, %cl
-	je	.LBB3_53
-	vmovhlps	%xmm4, %xmm4, %xmm4
-	movl	1340(%esp), %ecx
-	vmovss	%xmm4, (%ecx,%eax,4)
-.LBB3_53:
-	testb	$1, %dl
-	je	.LBB3_55
-.LBB3_54:
-	movl	1340(%esp), %ecx
-	vmovss	%xmm3, (%ecx,%eax,4)
-.LBB3_55:
-	movl	988(%esp), %eax
-	movl	892(%esp), %ecx
-	incl	(%eax,%ecx,4)
-	movl	1564(%esp), %ecx
-.LBB3_56:
-	vpshufb	.LCPI3_4, %xmm2, %xmm2
-	vpshufb	.LCPI3_5, %xmm0, %xmm0
-	vpor	%xmm2, %xmm0, %xmm0
-	vpmovzxwd	%xmm0, %ymm0
-	vpslld	$31, %ymm0, %ymm0
-	vmovaps	1504(%esp), %ymm2
-	vblendvps	%ymm0, %ymm6, %ymm2, %ymm2
-	vptest	%ymm2, %ymm2
-	je	.LBB3_8
-	vxorps	%ymm0, %ymm0, %ymm0
-	vcmpnltps	832(%esp), %ymm0, %ymm0
-	vmovaps	1024(%esp), %ymm4
-	vorps	%ymm4, %ymm0, %ymm0
-	vmovaps	%ymm2, 1440(%esp)
-	vandps	%ymm4, %ymm2, %ymm2
-	vpcmpeqd	%ymm6, %ymm2, %ymm2
-	vpxor	%ymm7, %ymm2, %ymm2
-	vmovdqa	.LCPI3_7, %ymm3
-	vpshufb	%ymm3, %ymm2, %ymm2
-	vpermq	$8, %ymm2, %ymm2
-	vmovdqa	%ymm2, 1504(%esp)
-	vpextrb	$6, %xmm2, %eax
-	movl	%eax, 1376(%esp)
-	vpextrb	$4, %xmm2, %esi
-	vpextrb	$2, %xmm2, %ebx
-	vpextrb	$0, %xmm2, %eax
-	vcmpnltps	%ymm1, %ymm6, %ymm1
-	vorps	%ymm4, %ymm1, %ymm1
-	vpcmpeqd	%ymm1, %ymm0, %ymm0
-	vmovdqa	%ymm0, 1408(%esp)
-	vpshufb	%ymm3, %ymm0, %ymm0
-	vpermq	$8, %ymm0, %ymm0
-	testb	$1, %al
-	movl	1336(%esp), %edi
-	je	.LBB3_59
-	vpextrb	$0, %xmm0, %eax
-	andl	$1, %eax
-	movl	%eax, 1656(%esp)
-	movl	16(%ebp), %eax
-	movl	%eax, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	1656(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	vmovdqa	%ymm0, 1568(%esp)
-	vzeroupper
-	calll	opencl_printf
-	vmovdqa	1568(%esp), %ymm0
-.LBB3_59:
-	vmovdqa	1504(%esp), %ymm1
-	vpextrb	$8, %xmm1, %eax
-	movl	%eax, 1344(%esp)
-	testb	$1, %bl
-	je	.LBB3_61
-	vpextrb	$2, %xmm0, %eax
-	andl	$1, %eax
-	movl	%eax, 1660(%esp)
-	movl	16(%ebp), %eax
-	movl	%eax, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	1660(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	vmovdqa	%ymm0, 1568(%esp)
-	vzeroupper
-	calll	opencl_printf
-	vmovdqa	1568(%esp), %ymm0
-.LBB3_61:
-	vmovdqa	1504(%esp), %ymm1
-	vpextrb	$10, %xmm1, %eax
-	movl	%eax, 1280(%esp)
-	movl	%esi, %eax
-	testb	$1, %al
-	je	.LBB3_63
-	vpextrb	$4, %xmm0, %eax
-	andl	$1, %eax
-	movl	%eax, 1664(%esp)
-	movl	16(%ebp), %eax
-	movl	%eax, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	1664(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	vmovdqa	%ymm0, 1568(%esp)
-	vzeroupper
-	calll	opencl_printf
-	vmovdqa	1568(%esp), %ymm0
-.LBB3_63:
-	vmovdqa	%ymm0, 1568(%esp)
-	vmovdqa	1504(%esp), %ymm0
-	vpextrb	$12, %xmm0, %esi
-	movl	1376(%esp), %eax
-	testb	$1, %al
-	je	.LBB3_65
-	vmovdqa	1568(%esp), %ymm0
-	vpextrb	$6, %xmm0, %eax
-	andl	$1, %eax
-	movl	%eax, 1668(%esp)
-	movl	16(%ebp), %eax
-	movl	%eax, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	1668(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	vzeroupper
-	calll	opencl_printf
-.LBB3_65:
-	vmovdqa	1504(%esp), %ymm0
-	vpextrb	$14, %xmm0, %ebx
-	movl	1344(%esp), %eax
-	testb	$1, %al
-	vmovdqa	1568(%esp), %ymm0
-	je	.LBB3_67
-	vpextrb	$8, %xmm0, %eax
-	andl	$1, %eax
-	movl	%eax, 1672(%esp)
-	movl	16(%ebp), %eax
-	movl	%eax, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	1672(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	vzeroupper
-	calll	opencl_printf
-	vmovdqa	1568(%esp), %ymm0
-.LBB3_67:
-	movl	1280(%esp), %eax
-	testb	$1, %al
-	je	.LBB3_69
-	vpextrb	$10, %xmm0, %eax
-	andl	$1, %eax
-	movl	%eax, 1676(%esp)
-	movl	16(%ebp), %eax
-	movl	%eax, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	1676(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	vzeroupper
-	calll	opencl_printf
-	vmovdqa	1568(%esp), %ymm0
-.LBB3_69:
-	movl	%esi, %eax
-	testb	$1, %al
-	je	.LBB3_71
-	vpextrb	$12, %xmm0, %eax
-	andl	$1, %eax
-	movl	%eax, 1680(%esp)
-	movl	16(%ebp), %eax
-	movl	%eax, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	1680(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	vzeroupper
-	calll	opencl_printf
-	vmovdqa	1568(%esp), %ymm0
-.LBB3_71:
-	testb	$1, %bl
-	je	.LBB3_73
-	vpextrb	$14, %xmm0, %eax
-	andl	$1, %eax
-	movl	%eax, 1684(%esp)
-	movl	16(%ebp), %eax
-	movl	%eax, 12(%esp)
-	movl	%edi, 8(%esp)
-	leal	1684(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	vzeroupper
-	calll	opencl_printf
-.LBB3_73:
-	vmovdqa	1408(%esp), %ymm0
-	vpandn	1440(%esp), %ymm0, %ymm0
-	vmovdqa	%ymm0, 704(%esp)
-	vptest	%ymm0, %ymm0
-	movl	1564(%esp), %ecx
-	vpxor	%ymm6, %ymm6, %ymm6
-	vpcmpeqd	%ymm7, %ymm7, %ymm7
-	je	.LBB3_8
-	vmovaps	1056(%esp), %ymm3
-	vsubps	1088(%esp), %ymm3, %ymm0
-	vbroadcastss	.LCPI3_8, %ymm1
-	vmovaps	%ymm1, 928(%esp)
-	vmulps	%ymm1, %ymm0, %ymm4
-	vmovaps	%ymm4, 992(%esp)
-	vxorps	%ymm0, %ymm0, %ymm0
-	testl	%ecx, %ecx
-	jle	.LBB3_75
-	xorl	%ebx, %ebx
-	xorl	%esi, %esi
-	xorl	%edi, %edi
-	vxorps	%ymm1, %ymm1, %ymm1
-	vmovaps	%ymm1, 1504(%esp)
-	.align	16, 0x90
-.LBB3_136:
-	vmovaps	%ymm0, 1568(%esp)
-	vmovd	%edi, %xmm0
-	vpermd	%ymm0, %ymm6, %ymm1
-	vmovaps	%ymm4, %ymm0
-	calll	__ocl_svml_s9_pownf8
-	vmovaps	992(%esp), %ymm4
-	vpxor	%ymm6, %ymm6, %ymm6
-	movl	1564(%esp), %eax
-	movl	1500(%esp), %ecx
-	vbroadcastss	(%ecx,%ebx), %ymm1
-	vmulps	%ymm1, %ymm0, %ymm0
-	vextractf128	$1, %ymm0, %xmm1
-	vcvtps2pd	%xmm1, %ymm1
-	vmovapd	1504(%esp), %ymm2
-	vaddpd	%ymm1, %ymm2, %ymm2
-	vmovapd	%ymm2, 1504(%esp)
-	vcvtps2pd	%xmm0, %ymm0
-	vmovapd	1568(%esp), %ymm1
-	vaddpd	%ymm0, %ymm1, %ymm1
-	vmovapd	%ymm1, 1568(%esp)
-	vmovaps	1568(%esp), %ymm0
-	addl	$4, %ebx
-	adcl	$0, %esi
-	incl	%edi
-	cmpl	%edi, %eax
-	jne	.LBB3_136
-	movl	1336(%esp), %esi
-	movl	16(%ebp), %edi
-	vpcmpeqd	%ymm7, %ymm7, %ymm7
-	vmovaps	1056(%esp), %ymm3
-	jmp	.LBB3_77
-.LBB3_75:
-	vxorps	%ymm1, %ymm1, %ymm1
-	vmovaps	%ymm1, 1504(%esp)
-	movl	1336(%esp), %esi
-	movl	16(%ebp), %edi
-.LBB3_77:
-	vmovaps	.LCPI3_9, %ymm1
-	vandps	%ymm1, %ymm0, %ymm0
-	vbroadcastsd	.LCPI3_10, %ymm5
-	vmovapd	%ymm5, 896(%esp)
-	vcmpnlepd	%ymm0, %ymm5, %ymm0
-	vmovdqa	.LCPI3_3, %ymm2
-	vpermd	%ymm0, %ymm2, %ymm0
-	vmovdqa	%ymm0, 448(%esp)
-	vpshufb	.LCPI3_5, %xmm0, %xmm0
-	vmovdqa	%xmm0, 1568(%esp)
+	vmovaps	1184(%esp), %ymm7
+	vblendvps	%ymm4, %ymm2, %ymm7, %ymm7
+	vmovaps	%ymm7, 1184(%esp)
+	vpxor	%ymm5, %ymm5, %ymm5
+	vcmpltpd	%ymm3, %ymm5, %ymm4
+	vpermd	%ymm4, %ymm0, %ymm4
+	vpshufb	.LCPI3_6, %xmm4, %xmm4
+	vcmpltpd	%ymm1, %ymm5, %ymm5
+	vpermd	%ymm5, %ymm0, %ymm5
+	vpshufb	%xmm6, %xmm5, %xmm5
+	vpor	%xmm5, %xmm4, %xmm4
+	vmovdqa	%xmm6, %xmm1
+	vmovdqa	.LCPI3_6, %xmm6
+	vpmovzxwd	%xmm4, %ymm4
+	vpslld	$31, %ymm4, %ymm4
+	vmovaps	1152(%esp), %ymm3
+	vblendvps	%ymm4, %ymm2, %ymm3, %ymm3
+	vmovaps	%ymm3, 1152(%esp)
+	vsubps	%ymm7, %ymm3, %ymm2
+	vandps	1216(%esp), %ymm2, %ymm2
+	vextractf128	$1, %ymm2, %xmm4
+	vcvtps2pd	%xmm4, %ymm4
+	vmovapd	992(%esp), %ymm5
+	vcmpltpd	%ymm4, %ymm5, %ymm4
+	vpermd	%ymm4, %ymm0, %ymm4
+	vpshufb	%xmm1, %xmm4, %xmm4
+	vcvtps2pd	%xmm2, %ymm2
+	vcmpltpd	%ymm2, %ymm5, %ymm2
+	vpermd	%ymm2, %ymm0, %ymm2
+	vmovdqa	%ymm0, %ymm5
+	vpshufb	%xmm6, %xmm2, %xmm2
+	vpor	%xmm4, %xmm2, %xmm2
+	vpmovzxwd	%xmm2, %ymm2
+	vpslld	$31, %ymm2, %ymm2
 	vmovaps	1504(%esp), %ymm0
-	vandps	%ymm1, %ymm0, %ymm1
-	vcmpnlepd	%ymm1, %ymm5, %ymm1
-	vpermd	%ymm1, %ymm2, %ymm1
-	vmovdqa	%ymm1, 416(%esp)
-	vpshufb	.LCPI3_4, %xmm1, %xmm1
-	vmovdqa	1568(%esp), %xmm0
+	vpxor	%ymm1, %ymm1, %ymm1
+	vblendvps	%ymm2, %ymm0, %ymm1, %ymm4
+	vaddps	%ymm7, %ymm3, %ymm2
+	vmulps	1088(%esp), %ymm2, %ymm2
+	vandps	1248(%esp), %ymm0, %ymm1
+	vpcmpeqd	.LCPI3_11, %ymm1, %ymm1
+	vpxor	.LCPI3_12, %ymm1, %ymm1
+	vmovaps	1536(%esp), %ymm3
+	vblendvps	%ymm1, %ymm2, %ymm3, %ymm3
+	vmovaps	%ymm3, 1536(%esp)
+	vptest	%ymm4, %ymm4
+	vxorps	%ymm3, %ymm3, %ymm3
+	vxorps	%ymm1, %ymm1, %ymm1
+	jne	.LBB3_97
+.LBB3_98:
+	vmovaps	1536(%esp), %ymm0
+	testl	%eax, %eax
+	vmovaps	704(%esp), %ymm3
+	vmovaps	1056(%esp), %ymm7
+	jg	.LBB3_100
+	vmovaps	%ymm0, %ymm7
+.LBB3_100:
+	vpxor	%ymm4, %ymm4, %ymm4
+	vmovaps	928(%esp), %ymm2
+.LBB3_101:
+	movl	924(%esp), %ecx
+	movl	1052(%esp), %edx
+	movl	(%ecx,%edx,4), %eax
+	addl	828(%esp), %eax
+	vmovdqa	480(%esp), %ymm0
+	vpshufb	%xmm6, %xmm0, %xmm0
+	vmovdqa	512(%esp), %ymm1
+	vpshufb	.LCPI3_5, %xmm1, %xmm1
 	vpor	%xmm1, %xmm0, %xmm0
 	vpmovzxwd	%xmm0, %ymm0
 	vpslld	$31, %ymm0, %ymm0
-	vmovaps	704(%esp), %ymm1
-	vblendvps	%ymm0, %ymm6, %ymm1, %ymm0
-	vptest	%ymm0, %ymm0
-	je	.LBB3_98
-	vmovaps	%ymm4, 992(%esp)
-	vpand	256(%esp), %ymm0, %ymm1
-	vmovaps	%ymm0, 384(%esp)
-	vptest	%ymm1, %ymm1
-	vmovaps	%ymm0, 1280(%esp)
-	vmovaps	%ymm3, 1376(%esp)
-	vmovaps	%ymm3, 1056(%esp)
-	vmovaps	1088(%esp), %ymm0
-	vmovaps	%ymm0, 1344(%esp)
-	je	.LBB3_79
-	.align	16, 0x90
-.LBB3_133:
-	vmovdqa	%ymm1, 1248(%esp)
-	vmovaps	1376(%esp), %ymm2
-	vmovaps	1344(%esp), %ymm3
-	vsubps	%ymm3, %ymm2, %ymm0
-	vmulps	928(%esp), %ymm0, %ymm5
-	vmovaps	%ymm5, 1440(%esp)
-	vxorps	%ymm4, %ymm4, %ymm4
-	vcmpltps	%ymm5, %ymm4, %ymm0
-	vblendvps	%ymm0, %ymm5, %ymm2, %ymm2
-	vmovaps	%ymm2, 1376(%esp)
-	vcmpltps	%ymm4, %ymm5, %ymm0
-	vblendvps	%ymm0, %ymm5, %ymm3, %ymm3
-	vmovaps	%ymm3, 1344(%esp)
-	vpand	1024(%esp), %ymm1, %ymm0
-	vpcmpeqd	%ymm4, %ymm0, %ymm0
-	vpxor	%ymm7, %ymm0, %ymm0
-	vmovaps	1280(%esp), %ymm1
-	vblendvps	%ymm0, %ymm5, %ymm1, %ymm1
-	vmovaps	%ymm1, 1280(%esp)
-	vpshufb	.LCPI3_7, %ymm0, %ymm0
-	vpermq	$8, %ymm0, %ymm0
-	vpextrb	$14, %xmm0, %eax
-	movl	%eax, 1216(%esp)
-	vpextrb	$12, %xmm0, %eax
-	movl	%eax, 1200(%esp)
-	vpextrb	$10, %xmm0, %eax
-	movl	%eax, 1196(%esp)
-	vpextrb	$8, %xmm0, %eax
-	movl	%eax, 1192(%esp)
-	vpextrb	$6, %xmm0, %eax
-	movl	%eax, 1188(%esp)
-	vpextrb	$4, %xmm0, %eax
-	movl	%eax, 1168(%esp)
-	vpextrb	$2, %xmm0, %eax
-	movl	%eax, 1152(%esp)
-	vpextrb	$0, %xmm0, %eax
-	movl	%eax, 1408(%esp)
-	xorl	%esi, %esi
-	xorl	%edi, %edi
-	xorl	%ebx, %ebx
-	vxorps	%ymm1, %ymm1, %ymm1
-	.align	16, 0x90
-.LBB3_134:
-	vmovaps	%ymm1, 1568(%esp)
-	vmovaps	%ymm4, 1504(%esp)
-	vmovd	%ebx, %xmm0
-	vxorps	%ymm1, %ymm1, %ymm1
-	vpermd	%ymm0, %ymm1, %ymm1
-	vmovaps	1440(%esp), %ymm0
-	calll	__ocl_svml_s9_pownf8
-	vmovapd	1504(%esp), %ymm4
-	movl	1500(%esp), %eax
-	vbroadcastss	(%eax,%esi), %ymm1
-	vmulps	%ymm1, %ymm0, %ymm0
-	vextractf128	$1, %ymm0, %xmm1
-	vcvtps2pd	%xmm1, %ymm1
-	vmovapd	1568(%esp), %ymm2
-	vaddpd	%ymm1, %ymm2, %ymm2
-	vmovapd	%ymm2, 1568(%esp)
-	vmovaps	1568(%esp), %ymm1
-	vcvtps2pd	%xmm0, %ymm0
-	vaddpd	%ymm0, %ymm4, %ymm4
-	addl	$4, %esi
-	adcl	$0, %edi
-	incl	%ebx
-	cmpl	%ebx, 1564(%esp)
-	jne	.LBB3_134
-	vmovaps	1376(%esp), %ymm0
-	vcvtps2pd	%xmm0, %ymm1
-	vmovapd	1344(%esp), %ymm0
-	vcvtps2pd	%xmm0, %ymm2
-	movl	1408(%esp), %eax
-	testb	$1, %al
-	movl	1336(%esp), %esi
-	movl	16(%ebp), %edi
+	vblendvps	%ymm0, %ymm7, %ymm2, %ymm2
+	vextractf128	$1, %ymm2, %xmm1
+	vpshufd	$3, %xmm1, %xmm0
+	vpcmpeqd	%ymm5, %ymm5, %ymm5
+	vptest	%ymm5, %ymm3
+	jb	.LBB3_102
+	vpand	1248(%esp), %ymm3, %ymm3
+	vpcmpeqd	%ymm4, %ymm3, %ymm3
+	vpxor	%ymm5, %ymm3, %ymm3
+	vpshufb	.LCPI3_8, %ymm3, %ymm3
+	vpermq	$8, %ymm3, %ymm3
+	vpextrb	$6, %xmm3, %ecx
+	movl	%ecx, 1536(%esp)
+	vpextrb	$4, %xmm3, %esi
+	vpextrb	$2, %xmm3, %edx
+	vpextrb	$0, %xmm3, %ecx
+	movl	%ecx, 1184(%esp)
+	testb	$1, %cl
+	movl	1148(%esp), %edi
+	je	.LBB3_110
+	vmovss	%xmm2, (%edi,%eax,4)
+.LBB3_110:
+	vpextrb	$8, %xmm3, %ecx
+	testb	$1, %dl
+	movl	%edx, 1248(%esp)
+	je	.LBB3_112
+	vpshufd	$1, %xmm2, %xmm4
+	vmovss	%xmm4, (%edi,%eax,4)
+.LBB3_112:
+	vpextrb	$10, %xmm3, %edx
+	movl	%esi, %ebx
+	movl	%ebx, 1344(%esp)
+	testb	$1, %bl
+	je	.LBB3_114
+	vmovhlps	%xmm2, %xmm2, %xmm4
+	vmovss	%xmm4, (%edi,%eax,4)
+.LBB3_114:
+	vpextrb	$12, %xmm3, %esi
+	movl	1536(%esp), %ebx
+	testb	$1, %bl
+	je	.LBB3_116
+	vpshufd	$3, %xmm2, %xmm2
+	vmovss	%xmm2, (%edi,%eax,4)
+.LBB3_116:
+	vpextrb	$14, %xmm3, %ebx
+	movl	%ecx, 1376(%esp)
+	testb	$1, %cl
 	je	.LBB3_118
-	vmovlpd	%xmm2, 1688(%esp)
-	vmovlpd	%xmm1, 1696(%esp)
-	vmovlpd	%xmm4, 1704(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1688(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	vmovapd	%ymm4, 1504(%esp)
-	vmovapd	%ymm1, 1440(%esp)
-	vmovapd	%ymm2, 1408(%esp)
-	vzeroupper
-	calll	opencl_printf
-	vmovapd	1408(%esp), %ymm2
-	vmovapd	1440(%esp), %ymm1
-	vmovapd	1504(%esp), %ymm4
+	vmovss	%xmm1, (%edi,%eax,4)
 .LBB3_118:
-	movl	1152(%esp), %eax
-	testb	$1, %al
+	testb	$1, %dl
+	movl	%edx, 1408(%esp)
 	je	.LBB3_120
-	vunpckhpd	%xmm4, %xmm4, %xmm0
-	vmovapd	%ymm1, 1440(%esp)
-	vmovapd	1440(%esp), %ymm1
-	vunpckhpd	%xmm1, %xmm1, %xmm1
-	vmovapd	%ymm2, 1408(%esp)
-	vmovapd	1408(%esp), %ymm2
-	vunpckhpd	%xmm2, %xmm2, %xmm2
-	vmovsd	%xmm2, 1712(%esp)
-	vmovsd	%xmm1, 1720(%esp)
-	vmovsd	%xmm0, 1728(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1712(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	vmovapd	%ymm4, 1504(%esp)
-	vzeroupper
-	calll	opencl_printf
-	vmovapd	1408(%esp), %ymm2
-	vmovapd	1440(%esp), %ymm1
-	vmovapd	1504(%esp), %ymm4
+	vpshufd	$1, %xmm1, %xmm2
+	vmovss	%xmm2, (%edi,%eax,4)
 .LBB3_120:
-	vmovapd	%ymm4, 1504(%esp)
-	vmovaps	1376(%esp), %ymm0
-	vextractf128	$1, %ymm0, 1152(%esp)
-	vmovaps	1344(%esp), %ymm0
-	vextractf128	$1, %ymm0, 1136(%esp)
-	vextractf128	$1, %ymm4, %xmm3
-	vextractf128	$1, %ymm1, %xmm1
-	vextractf128	$1, %ymm2, %xmm2
-	movl	1168(%esp), %eax
-	testb	$1, %al
+	movl	%esi, %edx
+	movl	%edx, 1472(%esp)
+	testb	$1, %dl
 	je	.LBB3_122
-	vmovsd	%xmm2, 1736(%esp)
-	vmovsd	%xmm1, 1744(%esp)
-	vmovsd	%xmm3, 1752(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1736(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	vmovapd	%xmm3, 1440(%esp)
-	vmovapd	%xmm2, 1408(%esp)
-	vmovapd	%xmm1, 1168(%esp)
-	vzeroupper
-	calll	opencl_printf
-	vmovapd	1168(%esp), %xmm1
-	vmovapd	1408(%esp), %xmm2
-	vmovapd	1440(%esp), %xmm3
+	vmovhlps	%xmm1, %xmm1, %xmm1
+	vmovss	%xmm1, (%edi,%eax,4)
 .LBB3_122:
-	vmovaps	1152(%esp), %xmm0
-	vcvtps2pd	%xmm0, %ymm0
-	vmovaps	%ymm0, 1408(%esp)
-	vmovaps	1136(%esp), %xmm0
-	vcvtps2pd	%xmm0, %ymm0
-	vmovapd	%ymm0, 1440(%esp)
-	movl	1188(%esp), %eax
-	testb	$1, %al
+	testb	$1, %bl
+	movl	%ebx, 1504(%esp)
 	je	.LBB3_124
-	vunpckhpd	%xmm3, %xmm3, %xmm0
-	vunpckhpd	%xmm1, %xmm1, %xmm1
-	vunpckhpd	%xmm2, %xmm2, %xmm2
-	vmovsd	%xmm2, 1760(%esp)
-	vmovsd	%xmm1, 1768(%esp)
-	vmovsd	%xmm0, 1776(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1760(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	vzeroupper
-	calll	opencl_printf
+	vmovss	%xmm0, (%edi,%eax,4)
 .LBB3_124:
-	movl	1192(%esp), %eax
+	movl	924(%esp), %edx
+	movl	1052(%esp), %esi
+	movl	(%edx,%esi,4), %ebx
+	incl	%ebx
+	movl	%ebx, (%edx,%esi,4)
+	movl	1184(%esp), %eax
 	testb	$1, %al
-	vmovapd	1568(%esp), %ymm0
 	je	.LBB3_126
-	vmovaps	1440(%esp), %ymm1
-	vmovsd	%xmm1, 1784(%esp)
-	vmovapd	1408(%esp), %ymm1
-	vmovsd	%xmm1, 1792(%esp)
-	vmovsd	%xmm0, 1800(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1784(%esp), %eax
+	movl	%esi, 2012(%esp)
+	movl	%ebx, 2016(%esp)
+	movl	16(%ebp), %eax
+	movl	%eax, 12(%esp)
+	movl	1340(%esp), %eax
+	movl	%eax, 8(%esp)
+	leal	2012(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
+	movl	$.L.str6, (%esp)
 	vzeroupper
 	calll	opencl_printf
-	vmovapd	1568(%esp), %ymm0
 .LBB3_126:
-	movl	1196(%esp), %eax
+	movl	1248(%esp), %eax
 	testb	$1, %al
-	vmovapd	1440(%esp), %ymm1
-	vmovapd	1408(%esp), %ymm2
+	movl	16(%ebp), %edi
 	je	.LBB3_128
-	vmovapd	1568(%esp), %ymm0
-	vunpckhpd	%xmm0, %xmm0, %xmm0
-	vunpckhpd	%xmm2, %xmm2, %xmm1
-	vmovapd	1440(%esp), %ymm2
-	vunpckhpd	%xmm2, %xmm2, %xmm2
-	vmovsd	%xmm2, 1808(%esp)
-	vmovsd	%xmm1, 1816(%esp)
-	vmovsd	%xmm0, 1824(%esp)
+	movl	%esi, 2020(%esp)
+	movl	%ebx, 2024(%esp)
 	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1808(%esp), %eax
+	movl	1340(%esp), %eax
+	movl	%eax, 8(%esp)
+	leal	2020(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
+	movl	$.L.str6, (%esp)
 	vzeroupper
 	calll	opencl_printf
-	vmovapd	1408(%esp), %ymm2
-	vmovapd	1440(%esp), %ymm1
-	vmovapd	1568(%esp), %ymm0
 .LBB3_128:
-	vextractf128	$1, %ymm0, %xmm0
-	vextractf128	$1, %ymm2, %xmm3
-	vextractf128	$1, %ymm1, %xmm2
-	movl	1200(%esp), %eax
+	movl	1344(%esp), %eax
 	testb	$1, %al
 	je	.LBB3_130
-	vmovsd	%xmm2, 1832(%esp)
-	vmovsd	%xmm3, 1840(%esp)
-	vmovsd	%xmm0, 1848(%esp)
+	movl	%esi, 2028(%esp)
+	movl	%ebx, 2032(%esp)
 	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1832(%esp), %eax
+	movl	1340(%esp), %eax
+	movl	%eax, 8(%esp)
+	leal	2028(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	vmovapd	%xmm0, 1440(%esp)
-	vmovapd	%xmm2, 1408(%esp)
-	vmovapd	%xmm3, 1200(%esp)
+	movl	$.L.str6, (%esp)
 	vzeroupper
 	calll	opencl_printf
-	vmovapd	1200(%esp), %xmm3
-	vmovapd	1408(%esp), %xmm2
-	vmovapd	1440(%esp), %xmm0
 .LBB3_130:
-	movl	1216(%esp), %eax
+	movl	1536(%esp), %eax
 	testb	$1, %al
 	je	.LBB3_132
-	vunpckhpd	%xmm0, %xmm0, %xmm0
-	vunpckhpd	%xmm3, %xmm3, %xmm1
-	vunpckhpd	%xmm2, %xmm2, %xmm2
-	vmovsd	%xmm2, 1856(%esp)
-	vmovsd	%xmm1, 1864(%esp)
-	vmovsd	%xmm0, 1872(%esp)
+	movl	%esi, 2036(%esp)
+	movl	%ebx, 2040(%esp)
 	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1856(%esp), %eax
+	movl	1340(%esp), %eax
+	movl	%eax, 8(%esp)
+	leal	2036(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
+	movl	$.L.str6, (%esp)
 	vzeroupper
 	calll	opencl_printf
 .LBB3_132:
-	vmovapd	.LCPI3_9, %ymm1
-	vmovapd	1504(%esp), %ymm0
-	vandpd	%ymm1, %ymm0, %ymm0
-	vmovapd	896(%esp), %ymm3
-	vcmpnlepd	%ymm0, %ymm3, %ymm0
-	vmovdqa	.LCPI3_3, %ymm2
-	vpermd	%ymm0, %ymm2, %ymm0
-	vpshufb	.LCPI3_5, %xmm0, %xmm0
-	vmovapd	1568(%esp), %ymm4
-	vandpd	%ymm1, %ymm4, %ymm1
-	vcmpnlepd	%ymm1, %ymm3, %ymm1
-	vpermd	%ymm1, %ymm2, %ymm1
-	vpshufb	.LCPI3_4, %xmm1, %xmm1
-	vpor	%xmm1, %xmm0, %xmm0
-	vpmovzxwd	%xmm0, %ymm0
-	vpslld	$31, %ymm0, %ymm0
-	vpxor	%ymm1, %ymm1, %ymm1
-	vmovaps	1248(%esp), %ymm2
-	vblendvps	%ymm0, %ymm1, %ymm2, %ymm2
-	vmovaps	%ymm2, %ymm1
-	vptest	%ymm1, %ymm1
-	vpcmpeqd	%ymm7, %ymm7, %ymm7
-	jne	.LBB3_133
-.LBB3_79:
-	vpcmpeqd	%ymm2, %ymm2, %ymm2
-	vmovdqa	384(%esp), %ymm0
-	vpand	288(%esp), %ymm0, %ymm0
-	vptest	%ymm0, %ymm0
-	je	.LBB3_96
-	vpand	1024(%esp), %ymm0, %ymm0
-	vpxor	%ymm1, %ymm1, %ymm1
-	vpcmpeqd	%ymm1, %ymm0, %ymm0
-	vpxor	%ymm2, %ymm0, %ymm0
-	vpshufb	.LCPI3_7, %ymm0, %ymm0
-	vpermq	$8, %ymm0, %ymm0
-	vmovdqa	%ymm0, 1568(%esp)
-	vpextrb	$6, %xmm0, %eax
-	movl	%eax, 1408(%esp)
-	vpextrb	$4, %xmm0, %eax
-	movl	%eax, 1344(%esp)
-	vpextrb	$2, %xmm0, %ebx
-	vpextrb	$0, %xmm0, %eax
-	vmovaps	992(%esp), %ymm3
-	vcmpltps	%ymm3, %ymm1, %ymm0
-	vmovaps	1056(%esp), %ymm2
-	vblendvps	%ymm0, %ymm3, %ymm2, %ymm0
-	vmovaps	%ymm0, 1248(%esp)
-	vcvtps2pd	%xmm0, %ymm2
-	vcmpltps	%ymm1, %ymm3, %ymm0
-	vmovaps	1088(%esp), %ymm1
-	vblendvps	%ymm0, %ymm3, %ymm1, %ymm0
-	vmovaps	%ymm0, 1216(%esp)
-	vcvtps2pd	%xmm0, %ymm1
+	movl	1376(%esp), %eax
 	testb	$1, %al
-	je	.LBB3_82
-	vmovlpd	%xmm1, 1880(%esp)
-	vmovlpd	%xmm2, 1888(%esp)
-	movl	$0, 1900(%esp)
-	movl	$0, 1896(%esp)
+	je	.LBB3_134
+	movl	%esi, 2044(%esp)
+	movl	%ebx, 2048(%esp)
+	movl	%edi, 12(%esp)
+	movl	1340(%esp), %eax
+	movl	%eax, 8(%esp)
+	leal	2044(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str6, (%esp)
+	vzeroupper
+	calll	opencl_printf
+.LBB3_134:
+	movl	1408(%esp), %eax
+	testb	$1, %al
+	je	.LBB3_136
+	movl	%esi, 2052(%esp)
+	movl	%ebx, 2056(%esp)
+	movl	%edi, 12(%esp)
+	movl	1340(%esp), %eax
+	movl	%eax, 8(%esp)
+	leal	2052(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str6, (%esp)
+	vzeroupper
+	calll	opencl_printf
+.LBB3_136:
+	movl	1472(%esp), %eax
+	testb	$1, %al
+	je	.LBB3_138
+	movl	%esi, 2060(%esp)
+	movl	%ebx, 2064(%esp)
+	movl	%edi, 12(%esp)
+	movl	1340(%esp), %eax
+	movl	%eax, 8(%esp)
+	leal	2060(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str6, (%esp)
+	vzeroupper
+	calll	opencl_printf
+.LBB3_138:
+	movl	1504(%esp), %eax
+	testb	$1, %al
+	je	.LBB3_8
+	movl	%esi, 2068(%esp)
+	movl	%ebx, 2072(%esp)
+	movl	%edi, 12(%esp)
+	movl	1340(%esp), %eax
+	movl	%eax, 8(%esp)
+	leal	2068(%esp), %eax
+	jmp	.LBB3_140
+.LBB3_102:
+	movl	1148(%esp), %esi
+	vmovss	%xmm0, (%esi,%eax,4)
+	movl	(%ecx,%edx,4), %esi
+	incl	%esi
+	movl	%esi, (%ecx,%edx,4)
+	movl	%edx, 1948(%esp)
+	movl	%esi, 1952(%esp)
+	movl	16(%ebp), %edi
+	movl	%edi, 12(%esp)
+	movl	1340(%esp), %ebx
+	movl	%ebx, 8(%esp)
+	leal	1948(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str6, (%esp)
+	vzeroupper
+	calll	opencl_printf
+	movl	1052(%esp), %eax
+	movl	%eax, 1956(%esp)
+	movl	%esi, 1960(%esp)
+	movl	%edi, 12(%esp)
+	movl	%ebx, 8(%esp)
+	leal	1956(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str6, (%esp)
+	calll	opencl_printf
+	movl	1052(%esp), %eax
+	movl	%eax, 1964(%esp)
+	movl	%esi, 1968(%esp)
+	movl	%edi, 12(%esp)
+	movl	%ebx, 8(%esp)
+	leal	1964(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str6, (%esp)
+	calll	opencl_printf
+	movl	1052(%esp), %eax
+	movl	%eax, 1972(%esp)
+	movl	%esi, 1976(%esp)
+	movl	%edi, 12(%esp)
+	movl	%ebx, 8(%esp)
+	leal	1972(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str6, (%esp)
+	calll	opencl_printf
+	movl	1052(%esp), %eax
+	movl	%eax, 1980(%esp)
+	movl	%esi, 1984(%esp)
+	movl	%edi, 12(%esp)
+	movl	%ebx, 8(%esp)
+	leal	1980(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str6, (%esp)
+	calll	opencl_printf
+	movl	1052(%esp), %eax
+	movl	%eax, 1988(%esp)
+	movl	%esi, 1992(%esp)
+	movl	%edi, 12(%esp)
+	movl	%ebx, 8(%esp)
+	leal	1988(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str6, (%esp)
+	calll	opencl_printf
+	movl	1052(%esp), %eax
+	movl	%eax, 1996(%esp)
+	movl	%esi, 2000(%esp)
+	movl	%edi, 12(%esp)
+	movl	%ebx, 8(%esp)
+	leal	1996(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str6, (%esp)
+	calll	opencl_printf
+	movl	1052(%esp), %eax
+	movl	%eax, 2004(%esp)
+	movl	%esi, 2008(%esp)
+	movl	%edi, 12(%esp)
+	movl	%ebx, 8(%esp)
+	movl	1052(%esp), %esi
+	leal	2004(%esp), %eax
+.LBB3_140:
+	movl	%eax, 4(%esp)
+	movl	$.L.str6, (%esp)
+	vzeroupper
+	calll	opencl_printf
+	.align	16, 0x90
+.LBB3_8:
+	movl	%esi, %ebx
+	vmovdqa	544(%esp), %ymm2
+	vptest	%ymm2, %ymm2
+	movl	1340(%esp), %esi
+	vmovdqa	1280(%esp), %ymm3
+	je	.LBB3_44
+	vextracti128	$1, %ymm3, %xmm5
+	vpshufd	$3, %xmm5, %xmm0
+	movl	924(%esp), %ecx
+	movl	(%ecx,%ebx,4), %eax
+	addl	828(%esp), %eax
+	vpcmpeqd	%ymm1, %ymm1, %ymm1
+	vptest	%ymm1, %ymm2
+	jb	.LBB3_10
+	vmovdqa	.LCPI3_5, %xmm1
+	vmovdqa	768(%esp), %ymm2
+	vpshufb	%xmm1, %xmm2, %xmm1
+	vmovdqa	.LCPI3_6, %xmm2
+	vmovdqa	736(%esp), %ymm4
+	vpshufb	%xmm2, %xmm4, %xmm2
+	vpor	%xmm1, %xmm2, %xmm1
+	vpsllw	$15, %xmm1, %xmm1
+	vpsraw	$15, %xmm1, %xmm1
+	vpextrb	$6, %xmm1, %ecx
+	movl	%ecx, 1376(%esp)
+	vpextrb	$4, %xmm1, %edi
+	vpextrb	$2, %xmm1, %ebx
+	vpextrb	$0, %xmm1, %ecx
+	movl	%ecx, 1536(%esp)
+	testb	$1, %cl
+	movl	1148(%esp), %edx
+	je	.LBB3_13
+	vmovss	%xmm3, (%edx,%eax,4)
+.LBB3_13:
+	vpextrb	$8, %xmm1, %ecx
+	movl	%ecx, 1408(%esp)
+	testb	$1, %bl
+	movl	%ebx, 1152(%esp)
+	je	.LBB3_15
+	vpshufd	$1, %xmm3, %xmm2
+	vmovss	%xmm2, (%edx,%eax,4)
+.LBB3_15:
+	vpextrb	$10, %xmm1, %ecx
+	movl	%edi, %ebx
+	movl	%ebx, 1184(%esp)
+	testb	$1, %bl
+	je	.LBB3_17
+	vmovhlps	%xmm3, %xmm3, %xmm2
+	vmovss	%xmm2, (%edx,%eax,4)
+.LBB3_17:
+	vpextrb	$12, %xmm1, %edi
+	movl	%edi, 1472(%esp)
+	movl	1376(%esp), %ebx
+	testb	$1, %bl
+	je	.LBB3_19
+	vpshufd	$3, %xmm3, %xmm2
+	vmovss	%xmm2, (%edx,%eax,4)
+.LBB3_19:
+	vpextrb	$14, %xmm1, %edi
+	movl	1408(%esp), %ebx
+	testb	$1, %bl
+	je	.LBB3_21
+	vmovss	%xmm5, (%edx,%eax,4)
+.LBB3_21:
+	movl	%ecx, 1248(%esp)
+	testb	$1, %cl
+	je	.LBB3_23
+	vpshufd	$1, %xmm5, %xmm1
+	vmovss	%xmm1, (%edx,%eax,4)
+.LBB3_23:
+	movl	1472(%esp), %ecx
+	testb	$1, %cl
+	je	.LBB3_25
+	vmovhlps	%xmm5, %xmm5, %xmm1
+	vmovss	%xmm1, (%edx,%eax,4)
+.LBB3_25:
+	vmovaps	%xmm5, 1504(%esp)
+	movl	%edi, %ebx
+	movl	%ebx, 1344(%esp)
+	testb	$1, %bl
+	je	.LBB3_27
+	vmovss	%xmm0, (%edx,%eax,4)
+.LBB3_27:
+	movl	924(%esp), %eax
+	movl	1052(%esp), %edx
+	incl	(%eax,%edx,4)
+	vcvtps2pd	%xmm3, %ymm0
+	movl	1536(%esp), %eax
+	testb	$1, %al
+	movl	1152(%esp), %ebx
+	je	.LBB3_29
+	vmovlpd	%xmm0, 1864(%esp)
+	movl	16(%ebp), %eax
+	movl	%eax, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1864(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str4, (%esp)
+	vmovapd	%ymm0, 1536(%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovapd	1536(%esp), %ymm0
+.LBB3_29:
+	testb	$1, %bl
+	movl	16(%ebp), %edi
+	je	.LBB3_31
+	vmovapd	%ymm0, 1536(%esp)
+	vmovapd	1536(%esp), %ymm0
+	vunpckhpd	%xmm0, %xmm0, %xmm0
+	vmovsd	%xmm0, 1872(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1872(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str4, (%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovapd	1536(%esp), %ymm0
+.LBB3_31:
+	vextractf128	$1, %ymm0, %xmm1
+	movl	1184(%esp), %eax
+	testb	$1, %al
+	movl	1052(%esp), %ebx
+	je	.LBB3_33
+	vmovsd	%xmm1, 1880(%esp)
 	movl	%edi, 12(%esp)
 	movl	%esi, 8(%esp)
 	leal	1880(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	vmovapd	%ymm2, 1440(%esp)
-	vmovapd	%ymm1, 1504(%esp)
+	movl	$.L.str4, (%esp)
+	vmovapd	%xmm1, 1536(%esp)
 	vzeroupper
 	calll	opencl_printf
-	vmovapd	1504(%esp), %ymm1
-	vmovapd	1440(%esp), %ymm2
-.LBB3_82:
-	vmovdqa	1568(%esp), %ymm0
-	vpextrb	$8, %xmm0, %eax
-	movl	%eax, 1376(%esp)
-	testb	$1, %bl
-	je	.LBB3_84
-	vunpckhpd	%xmm2, %xmm2, %xmm0
-	vmovapd	%ymm1, 1504(%esp)
-	vmovapd	1504(%esp), %ymm1
-	vunpckhpd	%xmm1, %xmm1, %xmm1
-	vmovsd	%xmm1, 1904(%esp)
-	vmovsd	%xmm0, 1912(%esp)
-	movl	$0, 1924(%esp)
-	movl	$0, 1920(%esp)
+	vmovapd	1536(%esp), %xmm1
+.LBB3_33:
+	vmovaps	1504(%esp), %xmm0
+	vcvtps2pd	%xmm0, %ymm0
+	vmovapd	%ymm0, 1536(%esp)
+	movl	1376(%esp), %eax
+	testb	$1, %al
+	je	.LBB3_35
+	vunpckhpd	%xmm1, %xmm1, %xmm0
+	vmovsd	%xmm0, 1888(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1888(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str4, (%esp)
+	vzeroupper
+	calll	opencl_printf
+.LBB3_35:
+	movl	1408(%esp), %eax
+	testb	$1, %al
+	je	.LBB3_37
+	vmovapd	1536(%esp), %ymm0
+	vmovsd	%xmm0, 1896(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1896(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str4, (%esp)
+	vzeroupper
+	calll	opencl_printf
+.LBB3_37:
+	movl	1248(%esp), %eax
+	testb	$1, %al
+	vmovapd	1536(%esp), %ymm0
+	je	.LBB3_39
+	vmovapd	1536(%esp), %ymm0
+	vunpckhpd	%xmm0, %xmm0, %xmm0
+	vmovsd	%xmm0, 1904(%esp)
 	movl	%edi, 12(%esp)
 	movl	%esi, 8(%esp)
 	leal	1904(%esp), %eax
 	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	vmovapd	%ymm2, 1440(%esp)
+	movl	$.L.str4, (%esp)
 	vzeroupper
 	calll	opencl_printf
-	vmovapd	1504(%esp), %ymm1
-	vmovapd	1440(%esp), %ymm2
-.LBB3_84:
-	vmovaps	1248(%esp), %ymm0
-	vextractf128	$1, %ymm0, 1200(%esp)
-	vmovaps	1216(%esp), %ymm0
-	vextractf128	$1, %ymm0, 1216(%esp)
-	vextractf128	$1, %ymm2, %xmm2
-	vextractf128	$1, %ymm1, %xmm1
-	vmovdqa	1568(%esp), %ymm0
-	vpextrb	$10, %xmm0, %eax
-	movl	%eax, 1248(%esp)
+	vmovapd	1536(%esp), %ymm0
+.LBB3_39:
+	vextractf128	$1, %ymm0, %xmm0
+	movl	1472(%esp), %eax
+	testb	$1, %al
+	je	.LBB3_41
+	vmovsd	%xmm0, 1912(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1912(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str4, (%esp)
+	vmovapd	%xmm0, 1536(%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovapd	1536(%esp), %xmm0
+.LBB3_41:
 	movl	1344(%esp), %eax
 	testb	$1, %al
-	je	.LBB3_86
-	vmovsd	%xmm1, 1928(%esp)
-	vmovsd	%xmm2, 1936(%esp)
-	movl	$0, 1948(%esp)
-	movl	$0, 1944(%esp)
+	je	.LBB3_44
+	vunpckhpd	%xmm0, %xmm0, %xmm0
+	vmovsd	%xmm0, 1920(%esp)
 	movl	%edi, 12(%esp)
 	movl	%esi, 8(%esp)
-	leal	1928(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	vmovapd	%xmm1, 1504(%esp)
-	vmovapd	%xmm2, 1440(%esp)
-	vzeroupper
-	calll	opencl_printf
-	vmovapd	1440(%esp), %xmm2
-	vmovapd	1504(%esp), %xmm1
-.LBB3_86:
-	vmovaps	1200(%esp), %xmm0
-	vcvtps2pd	%xmm0, %ymm0
-	vmovaps	%ymm0, 1440(%esp)
-	vmovaps	1216(%esp), %xmm0
-	vcvtps2pd	%xmm0, %ymm0
-	vmovaps	%ymm0, 1504(%esp)
-	vmovdqa	1568(%esp), %ymm0
-	vpextrb	$12, %xmm0, %eax
-	movl	%eax, 1344(%esp)
-	movl	1408(%esp), %eax
-	testb	$1, %al
-	je	.LBB3_88
-	vunpckhpd	%xmm2, %xmm2, %xmm0
-	vunpckhpd	%xmm1, %xmm1, %xmm1
-	vmovsd	%xmm1, 1952(%esp)
-	vmovsd	%xmm0, 1960(%esp)
-	movl	$0, 1972(%esp)
-	movl	$0, 1968(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1952(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	vzeroupper
-	calll	opencl_printf
-.LBB3_88:
-	vmovdqa	1568(%esp), %ymm0
-	vpextrb	$14, %xmm0, %ebx
-	movl	1376(%esp), %eax
-	testb	$1, %al
-	je	.LBB3_90
-	vmovaps	1504(%esp), %ymm0
-	vmovsd	%xmm0, 1976(%esp)
-	vmovdqa	1440(%esp), %ymm0
-	vmovsd	%xmm0, 1984(%esp)
-	movl	$0, 1996(%esp)
-	movl	$0, 1992(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	1976(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	vzeroupper
-	calll	opencl_printf
-.LBB3_90:
-	movl	1248(%esp), %eax
-	testb	$1, %al
-	vmovapd	1504(%esp), %ymm0
-	vmovapd	1440(%esp), %ymm1
-	je	.LBB3_92
-	vunpckhpd	%xmm1, %xmm1, %xmm0
-	vmovapd	1504(%esp), %ymm1
-	vunpckhpd	%xmm1, %xmm1, %xmm1
-	vmovsd	%xmm1, 2000(%esp)
-	vmovsd	%xmm0, 2008(%esp)
-	movl	$0, 2020(%esp)
-	movl	$0, 2016(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	2000(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	vzeroupper
-	calll	opencl_printf
-	vmovapd	1440(%esp), %ymm1
-	vmovapd	1504(%esp), %ymm0
-.LBB3_92:
-	vextractf128	$1, %ymm1, %xmm2
-	vextractf128	$1, %ymm0, %xmm1
-	movl	1344(%esp), %eax
-	testb	$1, %al
-	je	.LBB3_94
-	vmovsd	%xmm1, 2024(%esp)
-	vmovsd	%xmm2, 2032(%esp)
-	movl	$0, 2044(%esp)
-	movl	$0, 2040(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	2024(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	vmovapd	%xmm1, 1568(%esp)
-	vmovapd	%xmm2, 1504(%esp)
-	vzeroupper
-	calll	opencl_printf
-	vmovapd	1504(%esp), %xmm2
-	vmovapd	1568(%esp), %xmm1
-.LBB3_94:
-	testb	$1, %bl
-	je	.LBB3_96
-	vunpckhpd	%xmm2, %xmm2, %xmm0
-	vunpckhpd	%xmm1, %xmm1, %xmm1
-	vmovsd	%xmm1, 2048(%esp)
-	vmovsd	%xmm0, 2056(%esp)
-	movl	$0, 2068(%esp)
-	movl	$0, 2064(%esp)
-	movl	%edi, 12(%esp)
-	movl	%esi, 8(%esp)
-	leal	2048(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str1, (%esp)
-	vzeroupper
-	calll	opencl_printf
-.LBB3_96:
-	movl	1564(%esp), %eax
-	testl	%eax, %eax
-	vxorps	%ymm6, %ymm6, %ymm6
-	vpcmpeqd	%ymm7, %ymm7, %ymm7
-	vmovaps	992(%esp), %ymm4
-	vmovaps	1280(%esp), %ymm2
-	jg	.LBB3_98
-	vmovaps	%ymm4, %ymm2
-.LBB3_98:
-	movl	%esi, 1336(%esp)
-	movl	988(%esp), %eax
-	movl	892(%esp), %ecx
-	movl	(%eax,%ecx,4), %eax
-	addl	828(%esp), %eax
-	vmovdqa	448(%esp), %ymm0
-	vpshufb	.LCPI3_5, %xmm0, %xmm0
-	vmovdqa	416(%esp), %ymm1
-	vpshufb	.LCPI3_4, %xmm1, %xmm1
-	vpor	%xmm1, %xmm0, %xmm0
-	vpmovzxwd	%xmm0, %ymm0
-	vpslld	$31, %ymm0, %ymm0
-	vblendvps	%ymm0, %ymm4, %ymm2, %ymm2
-	vextractf128	$1, %ymm2, %xmm1
-	vpshufd	$3, %xmm1, %xmm0
-	vmovdqa	704(%esp), %ymm3
-	vptest	%ymm7, %ymm3
-	jb	.LBB3_114
-	vpand	1024(%esp), %ymm3, %ymm3
-	vpcmpeqd	%ymm6, %ymm3, %ymm3
-	vpxor	%ymm7, %ymm3, %ymm3
-	vpshufb	.LCPI3_7, %ymm3, %ymm3
-	vpermq	$8, %ymm3, %ymm3
-	vpextrb	$6, %xmm3, %ecx
-	movl	%ecx, 1568(%esp)
-	vpextrb	$4, %xmm3, %ecx
-	vpextrb	$2, %xmm3, %edx
-	vpextrb	$0, %xmm3, %ebx
-	testb	$1, %bl
-	je	.LBB3_101
-	movl	1340(%esp), %esi
-	vmovss	%xmm2, (%esi,%eax,4)
-.LBB3_101:
-	vpextrb	$8, %xmm3, %esi
-	testb	$1, %dl
-	je	.LBB3_103
-	vpshufd	$1, %xmm2, %xmm4
-	movl	1340(%esp), %edx
-	vmovss	%xmm4, (%edx,%eax,4)
-.LBB3_103:
-	vpextrb	$10, %xmm3, %edi
-	testb	$1, %cl
-	je	.LBB3_105
-	vmovhlps	%xmm2, %xmm2, %xmm4
-	movl	1340(%esp), %ecx
-	vmovss	%xmm4, (%ecx,%eax,4)
-.LBB3_105:
-	vpextrb	$12, %xmm3, %ecx
-	movl	1568(%esp), %edx
-	testb	$1, %dl
-	je	.LBB3_107
-	vpshufd	$3, %xmm2, %xmm2
-	movl	1340(%esp), %edx
-	vmovss	%xmm2, (%edx,%eax,4)
-.LBB3_107:
-	vpextrb	$14, %xmm3, %edx
-	movl	%esi, %ebx
-	testb	$1, %bl
-	vpcmpeqd	%ymm7, %ymm7, %ymm7
-	je	.LBB3_109
-	movl	1340(%esp), %esi
-	vmovss	%xmm1, (%esi,%eax,4)
-.LBB3_109:
-	movl	%edi, %ebx
-	testb	$1, %bl
-	je	.LBB3_111
-	vpshufd	$1, %xmm1, %xmm2
-	movl	1340(%esp), %esi
-	vmovss	%xmm2, (%esi,%eax,4)
-.LBB3_111:
-	testb	$1, %cl
-	je	.LBB3_113
-	vmovhlps	%xmm1, %xmm1, %xmm1
-	movl	1340(%esp), %ecx
-	vmovss	%xmm1, (%ecx,%eax,4)
-.LBB3_113:
-	testb	$1, %dl
-	je	.LBB3_115
-.LBB3_114:
-	movl	1340(%esp), %ecx
-	vmovss	%xmm0, (%ecx,%eax,4)
-.LBB3_115:
-	movl	988(%esp), %eax
-	movl	892(%esp), %ecx
-	incl	(%eax,%ecx,4)
-	movl	1564(%esp), %ecx
+	leal	1920(%esp), %eax
+	jmp	.LBB3_43
 	.align	16, 0x90
-.LBB3_8:
-	vmovdqa	480(%esp), %ymm2
-	vptest	%ymm2, %ymm2
-	movl	1500(%esp), %edx
-	je	.LBB3_27
-	vmovdqa	832(%esp), %ymm0
-	vextracti128	$1, %ymm0, %xmm1
-	vpshufd	$3, %xmm1, %xmm0
-	movl	988(%esp), %eax
-	movl	892(%esp), %ecx
-	movl	(%eax,%ecx,4), %eax
-	addl	828(%esp), %eax
-	vptest	%ymm7, %ymm2
-	jb	.LBB3_25
-	vmovdqa	768(%esp), %ymm2
-	vpshufb	.LCPI3_4, %xmm2, %xmm2
-	vmovdqa	736(%esp), %ymm3
-	vpshufb	.LCPI3_5, %xmm3, %xmm3
-	vpor	%xmm2, %xmm3, %xmm2
-	vpsllw	$15, %xmm2, %xmm2
-	vpsraw	$15, %xmm2, %xmm2
-	vpextrb	$6, %xmm2, %ecx
-	movl	%ecx, 1568(%esp)
-	vpextrb	$4, %xmm2, %ecx
-	vpextrb	$2, %xmm2, %edx
-	vpextrb	$0, %xmm2, %ebx
-	testb	$1, %bl
-	vmovdqa	832(%esp), %ymm4
-	je	.LBB3_12
-	movl	1340(%esp), %esi
-	vmovss	%xmm4, (%esi,%eax,4)
-.LBB3_12:
-	vpextrb	$8, %xmm2, %esi
-	testb	$1, %dl
-	je	.LBB3_14
-	vpshufd	$1, %xmm4, %xmm3
-	movl	1340(%esp), %edx
-	vmovss	%xmm3, (%edx,%eax,4)
-.LBB3_14:
-	vpextrb	$10, %xmm2, %edi
-	testb	$1, %cl
-	je	.LBB3_16
-	vmovhlps	%xmm4, %xmm4, %xmm3
-	movl	1340(%esp), %ecx
-	vmovss	%xmm3, (%ecx,%eax,4)
-.LBB3_16:
-	vpextrb	$12, %xmm2, %ecx
-	movl	1568(%esp), %edx
-	testb	$1, %dl
-	je	.LBB3_18
-	vpshufd	$3, %xmm4, %xmm3
-	movl	1340(%esp), %edx
-	vmovss	%xmm3, (%edx,%eax,4)
-.LBB3_18:
-	vpextrb	$14, %xmm2, %edx
-	movl	%esi, %ebx
-	testb	$1, %bl
-	je	.LBB3_20
-	movl	1340(%esp), %esi
-	vmovss	%xmm1, (%esi,%eax,4)
-.LBB3_20:
-	movl	%edi, %ebx
-	testb	$1, %bl
-	je	.LBB3_22
-	vpshufd	$1, %xmm1, %xmm2
-	movl	1340(%esp), %esi
-	vmovss	%xmm2, (%esi,%eax,4)
-.LBB3_22:
-	testb	$1, %cl
-	je	.LBB3_24
-	vmovhlps	%xmm1, %xmm1, %xmm1
-	movl	1340(%esp), %ecx
-	vmovss	%xmm1, (%ecx,%eax,4)
-.LBB3_24:
-	testb	$1, %dl
-	movl	1500(%esp), %edx
-	je	.LBB3_26
-.LBB3_25:
-	movl	1340(%esp), %ecx
-	vmovss	%xmm0, (%ecx,%eax,4)
-.LBB3_26:
-	movl	988(%esp), %eax
-	movl	892(%esp), %ecx
-	incl	(%eax,%ecx,4)
-	movl	1564(%esp), %ecx
-.LBB3_27:
-	vmovaps	512(%esp), %ymm0
-	vaddps	192(%esp), %ymm0, %ymm0
-	movl	572(%esp), %eax
+.LBB3_10:
+	movl	1148(%esp), %edx
+	vmovss	%xmm0, (%edx,%eax,4)
+	incl	(%ecx,%ebx,4)
+	vcvtps2pd	%xmm3, %ymm0
+	vmovapd	%ymm0, 1536(%esp)
+	vmovlpd	%xmm0, 1800(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1800(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str4, (%esp)
+	vmovdqa	%xmm5, 1504(%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovapd	1536(%esp), %ymm0
+	vmovhpd	%xmm0, 1808(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1808(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str4, (%esp)
+	vextractf128	$1, %ymm0, 1536(%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovapd	1536(%esp), %xmm0
+	vmovlpd	%xmm0, 1816(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1816(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str4, (%esp)
+	calll	opencl_printf
+	vmovapd	1536(%esp), %xmm0
+	vmovhpd	%xmm0, 1824(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1824(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str4, (%esp)
+	vmovaps	1504(%esp), %xmm0
+	vcvtps2pd	%xmm0, %ymm0
+	vmovaps	%ymm0, 1536(%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovapd	1536(%esp), %ymm0
+	vmovlpd	%xmm0, 1832(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1832(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str4, (%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovapd	1536(%esp), %ymm0
+	vmovhpd	%xmm0, 1840(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1840(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str4, (%esp)
+	vextractf128	$1, %ymm0, 1536(%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovapd	1536(%esp), %xmm0
+	vmovlpd	%xmm0, 1848(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1848(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str4, (%esp)
+	calll	opencl_printf
+	vmovapd	1536(%esp), %xmm0
+	vmovhpd	%xmm0, 1856(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	1856(%esp), %eax
+.LBB3_43:
+	movl	%eax, 4(%esp)
+	movl	$.L.str4, (%esp)
+	vzeroupper
+	calll	opencl_printf
+.LBB3_44:
+	vmovaps	832(%esp), %ymm0
+	vaddps	320(%esp), %ymm0, %ymm0
+	vmovaps	%ymm0, 832(%esp)
+	vmovaps	864(%esp), %ymm0
+	vaddps	288(%esp), %ymm0, %ymm0
+	movl	604(%esp), %eax
 	incl	%eax
-	cmpl	348(%esp), %eax
-	movl	984(%esp), %esi
+	cmpl	376(%esp), %eax
 	jne	.LBB3_3
-	addl	172(%esp), %edx
-	addl	176(%esp), %esi
-	movl	892(%esp), %edi
-	incl	%edi
-	movl	184(%esp), %eax
+	movl	120(%esp), %eax
+	addl	%eax, 1456(%esp)
+	movl	920(%esp), %ecx
+	addl	124(%esp), %ecx
+	incl	%ebx
+	movl	216(%esp), %eax
 	incl	%eax
-	movl	%eax, 184(%esp)
-	cmpl	188(%esp), %eax
-	movl	%edi, %eax
+	movl	%eax, 216(%esp)
+	cmpl	220(%esp), %eax
 	jne	.LBB3_2
-.LBB3_29:
-	movl	%ecx, %edx
+.LBB3_46:
 	movl	380(%esp), %ecx
 	movl	%ecx, %eax
 	andl	$-8, %eax
 	cmpl	%eax, %ecx
-	movl	888(%esp), %ecx
-	je	.LBB3_153
+	movl	988(%esp), %ecx
+	je	.LBB3_178
 	subl	%eax, 380(%esp)
-	addl	%eax, 180(%esp)
-	movl	124(%esp), %esi
-	addl	120(%esp), %esi
-	movl	%edx, 1564(%esp)
-	movl	%edx, %eax
-	imull	%esi, %eax
-	movl	116(%esp), %edi
-	leal	(%edi,%eax,4), %ebx
-	leal	-1(%edx), %eax
-	imull	%esi, %eax
-	leal	(%edi,%eax,4), %esi
-	movl	%ebx, %eax
-	leal	-4(,%edx,4), %edi
-	movl	%edi, 1196(%esp)
-	leal	(,%edx,4), %edx
-	movl	%edx, 1192(%esp)
+	addl	%eax, 212(%esp)
+	vmovaps	416(%esp), %ymm0
+	vmovapd	384(%esp), %ymm1
+	vaddss	%xmm0, %xmm1, %xmm0
+	vmovss	%xmm0, 1056(%esp)
+	movl	112(%esp), %ebx
+	addl	108(%esp), %ebx
+	movl	1572(%esp), %eax
+	imull	%ebx, %eax
+	movl	116(%esp), %edx
+	leal	(%edx,%eax,8), %edx
+	movl	1572(%esp), %eax
+	leal	-1(%eax), %eax
+	imull	%ebx, %eax
+	movl	%edx, %ebx
+	movl	116(%esp), %edx
+	leal	(%edx,%eax,8), %eax
+	movl	1572(%esp), %edx
+	leal	-8(,%edx,8), %edx
+	movl	%edx, 992(%esp)
+	movl	1572(%esp), %edx
+	leal	(,%edx,8), %edx
+	movl	%edx, 928(%esp)
 	xorl	%edx, %edx
 	.align	16, 0x90
-.LBB3_31:
-	movl	%esi, 1376(%esp)
-	movl	%edx, 1200(%esp)
-	movl	%eax, 1500(%esp)
-	movl	%ecx, 888(%esp)
-	movl	%ecx, %eax
-	imull	1564(%esp), %eax
-	subl	%ecx, %eax
+.LBB3_48:
+	movl	%edx, 1052(%esp)
 	movl	%eax, 1344(%esp)
-	movl	$0, 1280(%esp)
-	movl	180(%esp), %edx
-	jmp	.LBB3_32
+	movl	%ebx, 1504(%esp)
+	movl	%ecx, 988(%esp)
+	movl	%ecx, %eax
+	imull	1572(%esp), %eax
+	subl	%ecx, %eax
+	movl	%eax, 1280(%esp)
+	xorl	%eax, %eax
+	movl	212(%esp), %edx
 	.align	16, 0x90
-.LBB3_146:
-	vucomiss	.LCPI3_12, %xmm1
-	movl	$-1, %esi
-	movl	$1, %eax
-	cmoval	%eax, %esi
-	movl	1504(%esp), %edi
-	cmpl	%esi, %edi
-	sete	%al
-	movzbl	%al, %eax
-	movl	%eax, 2072(%esp)
-	movl	16(%ebp), %eax
-	movl	%eax, 12(%esp)
-	movl	1336(%esp), %eax
-	movl	%eax, 8(%esp)
-	leal	2072(%esp), %eax
-	movl	%eax, 4(%esp)
-	movl	$.L.str, (%esp)
-	vzeroupper
-	calll	opencl_printf
-	cmpl	%esi, %edi
-	movl	888(%esp), %ecx
-	vmovss	1440(%esp), %xmm0
-	vmovss	1408(%esp), %xmm1
-	je	.LBB3_151
-	vsubss	%xmm0, %xmm1, %xmm0
-	vmulss	.LCPI3_8, %xmm0, %xmm0
-	movl	1564(%esp), %eax
-	testl	%eax, %eax
-	jle	.LBB3_148
-	vxorps	%xmm1, %xmm1, %xmm1
-	xorl	%edi, %edi
-	xorl	%ebx, %ebx
-	xorl	%esi, %esi
-	vmovss	%xmm0, 1504(%esp)
-	.align	16, 0x90
-.LBB3_164:
-	vmovsd	%xmm1, 1568(%esp)
-	movl	%esi, (%esp)
-	vmovss	1504(%esp), %xmm0
-	calll	__ocl_svml_s9_pownf1
-	vmovsd	1568(%esp), %xmm1
-	movl	1500(%esp), %eax
-	vmulss	(%eax,%edi), %xmm0, %xmm0
-	vcvtss2sd	%xmm0, %xmm0, %xmm0
-	vaddsd	%xmm0, %xmm1, %xmm1
-	addl	$4, %edi
-	adcl	$0, %ebx
-	incl	%esi
-	cmpl	%esi, 1564(%esp)
-	jne	.LBB3_164
-	vmovsd	%xmm1, 1648(%esp)
-	movl	1652(%esp), %eax
-	movl	$2147483647, %ecx
-	andl	%ecx, %eax
-	movl	%eax, 1644(%esp)
-	movl	1648(%esp), %eax
-	movl	%eax, 1640(%esp)
-	vmovsd	1640(%esp), %xmm0
-	vucomisd	.LCPI3_10, %xmm0
-	vmovss	1440(%esp), %xmm1
-	jmp	.LBB3_155
-.LBB3_148:
-	vmovss	%xmm0, 1504(%esp)
-	jmp	.LBB3_149
-	.align	16, 0x90
-.LBB3_162:
-	vmovss	1440(%esp), %xmm0
-	vcvtss2sd	%xmm0, %xmm0, %xmm0
-	vmovsd	%xmm0, 2076(%esp)
-	vmovss	1408(%esp), %xmm0
-	vcvtss2sd	%xmm0, %xmm0, %xmm0
-	vmovsd	%xmm0, 2084(%esp)
-	vmovsd	%xmm1, 2092(%esp)
-	movl	16(%ebp), %eax
-	movl	%eax, 12(%esp)
-	movl	1336(%esp), %eax
-	movl	%eax, 8(%esp)
+.LBB3_49:
+	movl	%edx, 1216(%esp)
+	movl	%eax, 1248(%esp)
+	movl	%ecx, 2076(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
 	leal	2076(%esp), %eax
 	movl	%eax, 4(%esp)
-	vmovsd	%xmm1, 1632(%esp)
-	movl	$.L.str1, (%esp)
-	movl	1636(%esp), %eax
-	movl	$2147483647, %ecx
-	andl	%ecx, %eax
-	movl	%eax, 1628(%esp)
-	movl	1632(%esp), %eax
-	movl	%eax, 1624(%esp)
-	calll	opencl_printf
-	vmovss	1440(%esp), %xmm1
-	vmovsd	1624(%esp), %xmm0
-	vucomisd	.LCPI3_10, %xmm0
-.LBB3_155:
-	vmovss	1408(%esp), %xmm2
-	jb	.LBB3_149
-	vsubss	%xmm1, %xmm2, %xmm0
-	vmulss	.LCPI3_8, %xmm0, %xmm3
-	vucomiss	.LCPI3_12, %xmm3
-	vmovaps	%xmm3, %xmm0
-	ja	.LBB3_158
-	vmovaps	%xmm2, %xmm0
-.LBB3_158:
-	vmovss	%xmm0, 1408(%esp)
-	vxorps	%xmm0, %xmm0, %xmm0
-	vucomiss	%xmm3, %xmm0
-	vmovaps	%xmm3, %xmm0
-	ja	.LBB3_160
-	vmovaps	%xmm1, %xmm0
-.LBB3_160:
-	vmovss	%xmm0, 1440(%esp)
-	xorl	%edi, %edi
-	vxorps	%xmm1, %xmm1, %xmm1
-	xorl	%ebx, %ebx
-	xorl	%esi, %esi
-	vmovss	%xmm3, 1504(%esp)
-	.align	16, 0x90
-.LBB3_161:
-	vmovsd	%xmm1, 1568(%esp)
-	movl	%esi, (%esp)
-	vmovss	1504(%esp), %xmm0
-	calll	__ocl_svml_s9_pownf1
-	vmovsd	1568(%esp), %xmm1
-	movl	1500(%esp), %eax
-	vmulss	(%eax,%edi), %xmm0, %xmm0
+	movl	$.L.str, (%esp)
+	vcvtsi2ssl	%edx, %xmm0, %xmm0
+	vmovaps	416(%esp), %ymm1
+	vmulss	%xmm1, %xmm0, %xmm1
+	vmovss	%xmm1, 1472(%esp)
+	vmovaps	384(%esp), %ymm0
+	vaddss	%xmm0, %xmm1, %xmm0
+	vmovss	%xmm0, 1184(%esp)
 	vcvtss2sd	%xmm0, %xmm0, %xmm0
-	vaddsd	%xmm0, %xmm1, %xmm1
-	addl	$4, %edi
-	adcl	$0, %ebx
-	incl	%esi
-	cmpl	%esi, 1564(%esp)
-	jne	.LBB3_161
-	jmp	.LBB3_162
-.LBB3_149:
-	movl	888(%esp), %ecx
-	movl	988(%esp), %edx
-	movl	(%edx,%ecx,4), %eax
-	addl	1344(%esp), %eax
-	movl	1340(%esp), %esi
-	vmovss	1504(%esp), %xmm0
-	vmovss	%xmm0, (%esi,%eax,4)
-	jmp	.LBB3_150
-	.align	16, 0x90
-.LBB3_32:
-	movl	%edx, 1248(%esp)
-	vcvtsi2ssl	%edx, %xmm0, %xmm3
-	vmovdqa	688(%esp), %xmm0
-	vfmadd213ss	352(%esp), %xmm0, %xmm3
-	vmovss	%xmm3, 1440(%esp)
-	cmpl	$0, 1564(%esp)
-	jle	.LBB3_33
+	vmovsd	%xmm0, 1408(%esp)
+	vzeroupper
+	calll	opencl_printf
+	vmovsd	1408(%esp), %xmm0
+	vmovsd	%xmm0, 2080(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	2080(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str1, (%esp)
+	calll	opencl_printf
+	movl	$0, 2092(%esp)
+	movl	$0, 2088(%esp)
+	movl	%edi, 12(%esp)
+	movl	%esi, 8(%esp)
+	leal	2088(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str2, (%esp)
+	calll	opencl_printf
+	cmpl	$0, 1572(%esp)
+	jle	.LBB3_50
+	xorl	%esi, %esi
 	xorl	%edi, %edi
 	xorl	%ebx, %ebx
-	xorl	%esi, %esi
-	vpxor	%xmm0, %xmm0, %xmm0
+	vxorps	%xmm0, %xmm0, %xmm0
+	vmovaps	%xmm0, 1536(%esp)
 	.align	16, 0x90
-.LBB3_138:
-	vmovss	%xmm0, 1568(%esp)
-	movl	%esi, (%esp)
-	vmovaps	%xmm3, %xmm0
-	vzeroupper
-	calll	__ocl_svml_s9_pownf1
-	vmovss	1440(%esp), %xmm3
-	movl	1376(%esp), %eax
-	vmovss	(%eax,%edi), %xmm1
-	vfmadd213ss	1568(%esp), %xmm0, %xmm1
-	addl	$4, %edi
-	adcl	$0, %ebx
-	incl	%esi
-	cmpl	%esi, 1564(%esp)
-	vmovdqa	%xmm1, %xmm0
-	jne	.LBB3_138
-	jmp	.LBB3_139
+.LBB3_142:
+	movl	%ebx, (%esp)
+	vmovsd	1408(%esp), %xmm0
+	calll	__ocl_svml_s9_pown1
+	movl	1344(%esp), %eax
+	vmovsd	(%eax,%esi), %xmm1
+	vmovsd	%xmm1, 2096(%esp)
+	movl	16(%ebp), %eax
+	movl	%eax, 12(%esp)
+	movl	1340(%esp), %eax
+	movl	%eax, 8(%esp)
+	leal	2096(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str3, (%esp)
+	addl	$8, %esi
+	adcl	$0, %edi
+	vmovaps	1536(%esp), %xmm2
+	vcvtss2sd	%xmm2, %xmm2, %xmm2
+	vfmadd213sd	%xmm2, %xmm1, %xmm0
+	vcvtsd2ss	%xmm0, %xmm0, %xmm0
+	vmovaps	%xmm0, 1536(%esp)
+	calll	opencl_printf
+	incl	%ebx
+	cmpl	%ebx, 1572(%esp)
+	jne	.LBB3_142
+	jmp	.LBB3_143
 	.align	16, 0x90
-.LBB3_33:
-	vpxor	%xmm1, %xmm1, %xmm1
-.LBB3_139:
+.LBB3_50:
+	vxorps	%xmm0, %xmm0, %xmm0
+	vmovaps	%xmm0, 1536(%esp)
+.LBB3_143:
 	movl	$2147483647, %eax
 	vmovd	%eax, %xmm0
-	vmovapd	%xmm0, 1216(%esp)
-	vpand	%xmm0, %xmm1, %xmm0
+	vmovapd	%xmm0, 1456(%esp)
+	vmovapd	1536(%esp), %xmm2
+	vandpd	%xmm0, %xmm2, %xmm0
 	vcvtss2sd	%xmm0, %xmm0, %xmm0
-	vmovsd	.LCPI3_2, %xmm2
-	vucomisd	%xmm0, %xmm2
-	ja	.LBB3_140
-	vaddss	688(%esp), %xmm3, %xmm2
-	vmovss	%xmm2, 1408(%esp)
-	vmovss	%xmm3, 1440(%esp)
-	vpxor	%xmm0, %xmm0, %xmm0
-	vucomiss	%xmm0, %xmm1
+	vmovsd	.LCPI3_3, %xmm1
+	vucomisd	%xmm0, %xmm1
+	vmovapd	%xmm2, %xmm1
+	jbe	.LBB3_145
+	movl	988(%esp), %ecx
+	movl	924(%esp), %edx
+	movl	(%edx,%ecx,4), %eax
+	addl	1280(%esp), %eax
+	movl	1148(%esp), %esi
+	vmovss	%xmm1, (%esi,%eax,4)
+	incl	(%edx,%ecx,4)
+	vxorps	%xmm0, %xmm0, %xmm0
+	vcvtss2sd	%xmm1, %xmm1, %xmm0
+	vmovsd	%xmm0, 2104(%esp)
+	movl	16(%ebp), %ebx
+	movl	%ebx, %edi
+	movl	%edi, 12(%esp)
+	movl	1340(%esp), %esi
+	movl	%esi, 8(%esp)
+	leal	2104(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str4, (%esp)
+	jmp	.LBB3_175
+	.align	16, 0x90
+.LBB3_145:
+	vmovss	1056(%esp), %xmm0
+	vaddss	1472(%esp), %xmm0, %xmm0
+	vmovss	%xmm0, 1152(%esp)
+	vcvtss2sd	%xmm0, %xmm0, %xmm3
+	vmovsd	%xmm3, 1376(%esp)
+	vxorpd	%xmm2, %xmm2, %xmm2
+	vucomiss	%xmm2, %xmm1
 	movl	$-1, %ecx
 	movl	$1, %eax
 	cmoval	%eax, %ecx
-	movl	%ecx, 1504(%esp)
-	cmpl	$0, 1564(%esp)
-	jle	.LBB3_142
+	movl	%ecx, 1088(%esp)
+	cmpl	$0, 1572(%esp)
+	jle	.LBB3_148
+	xorl	%esi, %esi
 	xorl	%edi, %edi
 	xorl	%ebx, %ebx
-	xorl	%esi, %esi
-	vpxor	%xmm0, %xmm0, %xmm0
 	.align	16, 0x90
-.LBB3_144:
-	vmovss	%xmm0, 1568(%esp)
-	movl	%esi, (%esp)
-	vmovaps	%xmm2, %xmm0
-	vzeroupper
-	calll	__ocl_svml_s9_pownf1
-	vmovss	1408(%esp), %xmm2
-	movl	1500(%esp), %eax
-	vmovss	(%eax,%edi), %xmm1
-	vfmadd213ss	1568(%esp), %xmm0, %xmm1
-	addl	$4, %edi
-	adcl	$0, %ebx
-	incl	%esi
-	cmpl	%esi, 1564(%esp)
-	vmovdqa	%xmm1, %xmm0
-	jne	.LBB3_144
-	jmp	.LBB3_145
-	.align	16, 0x90
-.LBB3_142:
-	vpxor	%xmm1, %xmm1, %xmm1
-.LBB3_145:
-	vmovss	%xmm2, 1408(%esp)
-	vpand	1216(%esp), %xmm1, %xmm0
+.LBB3_147:
+	vmovapd	%xmm2, 1472(%esp)
+	movl	%esi, 1536(%esp)
+	movl	%ebx, (%esp)
+	addl	$8, %esi
+	adcl	$0, %edi
+	vmovaps	%xmm3, %xmm0
+	calll	__ocl_svml_s9_pown1
+	vmovsd	1376(%esp), %xmm3
+	movl	1504(%esp), %eax
+	movl	1536(%esp), %ecx
+	vmovsd	(%eax,%ecx), %xmm1
+	vmovaps	1472(%esp), %xmm2
+	vcvtss2sd	%xmm2, %xmm2, %xmm2
+	vfmadd213sd	%xmm2, %xmm0, %xmm1
+	vxorps	%xmm2, %xmm2, %xmm2
+	vcvtsd2ss	%xmm1, %xmm1, %xmm2
+	incl	%ebx
+	cmpl	%ebx, 1572(%esp)
+	jne	.LBB3_147
+.LBB3_148:
+	vandpd	1456(%esp), %xmm2, %xmm0
 	vcvtss2sd	%xmm0, %xmm0, %xmm0
-	vmovsd	.LCPI3_2, %xmm2
-	vucomisd	%xmm0, %xmm2
-	jbe	.LBB3_146
-.LBB3_140:
-	movl	888(%esp), %ecx
-	movl	988(%esp), %edx
+	vmovsd	.LCPI3_3, %xmm1
+	vucomisd	%xmm0, %xmm1
+	jbe	.LBB3_150
+	movl	988(%esp), %ecx
+	movl	924(%esp), %edx
 	movl	(%edx,%ecx,4), %eax
-	addl	1344(%esp), %eax
-	movl	1340(%esp), %esi
-	vmovss	%xmm1, (%esi,%eax,4)
-.LBB3_150:
+	addl	1280(%esp), %eax
+	movl	1148(%esp), %esi
+	vmovss	%xmm2, (%esi,%eax,4)
 	incl	(%edx,%ecx,4)
-.LBB3_151:
-	movl	1248(%esp), %edx
-	incl	%edx
-	movl	1280(%esp), %eax
-	incl	%eax
-	movl	%eax, 1280(%esp)
-	cmpl	380(%esp), %eax
-	movl	1500(%esp), %eax
-	movl	1376(%esp), %esi
-	jne	.LBB3_32
-	addl	1192(%esp), %eax
-	addl	1196(%esp), %esi
-	incl	%ecx
-	movl	1200(%esp), %edx
-	incl	%edx
-	cmpl	188(%esp), %edx
-	jne	.LBB3_31
+	movl	16(%ebp), %ebx
+	movl	%ebx, %edi
+	movl	%edi, 12(%esp)
+	movl	1340(%esp), %esi
+	movl	%esi, 8(%esp)
+	leal	2115(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str5, (%esp)
+	jmp	.LBB3_175
+	.align	16, 0x90
+.LBB3_150:
+	vucomiss	.LCPI3_13, %xmm2
+	movl	$-1, %eax
+	movl	$1, %ecx
+	cmoval	%ecx, %eax
+	cmpl	%eax, 1088(%esp)
+	movl	1340(%esp), %esi
+	movl	16(%ebp), %ebx
+	movl	%ebx, %edi
+	vmovsd	1408(%esp), %xmm1
+	je	.LBB3_176
+	vmovss	1152(%esp), %xmm0
+	vucomiss	1184(%esp), %xmm0
+	vmovaps	%xmm1, %xmm0
+	ja	.LBB3_153
+	vmovaps	%xmm3, %xmm0
 .LBB3_153:
+	vcvtsd2ss	%xmm0, %xmm0, %xmm2
+	movl	1572(%esp), %eax
+	ja	.LBB3_155
+	vmovaps	%xmm1, %xmm3
+.LBB3_155:
+	vxorps	%xmm0, %xmm0, %xmm0
+	vcvtsd2ss	%xmm3, %xmm3, %xmm0
+	vmovss	%xmm0, 1408(%esp)
+	vaddss	%xmm2, %xmm0, %xmm0
+	vmovss	%xmm2, 1376(%esp)
+	vmulss	.LCPI3_9, %xmm0, %xmm3
+	vmovss	%xmm3, 1472(%esp)
+	testl	%eax, %eax
+	jle	.LBB3_156
+	xorl	%esi, %esi
+	xorl	%edi, %edi
+	xorl	%ebx, %ebx
+	vxorps	%xmm1, %xmm1, %xmm1
+	.align	16, 0x90
+.LBB3_167:
+	vmovsd	%xmm1, 1536(%esp)
+	movl	%ebx, (%esp)
+	vmovaps	%xmm3, %xmm0
+	calll	__ocl_svml_s9_pownf1
+	vmovss	1472(%esp), %xmm3
+	movl	1504(%esp), %eax
+	vmovsd	(%eax,%esi), %xmm1
+	vcvtss2sd	%xmm0, %xmm0, %xmm0
+	vfmadd213sd	1536(%esp), %xmm1, %xmm0
+	addl	$8, %esi
+	adcl	$0, %edi
+	incl	%ebx
+	cmpl	%ebx, 1572(%esp)
+	vmovaps	%xmm0, %xmm1
+	jne	.LBB3_167
+	jmp	.LBB3_157
+.LBB3_156:
+	vxorps	%xmm0, %xmm0, %xmm0
+.LBB3_157:
+	vmovss	1408(%esp), %xmm4
+	vmovss	1376(%esp), %xmm5
+	vsubss	%xmm5, %xmm4, %xmm1
+	vandps	1456(%esp), %xmm1, %xmm1
+	vcvtss2sd	%xmm1, %xmm1, %xmm1
+	vucomisd	.LCPI3_10, %xmm1
+	jbe	.LBB3_158
+	cmpl	$0, 1572(%esp)
+	movl	988(%esp), %ecx
+	movl	1148(%esp), %esi
+	movl	16(%ebp), %edi
+	jle	.LBB3_169
+	.align	16, 0x90
+.LBB3_161:
+	vxorps	%xmm2, %xmm2, %xmm2
+	vucomisd	%xmm0, %xmm2
+	vmovaps	%xmm3, %xmm1
+	ja	.LBB3_163
+	vmovaps	%xmm5, %xmm1
+.LBB3_163:
+	vucomisd	%xmm2, %xmm0
+	ja	.LBB3_165
+	vmovaps	%xmm4, %xmm3
+.LBB3_165:
+	vmovss	%xmm3, 1408(%esp)
+	vaddss	%xmm1, %xmm3, %xmm0
+	vmovss	%xmm1, 1376(%esp)
+	vmulss	.LCPI3_9, %xmm0, %xmm3
+	vmovss	%xmm3, 1472(%esp)
+	xorl	%esi, %esi
+	xorl	%edi, %edi
+	xorl	%ebx, %ebx
+	vxorps	%xmm1, %xmm1, %xmm1
+	.align	16, 0x90
+.LBB3_159:
+	vmovsd	%xmm1, 1536(%esp)
+	movl	%ebx, (%esp)
+	vmovaps	%xmm3, %xmm0
+	calll	__ocl_svml_s9_pownf1
+	vmovss	1472(%esp), %xmm3
+	movl	1504(%esp), %eax
+	vmovsd	(%eax,%esi), %xmm1
+	vcvtss2sd	%xmm0, %xmm0, %xmm0
+	vfmadd213sd	1536(%esp), %xmm1, %xmm0
+	addl	$8, %esi
+	adcl	$0, %edi
+	incl	%ebx
+	cmpl	%ebx, 1572(%esp)
+	vmovaps	%xmm0, %xmm1
+	jne	.LBB3_159
+	vmovss	1408(%esp), %xmm4
+	vmovss	1376(%esp), %xmm2
+	vsubss	%xmm2, %xmm4, %xmm1
+	vandps	1456(%esp), %xmm1, %xmm1
+	vcvtss2sd	%xmm1, %xmm1, %xmm1
+	vucomisd	.LCPI3_10, %xmm1
+	vmovapd	%xmm2, %xmm5
+	movl	988(%esp), %ecx
+	movl	1148(%esp), %esi
+	movl	16(%ebp), %edi
+	ja	.LBB3_161
+	jmp	.LBB3_174
+	.align	16, 0x90
+.LBB3_169:
+	vxorpd	%xmm2, %xmm2, %xmm2
+	vucomisd	%xmm0, %xmm2
+	vmovapd	%xmm3, %xmm1
+	ja	.LBB3_171
+	vmovapd	%xmm5, %xmm1
+.LBB3_171:
+	vucomisd	%xmm2, %xmm0
+	ja	.LBB3_173
+	vmovapd	%xmm4, %xmm3
+.LBB3_173:
+	vmovapd	%xmm3, %xmm4
+	vaddss	%xmm1, %xmm4, %xmm0
+	vmulss	.LCPI3_9, %xmm0, %xmm3
+	vsubss	%xmm1, %xmm4, %xmm0
+	vandps	1456(%esp), %xmm0, %xmm0
+	vcvtss2sd	%xmm0, %xmm0, %xmm0
+	vucomisd	.LCPI3_10, %xmm0
+	vxorps	%xmm0, %xmm0, %xmm0
+	vmovapd	%xmm1, %xmm5
+	ja	.LBB3_169
+	jmp	.LBB3_174
+.LBB3_158:
+	movl	988(%esp), %ecx
+	movl	1148(%esp), %esi
+	movl	16(%ebp), %edi
+.LBB3_174:
+	movl	924(%esp), %edx
+	movl	(%edx,%ecx,4), %eax
+	addl	1280(%esp), %eax
+	vmovss	%xmm3, (%esi,%eax,4)
+	movl	(%edx,%ecx,4), %eax
+	incl	%eax
+	movl	%eax, (%edx,%ecx,4)
+	movl	%ecx, 2116(%esp)
+	movl	%eax, 2120(%esp)
+	movl	%edi, 12(%esp)
+	movl	1340(%esp), %esi
+	movl	%esi, 8(%esp)
+	leal	2116(%esp), %eax
+	movl	%eax, 4(%esp)
+	movl	$.L.str6, (%esp)
+	.align	16, 0x90
+.LBB3_175:
+	calll	opencl_printf
+.LBB3_176:
+	movl	1216(%esp), %edx
+	incl	%edx
+	movl	1248(%esp), %eax
+	incl	%eax
+	cmpl	380(%esp), %eax
+	movl	988(%esp), %ecx
+	movl	1504(%esp), %ebx
+	jne	.LBB3_49
+	addl	928(%esp), %ebx
+	movl	1344(%esp), %eax
+	addl	992(%esp), %eax
+	incl	%ecx
+	movl	1052(%esp), %edx
+	incl	%edx
+	cmpl	220(%esp), %edx
+	jne	.LBB3_48
+.LBB3_178:
 	leal	-12(%ebp), %esp
 	popl	%esi
 	popl	%edi
@@ -3879,13 +4403,38 @@ PolinomeFindRoots:
 	.type	.L.str,@object
 	.section	.rodata.str1.1,"aMS",@progbits,1
 .L.str:
-	.asciz	 "%d, "
-	.size	.L.str, 5
+	.asciz	 "%d, \t"
+	.size	.L.str, 6
 
 	.type	.L.str1,@object
 .L.str1:
-	.asciz	 "[%f, %f, %f]  "
-	.size	.L.str1, 15
+	.asciz	 "Negative edge: %f\t"
+	.size	.L.str1, 19
+
+	.type	.L.str2,@object
+.L.str2:
+	.asciz	 "\nroot += %f\n"
+	.size	.L.str2, 13
+
+	.type	.L.str3,@object
+.L.str3:
+	.asciz	 "coefs = %f\t"
+	.size	.L.str3, 12
+
+	.type	.L.str4,@object
+.L.str4:
+	.asciz	 "   Here 1, root = %f\n"
+	.size	.L.str4, 22
+
+	.type	.L.str5,@object
+.L.str5:
+	.asciz	 "\nHere 1\n"
+	.size	.L.str5, 9
+
+	.type	.L.str6,@object
+.L.str6:
+	.asciz	 "rootsCount[%d] = %d\n"
+	.size	.L.str6, 21
 
 	.type	float_const_signMask,@object
 	.section	.rodata,"a",@progbits
@@ -3894,13 +4443,6 @@ PolinomeFindRoots:
 float_const_signMask:
 	.long	2147483647
 	.size	float_const_signMask, 4
-
-	.type	double_const_signMask,@object
-	.globl	double_const_signMask
-	.align	8
-double_const_signMask:
-	.quad	9223372036854775807
-	.size	double_const_signMask, 8
 
 
 	.section	".note.GNU-stack","",@progbits

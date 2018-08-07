@@ -216,28 +216,34 @@ __kernel void PolinomeRealRoots(__global float* coefs, __global float* rootsArra
 // roots: [h * (power - 1)]
 // rootsCount[h * (power - 1)]
 // TODO: fix global sizes
-__kernel void PolinomeFindRoots(__global float* coefs, const int coefs_numb,
+__kernel void PolinomeFindRoots(__global double* coefs, const int coefs_numb,
 	const float start, const float h, __global float* roots, __global int* rootsCount){ 
 
 	const int id_i = get_global_id(0);
 	const int id_j = get_global_id(1);
+	printf("%d, \t", id_i);
+	double negative_edge = start + id_j*h, positive_edge = h + start + id_j*h;
 
-	float negative_edge = start + id_j*h, positive_edge = h + start + id_j*h;
 	float Left, Right;
 	float root;
 	int signLeft, signRight;
 	// counting root
 	root = 0;
+
+	printf("Negative edge: %f\t", negative_edge);
+	printf("\nroot += %f\n", root);
 	for(int i = 0; i < coefs_numb; ++i){ 
 		root += pown(negative_edge, i) * coefs[coefs_numb*id_i - id_i + i];
-		
+		//printf(" + %f ", pown(negative_edge, i) * coefs[coefs_numb*id_i - id_i + i]);
+		printf("coefs = %f\t", coefs[coefs_numb*id_i - id_i + i]);
 	}
 	// if root found
 	int rcount = 0;
-	if(fabs(root) < 0.01){ 
+	if(fabs(root) < 0.1){ 
 		rcount = rootsCount[id_i];
 		roots[coefs_numb*id_i - id_i + rcount] = root;
 		rootsCount[id_i]++;
+		printf("   Here 1, root = %f\n", root);
 		return;
 	}
 	signLeft = (root > 0) ? 1 : -1;
@@ -247,10 +253,11 @@ __kernel void PolinomeFindRoots(__global float* coefs, const int coefs_numb,
 		root += pown(positive_edge, i) * coefs[coefs_numb*id_i + i];
 	}
 	// if root found
-	if (fabs(root) < 0.01) {
+	if (fabs(root) < 0.1) {
 		rcount = rootsCount[id_i];
 		roots[coefs_numb*id_i - id_i + rcount] = root;
 		rootsCount[id_i]++;
+		printf("\nHere 1\n");
 		return;
 	}
 	signRight = (root > 0) ? 1 : -1;
@@ -258,22 +265,20 @@ __kernel void PolinomeFindRoots(__global float* coefs, const int coefs_numb,
 	// if no sign change ---> no root found
 	if (signLeft == signRight)
 		return;
-	if(signLeft == -1){
-		Left = negative_edge; Right = positive_edge;
-	}
-	else {
-		Left = positive_edge; Right = negative_edge;
-	}
-	// else there is a root betwen negative and positive edges
-	root = (Right - Left) * 0.5;
+
+	// sign change ---> root found
+	Left = (negative_edge < positive_edge) ? negative_edge : positive_edge;
+	Right = (positive_edge > negative_edge) ? positive_edge : negative_edge;
+
+	root = (Right + Left) * 0.5;
 	double resoult = 0;
 	for (int i = 0; i < coefs_numb; ++i) {
 		resoult += pown(root, i) * coefs[coefs_numb*id_i + i];
 	}
-	while(fabs(resoult) >= 1){ 
-		root = (Right - Left) * 0.5;
-		Left = (root < 0) ? root : Left;
-		Right = (root > 0) ? root : Right;
+	while(fabs(Right - Left) > 0.001){
+		Left = (resoult < 0) ? root : Left;
+		Right = (resoult > 0) ? root : Right;
+		root = (Right + Left) * 0.5;
 		resoult = 0;
 		for (int i = 0; i < coefs_numb; ++i) {
 			resoult += pown(root, i) * coefs[coefs_numb*id_i + i];
@@ -282,5 +287,5 @@ __kernel void PolinomeFindRoots(__global float* coefs, const int coefs_numb,
 	rcount = rootsCount[id_i];
 	roots[coefs_numb*id_i - id_i + rcount] = root;
 	rootsCount[id_i]++;
-
+	printf("rootsCount[%d] = %d\n",id_i, rootsCount[id_i]);
 }

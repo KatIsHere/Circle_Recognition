@@ -115,7 +115,7 @@ void Plot_XY_Axis(double xFrom, double xTo, double yFrom, double yTo,
 	glVertex3f(maxXaxis + 0.05, yZero, 0.0f);
 	glEnd();
 
-	// X AXIS ARROWS
+	// Y AXIS ARROWS
 	glBegin(GL_LINES);
 	glColor3f(0.0f, 0.0f, 0.0f);
 	glVertex3f(xZero + 0.015, maxYaxis + 0.025, 0.0f);

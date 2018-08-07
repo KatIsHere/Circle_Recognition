@@ -206,6 +206,7 @@ double Extremums_Run_Kernel(cl_command_queue &queue, cl_context context, cl_devi
 
 	cl_int setSize = (finish - start) / h;
 
+	
 
 	// SETTING UP KERNEL ARGUMENTS + CHECKING FOR ERRORS
 	err = clSetKernelArg(kernel, 0, sizeof(coefs_input_buffer), (void *)& coefs_input_buffer);
@@ -225,6 +226,7 @@ double Extremums_Run_Kernel(cl_command_queue &queue, cl_context context, cl_devi
 
 	err = clSetKernelArg(kernel, 5, sizeof(extrems_count_buffer), (void *)& extrems_count_buffer);
 	checkErr(err, "clSetKernelArg : coefs_input_buffer(0)");
+
 
 	const clock_t perf_start = clock();
 	int dim = 2;
