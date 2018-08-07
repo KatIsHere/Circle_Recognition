@@ -6,6 +6,7 @@
 #include <fstream>
 #include "Classify.h"
 #include <filesystem>
+#include <algorithm>
 using namespace std;
 namespace fs = std::experimental::filesystem::v1;
 #define POLINOME_POWER_LARGE 6
@@ -45,7 +46,6 @@ int main(int argc, char ** argv) {
 	setUpKernel(queue_, context_, device_, kernel_poli, kernel_extr);
 	string filename = "Classes.txt";
 	OBJS = Read_Classification(filename, POLINOME_POWER_LARGE - 1);
-
 	Draw(argc, argv);
 	
 	//CreateClassificatoin();
@@ -58,8 +58,6 @@ int main(int argc, char ** argv) {
 	return 1;
 }
 
-
-//int MAIN_FUNCTION(const int& x, const int& y, const int& h, const int& w, double** Matr)
 
 
 //-------------------------------------------------------------------------------------------------------
@@ -77,6 +75,10 @@ void Draw(int argc, char ** argv) {
 	}
 
 	Pos = 0;
+
+	printf("Press: \n\t'Enter' to view next object;\n\t'Backspace' to view previous object;\n\t'p'"""
+		""" to view pressed object of the same class;\n\t'Space' to view unpresed object of the same class;\n\t"""
+		"""Number from '1' to '7' to view different types of objects;\n");
 
 	// Render fast approximation using opencl
 	glutInit(&argc, argv);

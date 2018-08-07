@@ -97,10 +97,10 @@ public:
 		return *this;
 	}
 
-	//~Features(){
-	//	delete[]angles;
-	//	delete[]distances;
-	//}
+	/*~Features(){
+		delete[]angles;
+		delete[]distances;
+	}*/
 
 private:
 	int N;
@@ -226,6 +226,8 @@ public:
 	const int& getPowerMin() {
 		return _powerMin;
 	}
+
+
 
 private:
 	Features max_polinome;
