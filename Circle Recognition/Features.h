@@ -255,16 +255,21 @@ public:
 		_angles.clear();
 	}
 
-	ObjectClass(std::string className, const double& extr_count, std::vector<double> extrems, std::vector<double> dists, std::vector<float> angles) {
+	ObjectClass(std::string className, const double& extr_count, std::vector<double> extrems, std::vector<double> dists, std::vector<float> angles, 
+				std::vector<double> minValue, std::vector<double> maxValue, std::vector<double> minValueDist, std::vector<double> maxValueDist) {
 		_extrems = extrems;
 		_dists = dists;
 		_angles = angles;
 		_className = className;
 		av_power = ((ceil(extr_count) - extr_count) >= 0.1) ? floor(extr_count) : ceil(extr_count);
 
-		_extrems_back = 500; _extrems_forv = 500;
-		_dist_back = 250, _dist_forv = 250;
-		_angl_back = 0.000002, _angl_forv = 0.000002;
+		_extrems_back = 100; _extrems_forv = 100;
+		_dist_back = 100, _dist_forv = 100;
+		_angl_back = 0.000003, _angl_forv = 0.000003;
+		_distanceMax_Value = maxValueDist;
+		_distanceMin_Value = minValueDist;
+		_LocalMax_Value = maxValue;
+		_LocalMin_Value = minValue;
 	}
 
 	void print() {
@@ -292,29 +297,41 @@ public:
 		count = obj.getDistNumMax();
 		for (int i = 0; i < count; ++i) {
 			pos += DistTrust * (obj.getDistMax()[i] <= _dists[i] + _dist_forv && obj.getDistMax()[i] >= _dists[i] - _dist_back);
+			pos += DistTrust * (obj.getDistMax()[i] <= _distanceMax_Value[i] - _dist_forv && obj.getDistMax()[i] >= _distanceMin_Value[i] + _dist_back);
 		}
 		count = obj.getDistNumMin();
 		for (int i = 0; i < count; ++i) {
 			pos += DistTrust * (obj.getDistMin()[i] <= _dists[i] + _dist_forv && obj.getDistMin()[i] >= _dists[i] - _dist_back);
+			pos += DistTrust * (obj.getDistMin()[i] <= _distanceMax_Value[i] - _dist_forv && obj.getDistMin()[i] >= _distanceMin_Value[i] + _dist_back);
 		}
+
 		count = obj.getPowerMin();
 		for (int i = 0; i < count; ++i) {
 			pos += LocalsTrust * (obj.getMin_extr()[i] <= _extrems[i] + _extrems_forv && obj.getMin_extr()[i] >= _extrems[i] - _extrems_back);
 		}
+		for (int i = 0; i < _LocalMax_Value.size(); ++i)
+		{
+			pos += LocalsTrust * (obj.getMin_extr()[i] <= _LocalMax_Value[i] - _extrems_forv && obj.getMin_extr()[i] >= _LocalMin_Value[i] + _extrems_back);
+		}
 		count = obj.getPowerMax();
 		for (int i = 0; i < count; ++i) {
 			pos += LocalsTrust * (obj.getMax_extr()[i] <= _extrems[i] + _extrems_forv && obj.getMax_extr()[i] >= _extrems[i] - _extrems_back);
+			
 		}
-		
-		pos -= (PowTrust * (obj.getPowerMax() != av_power) + PowTrust * (obj.getPowerMin() != av_power));
+		for (int i = 0; i < _LocalMin_Value.size(); ++i)
+		{
+			pos += LocalsTrust * (obj.getMax_extr()[i] <= _LocalMax_Value[i] - _extrems_forv && obj.getMax_extr()[i] >= _LocalMin_Value[i] + _extrems_back);
+		}
+
+		pos += (PowTrust * (obj.getPowerMax() == av_power) + PowTrust * (obj.getPowerMin() == av_power));
 		return pos;
 	}
 
 private:
-	const float AnglesTrust = 0.2;
-	const float LocalsTrust = 0.2;
-	const float DistTrust = 0.20;
-	const float PowTrust = 0.3;
+	const float AnglesTrust = 0.1;
+	const float LocalsTrust = 0.1;
+	const float DistTrust = 0.1;
+	const float PowTrust = 0.2;
 
 	// Thresholds
 	double _extrems_back, _extrems_forv;
@@ -326,6 +343,15 @@ private:
 	std::vector<double> _extrems;
 	std::vector<double> _dists;
 	std::vector<float> _angles;
+
+
+	std::vector<double> _distanceMax_Value;
+
+	std::vector<double> _LocalMax_Value;
+
+	std::vector<double> _distanceMin_Value;
+
+	std::vector<double> _LocalMin_Value;
 
 	// Class name
 	std::string _className;
@@ -367,6 +393,14 @@ public:
 		AngleMaxN.clear();
 		_distanceMax.clear();
 		distanceMaxN.clear();
+
+		_AngleMax_Value.clear();
+		_distanceMax_Value.clear();
+		_LocalMax_Value.clear();
+
+		_AngleMin_Value.clear();
+		_distanceMin_Value.clear();
+		_LocalMin_Value.clear();
 		avaraged = false;
 	}
 
@@ -384,6 +418,29 @@ public:
 		AngleMaxN.resize(polinome_power - 2);
 		_distanceMax.resize(polinome_power - 1);
 		distanceMaxN.resize(polinome_power - 1);
+		_AngleMax_Value.resize(polinome_power - 2);
+		_distanceMax_Value.resize(polinome_power - 1);
+		_LocalMax_Value.resize(polinome_power);
+
+		_AngleMin_Value.resize(polinome_power - 2);
+		_distanceMin_Value.resize(polinome_power - 1);
+		_LocalMin_Value.resize(polinome_power);
+		for (int i = 0; i < polinome_power - 2; ++i) {
+			_AngleMax_Value[i] = 0; _AngleMin_Value[i] = 1;
+
+			_distanceMin_Value[i] = VALUE_RESTRICTION + 1;
+			_distanceMax_Value[i] = -VALUE_RESTRICTION - 1;
+
+			_LocalMin_Value[i] = VALUE_RESTRICTION + 1;
+			_LocalMax_Value[i] = -VALUE_RESTRICTION - 1;
+		}
+		_distanceMin_Value[polinome_power - 2] = VALUE_RESTRICTION + 1;
+		_distanceMax_Value[polinome_power - 2] = -VALUE_RESTRICTION - 1;
+
+		_LocalMin_Value[polinome_power - 2] = VALUE_RESTRICTION + 1;
+		_LocalMax_Value[polinome_power - 2] = -VALUE_RESTRICTION - 1;
+		_LocalMin_Value[polinome_power - 1] = VALUE_RESTRICTION + 1;
+		_LocalMax_Value[polinome_power - 1] = -VALUE_RESTRICTION - 1;
 		avaraged = false;
 	}
 
@@ -409,12 +466,18 @@ public:
 		for (int i = 0; i < AnglNumMax; i++)
 		{
 			_AngleMax[i] += AngleMax[i];
+			_AngleMax_Value[i] = (_AngleMax_Value[i] < AngleMax[i]) ? AngleMax[i] : _AngleMax_Value[i];
+			_AngleMin_Value[i] = (_AngleMin_Value[i] > AngleMax[i]) ? AngleMax[i] : _AngleMin_Value[i];
 			AngleMaxN[i] ++;
 		}
 
 		for (int i = 0; i < DistNumMax; i++)
 		{
 			flag = (distanceMax[i] <= VALUE_RESTRICTION && distanceMax[i] >= -VALUE_RESTRICTION);
+			if (flag) {
+				_distanceMax_Value[i] = (_distanceMax_Value[i] < distanceMax[i]) ? distanceMax[i] : _distanceMax_Value[i];
+				_distanceMin_Value[i] = (_distanceMin_Value[i] > distanceMax[i]) ? distanceMax[i] : _distanceMin_Value[i];
+			}
 			_distanceMax[i] += distanceMax[i] * flag;
 			distanceMaxN[i] += flag;
 		}
@@ -422,6 +485,10 @@ public:
 		for (int i = 0; i < count_max; i++)
 		{
 			flag = (LocalMax[i] <= VALUE_RESTRICTION && LocalMax[i] >= -VALUE_RESTRICTION);
+			if (flag) {
+				_LocalMax_Value[i] = (_LocalMax_Value[i] < LocalMax[i]) ? LocalMax[i] : _LocalMax_Value[i];
+				_LocalMin_Value[i] = (_LocalMin_Value[i] > LocalMax[i]) ? LocalMax[i] : _LocalMin_Value[i];
+			}
 			_LocalMax[i] += LocalMax[i] * flag;
 			LocalMaxN[i] += flag;
 			avarage_extremum_count += flag;
@@ -468,9 +535,35 @@ public:
 			oss.precision(std::numeric_limits<double>::digits10);
 			oss << std::fixed << _AngleMax[i];
 			obj += oss.str() + "\t";
-			oss.clear();
+			oss.str("");
 		};
-		obj += std::to_string(_AngleMax[polinome_power - 3]) + ";\n";
+		oss.str("");
+		oss.precision(std::numeric_limits<double>::digits10);
+		oss << std::fixed << _AngleMax[polinome_power - 3];
+		obj += oss.str() + ";";
+		
+		// min-max
+		for (int i = 0; i < polinome_power - 1; ++i) {
+			obj += std::to_string(_LocalMax_Value[i]) + "\t";
+		};
+		obj +=  std::to_string(_LocalMax_Value[polinome_power - 1]) + ";";
+		
+		for (int i = 0; i < polinome_power - 1; ++i) {
+			obj += std::to_string(_LocalMin_Value[i]) + "\t";
+		};
+		obj += std::to_string(_LocalMin_Value[polinome_power - 1]) + ";";
+
+
+		for (int i = 0; i < polinome_power - 2; ++i) {
+			obj += std::to_string(_distanceMax_Value[i]) + "\t";
+		};
+		obj += std::to_string(_distanceMax_Value[polinome_power - 2]) + ";";
+		
+		for (int i = 0; i < polinome_power - 2; ++i) {
+			obj += std::to_string(_distanceMin_Value[i]) + "\t";
+		};
+		obj += std::to_string(_distanceMin_Value[polinome_power - 2]) + ";\n";
+
 		file << obj;
 	}
 
@@ -484,6 +577,16 @@ private:
 
 	std::vector<int> LocalMaxN;
 	std::vector<double> _LocalMax;
+
+	std::vector<float> _AngleMax_Value;
+	std::vector<double> _distanceMax_Value;
+
+	std::vector<double> _LocalMax_Value;
+
+	std::vector<float> _AngleMin_Value;
+	std::vector<double> _distanceMin_Value;
+
+	std::vector<double> _LocalMin_Value;
 
 	int polinome_power;
 	int extremum_power_sum;

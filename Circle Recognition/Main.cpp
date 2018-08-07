@@ -47,6 +47,7 @@ int main(int argc, char ** argv) {
 	OBJS = Read_Classification(filename, POLINOME_POWER_LARGE - 1);
 
 	Draw(argc, argv);
+	
 	//CreateClassificatoin();
 	clReleaseKernel(kernel_poli);
 	clReleaseKernel(kernel_extr);
@@ -56,6 +57,9 @@ int main(int argc, char ** argv) {
 	cin.get();
 	return 1;
 }
+
+
+//int MAIN_FUNCTION(const int& x, const int& y, const int& h, const int& w, double** Matr)
 
 
 //-------------------------------------------------------------------------------------------------------
@@ -276,7 +280,26 @@ int parse_path(const string& filepath, int& height, int& width, int clas, int pr
 			}
 		}
 	}
-	if (filepath[FILEPATH.size()] > char(clas) + '0')// || filepath[FILEPATH.size() + 2] != char(pressed) + '0')
+	if (filepath[FILEPATH.size()] > char(clas) + '0')
+		return -1;
+	return 0;
+}
+
+int parse_everything(const string& filepath, int& height, int& width, int clas, int pressed){
+	int _count = 0;
+	if (filepath[FILEPATH.size()] == char(clas) + '0' && filepath[FILEPATH.size() + 2] == char(pressed) + '0') {
+		for (int i = FILEPATH.size(); i < filepath.size() - 5; ++i) {
+			if (filepath[i] == '_')
+				_count++;
+			if (_count == 3)
+			{
+				height = (int(filepath[i + 1]) - int('0')) * 10 + int(filepath[i + 2]) - int('0');
+				width = (int(filepath[i + 4]) - int('0')) * 10 + int(filepath[i + 5]) - int('0');
+				return 1;
+			}
+		}
+	}
+	if (filepath[FILEPATH.size()] > char(clas) + '0' || filepath[FILEPATH.size() + 2] != char(pressed) + '0')
 		return -1;
 	return 0;
 }

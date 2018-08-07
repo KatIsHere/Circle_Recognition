@@ -9,6 +9,7 @@ using namespace std;
 
 ObjectClass parse_substring(string str, const int& power) {
 	std::vector<double> extrems; std::vector<double> dists; std::vector<float> angles;
+	std::vector<double> minValue, maxValue, minValueDist, maxValueDist;
 	int i = 0;
 	while (str[i] != ':') i++;
 	string className = str.substr(0, i);
@@ -35,6 +36,7 @@ ObjectClass parse_substring(string str, const int& power) {
 		buffer >> extr;
 		dists.push_back(extr);
 	}
+
 	i = 0;
 	while (str[i] != ';') ++i;
 	str.erase(0, i + 1);
@@ -47,7 +49,52 @@ ObjectClass parse_substring(string str, const int& power) {
 		angles.push_back(extr);
 	}
 
-	ObjectClass clas(className, extr_count, extrems, dists, angles);
+	// max values
+	i = 0;
+	while (str[i] != ';') ++i;
+	str.erase(0, i + 1);
+	buffer.clear();
+	buffer.str(str);
+	// distances
+	for (int k = 0; k < power - 2; ++k) {
+		buffer >> extr;
+		maxValue.push_back(extr);
+	}
+
+	i = 0;
+	while (str[i] != ';') ++i;
+	str.erase(0, i + 1);
+	buffer.clear();
+	buffer.str(str);
+	// distances
+	for (int k = 0; k < power - 2; ++k) {
+		buffer >> extr;
+		minValue.push_back(extr);
+	}
+
+	i = 0;
+	while (str[i] != ';') ++i;
+	str.erase(0, i + 1);
+	buffer.clear();
+	buffer.str(str);
+	// distances
+	for (int k = 0; k < power - 2; ++k) {
+		buffer >> extr;
+		maxValueDist.push_back(extr);
+	}
+
+	i = 0;
+	while (str[i] != ';') ++i;
+	str.erase(0, i + 1);
+	buffer.clear();
+	buffer.str(str);
+	// distances
+	for (int k = 0; k < power - 2; ++k) {
+		buffer >> extr;
+		minValueDist.push_back(extr);
+	}
+
+	ObjectClass clas(className, extr_count, extrems, dists, angles, minValue, maxValue, minValueDist, maxValueDist);
 	return clas;
 }
 
@@ -155,8 +202,8 @@ inline void Calculate(double* polinomes, const int& height, const int& N, const 
 	//const clock_t start = clock();
 	Object_Features features = findExtremums_and_features(polinomes_new, extrems, extremsValues, extrNumb, height, N, xFrom, xTo, max_Y, min_Y, pos_min, pos_max);
 
-	float* possibilities = new float[possibleClasses.size()]; 
-	possibilities = Classify(features, possibleClasses);
+	//float* possibilities = new float[possibleClasses.size()]; 
+	//possibilities = Classify(features, possibleClasses);
 	Avar.add_features(features);
 	//const clock_t finish = clock();
 	for (int i = 0; i < height; ++i) {
@@ -166,5 +213,6 @@ inline void Calculate(double* polinomes, const int& height, const int& N, const 
 	delete[]polinomes_new;
 	delete[]extrems; delete[]extremsValues;
 	delete[]extrNumb;
+	//delete[]possibilities;
 }
 
